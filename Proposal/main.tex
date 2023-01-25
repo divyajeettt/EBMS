@@ -1,0 +1,176 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{multicol}
+
+\geometry{bottom=30mm, top=30mm, left=30mm, right=30mm}
+
+\title{
+    \textbf{\Huge ElectroBase Management System} \\
+    \vspace*{15pt}
+    \large{
+        EBMS - \textit{an Online Electronics Retail Store}, built as a course project for
+        \normalsize{CSE202: Fundamentals of Database Management Systems}
+    }
+}
+
+\author{
+    \href{mailto:divyajeet21529@iiitd.ac.in}{Divyajeet Singh (2021529)}
+    \and
+    \href{mailto:mehar21541@iiitd.ac.in}{Mehar Khurana (2021541)}
+}
+
+\date{\vspace*{10pt} January 25, 2023}
+
+\begin{document}
+    \maketitle
+
+    \section*{\Huge Project Scope}
+    \vspace*{10pt}
+    Electronics has always been a booming industry.
+    With the advent of the internet, the industry has seen a massive shift towards online retail.
+    However, it is difficult to keep track of the technical requirements of a store.
+    It is difficult to keep all stakeholders in the loop and keep them involved and updated.
+    \vspace*{10pt} \\
+    This is where we come in with \textbf{EBMS}, i.e. the \textbf{ElectroBase Management System}.
+    EBMS is an online retail platform for electronics.
+    It aims to provide a common platform for suppliers, store managers, customers, and delivery agents.
+    \begin{itemize}
+        \item
+        It is an easy solution for the \textbf{customers}, as it aims to provide a diverse catalogue of products to customers.
+        The customers get to choose from a wide range of categories, make changes to their cart, and make secure payments with a method of their choice.
+        \item
+        The \textbf{suppliers} get to keep track of their products and change their description, price, etc.
+        They can also keep track of their sales statistics and make changes to their products as and when required.
+        \item
+        The database managers (\textbf{admins}) get assisted in monitoring the transactions and managing the inventory.
+        Based on their requirements, they can add deals or combos on the available products or remove categories from their store.
+        \item
+        EBMS provides a platform for \textbf{delivery agents} to keep track of all orders that have been assigned to them. They can set their activity/inactivity status and view the feedback given to them.
+    \end{itemize}
+    The primary focus of the project is to design an efficient backend.
+    We aim to create a system that is smooth and easy to use for the customers and easy to manage for the suppliers.
+    The system should support efficient searching through the catalogue and should be able to handle a large number of transactions.
+    \vspace*{10pt} \\
+    The backend will be built using MySQL, along with Python and Django, and will be hosted on a server.
+    The frontend will be built using HTML, CSS, and ReactJS.
+    By the end of the semester, we plan to host this project on a public server and make it accessible publicly.
+
+    \subsection*{TL; DR}
+    The aim of this project is to bring to life an integrated online retail store for electronics.
+    The project will bring all stakeholders on a common platform and will ensure a smooth and easy-to-use experience for the customers.
+
+    \pagebreak
+
+    \section*{\Huge Technical Requirements}
+    \subsection*{Tech Stack}
+    We plan for EBMS to be a full-stack project with a backend and a frontend.
+    According to the requirements, we plan to use the following tools and technologies:
+    \textbf{\begin{multicols}{2}
+        \begin{itemize}
+            \item MySQL Database
+            \item Python-3
+            \item Django Framework
+            \item HTML
+            \item CSS
+            \item ReactJS
+        \end{itemize}
+    \end{multicols}}
+
+    \subsection*{Entities, Stakeholders, Relations, \& Constraints}
+    The following entities will be used in the project:
+    \begin{enumerate}
+        \item \textbf{Customers:}
+        Customers are the primary stakeholders interacting with the system.
+        Customers have to register and log in first.
+        \item \textbf{Admin:}
+        Admins are the store managers.
+        They are the stakeholders responsible for managing the inventory and maintaining the store (database).
+        \item \textbf{Suppliers:}
+        Suppliers are responsible for maintaining the products in the store.
+        \item \textbf{Delivery Agents:}
+        Delivery Agents will be assigned to each Order and are responsible for delivering the orders.
+        \item \textbf{Reviews:}
+        Reviews are the feedback given by Customers to Products and Delivery Agents.
+        \item \textbf{Products}
+        \item \textbf{Orders}
+    \end{enumerate}
+    To effectively manage the database, we will be using the following (non-exhaustive list of) relationships among the data:
+    \begin{enumerate}
+        \item \textbf{Cart:} Product, Customer
+        \item \textbf{Sells:} Supplier, Product
+        \item \textbf{Sold to:} Product, Supplier, Customer
+        \item \textbf{Delivered:} Customer, Delivery Agent
+        \item \textbf{Reviewed:} Product, Review, Customer
+    \end{enumerate}
+    \vspace*{10pt}
+    Constraints on the cardinalities of entity sets limit the relationships and associations among data.
+    The following are the cardinality-constraints of the relations:
+    \begin{enumerate}
+        \item \textbf{Many-to-One:} Product, Supplier
+        \item \textbf{Existential:} Product, Supplier
+        \item \textbf{One-to-Many:} Delivery Agent, Order
+        \item \textbf{Existential:} Order, Customer
+        \item \textbf{Existential:} Review, Product Sold to Customer
+    \end{enumerate}
+    Since some data must remain private while other data must be accessible to all, we must implement access-control constraints.
+    The following points show which stakeholders can access which data:
+    \begin{enumerate}
+        \item \textbf{Admin:} All data except for Customer Passwords
+        \item \textbf{Customer:} Personal records from the Customer entity set, their past and current Orders, and all Products and Reviews
+        \item \textbf{Supplier:} Their Product catalogue, personal records, sales statistics, and Customer Reviews
+        \item \textbf{Delivery Agent:} Personal records, current Orders, and Feedback from past Orders
+    \end{enumerate}
+
+    \section*{\Huge Functional Requirements}
+    \vspace*{10pt}
+    All stakeholders except the \textbf{Admins} will need to create an account and log in.
+    The features covered in this section also cover the functional requirements of the project:
+    \begin{enumerate}
+        \item As a \textbf{Customer:}
+        \begin{itemize}
+            \item Add balance to wallet
+            \item Browse and search/sort/filter for products
+            \item Manage (add/remove) items in their cart
+            \item Place an order (checkout cart)
+            \item Confirm/Authenticate transaction
+            \item View and search for previous orders
+        \end{itemize}
+
+        \item As an \textbf{Admin:}
+        \begin{itemize}
+            \item Add/Delete categories
+            \item Delete products
+            \item Add/Modify discounts
+            \item Create deals/combos
+            \item View transaction history
+            \item Appoint other Admins
+        \end{itemize}
+
+        \item As a \textbf{Supplier:}
+        \begin{itemize}
+            \item View products currently on sale
+            \item Add/Discontinue a product
+            \item Change price of a product
+            \item Change quantity of a product
+            \item View sales statistics
+        \end{itemize}
+
+        \item As a \textbf{Delivery Agent:}
+        \begin{itemize}
+            \item Confirm a delivery
+            \item View the address of the order
+            \item View the ETA of the order
+            \item View feedback (which will also be stored as a review)
+            \item Choose current activity status
+        \end{itemize}
+    \end{enumerate}
+
+    \vspace*{150pt}
+
+    \section*{Footnotes}
+    This is the first draft of the project proposal.
+    Some details, like the tech stack and the functional requirements, are currently tentative and are subject to change.
+
+\end{document}
