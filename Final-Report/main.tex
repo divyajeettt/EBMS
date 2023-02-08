@@ -1,0 +1,267 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{graphicx}
+
+\geometry{bottom=30mm, top=30mm, left=30mm, right=30mm}
+
+\newcommand{\deadline}[3]{
+    \hspace{0pt}
+    \vfill
+    \begin{center}
+        \Huge \textbf{Deadline #1} \\ \Large \textit{#2} \\
+        \vspace*{25pt}
+        \large \textbf{#3}
+    \end{center}
+    \vfill
+    \pagebreak
+}
+
+\title{
+    \textbf{\Huge ElectroBase Management System} \\
+    \vspace*{15pt}
+    \large{
+        EBMS - \textit{an Online Electronics Retail Store}, built as a course project for
+        \normalsize{CSE202: Fundamentals of Database Management Systems} \\
+    }
+    \vspace*{20pt}
+    \textbf{\Large Project Report and Documentation}
+}
+
+\author{
+    \href{mailto:divyajeet21529@iiitd.ac.in}{Divyajeet Singh (2021529)}
+    \and
+    \href{mailto:mehar21541@iiitd.ac.in}{Mehar Khurana (2021541)}
+}
+
+\date{\vspace*{10pt} \textbf{\today}}
+
+\begin{document}
+    \maketitle
+
+    \deadline{1}{Defining Project Scope and Requirements}{January 25, 2023}
+
+    \section*{\Huge Project Scope}
+    \vspace*{10pt}
+    Electronics has always been a booming industry.
+    With the advent of the internet, the industry has seen a massive shift towards online retail.
+    However, it is difficult to keep track of the technical requirements of a store.
+    It is difficult to keep all stakeholders in the loop and keep them involved and updated.
+    \vspace*{10pt} \\
+    This is where we come in with \textbf{EBMS}, i.e. the \textbf{ElectroBase Management System}.
+    EBMS is an online retail platform for electronics.
+    It aims to provide a common platform for suppliers, store managers, customers, and delivery agents.
+    \begin{itemize}
+        \item
+        It is an easy solution for the \textbf{customers}, as it aims to provide a diverse catalogue of products to customers.
+        The customers get to choose from a wide range of categories, make changes to their cart, and make secure payments with a method of their choice.
+        \item
+        The \textbf{suppliers} get to keep track of their products and change their description, price, etc.
+        They can also keep track of their sales statistics and make changes to their products as and when required.
+        \item
+        The database managers (\textbf{admins}) get assisted in monitoring the transactions and managing the inventory.
+        Based on their requirements, they can add deals or combos on the available products or remove categories from their store.
+        \item
+        EBMS provides a platform for \textbf{delivery agents} to keep track of all orders that have been assigned to them. They can set their activity/inactivity status and view the feedback given to them.
+    \end{itemize}
+    The primary focus of the project is to design an efficient backend.
+    We aim to create a system that is smooth and easy to use for the customers and easy to manage for the suppliers.
+    The system should support efficient searching through the catalogue and should be able to handle a large number of transactions.
+    \vspace*{10pt} \\
+    The backend will be built using MySQL, along with Python and Django, and will be hosted on a server.
+    The frontend will be built using HTML, CSS, and ReactJS.
+    By the end of the semester, we plan to host this project on a public server and make it accessible publicly.
+
+    \subsection*{TL; DR}
+    The aim of this project is to bring to life an integrated online retail store for electronics.
+    The project will bring all stakeholders on a common platform and will ensure a smooth and easy-to-use experience for the customers.
+
+    \section*{\Huge Technical Requirements}
+    \subsection*{Tech Stack}
+    We plan for EBMS to be a full-stack project with a backend and a frontend.
+    According to the requirements, we plan to use the following tools and technologies:
+    \textbf{\begin{multicols}{2}
+        \begin{itemize}
+            \item MySQL Database
+            \item Python-3
+            \item Django Framework
+            \item HTML
+            \item CSS
+            \item ReactJS
+        \end{itemize}
+    \end{multicols}}
+
+    \subsection*{Entities, Relations, \& Constraints}
+
+    \subsubsection*{Entities}
+        The following entities are identified and will be used in the project:
+        \begin{enumerate}
+            \item \textbf{Admin:}
+            Admins are the store managers.
+            They are the stakeholders responsible for managing the inventory and maintaining the store (database).
+            \item \textbf{Customers:}
+            Customers are the primary stakeholders interacting with the system.
+            They must create an account and log in to use the app.
+            \item \textbf{Suppliers:}
+            Suppliers are responsible for supplying products to the store.
+            Different suppliers are allowed to supply the same products to the store.
+            \item \textbf{Delivery Agents:}
+            A delivery agent will be assigned to each order.
+            They will be responsible for delivering orders.
+            \item \textbf{Products:}
+            As the name suggests, these are the products supplied to the store by suppliers. Products are weak entities since several sellers can sell the same product, ie, we can have several records for the same productID.
+            \item \textbf{Orders:}
+            An order entity is used to keep track of the orders placed by different customers.
+            Each order also has one associated delivery agent.
+            \item \textbf{Product Reviews:}
+            Product reviews are the feedback given by customers on products.
+            A customer can only review a product they have previously purchased.
+            \item \textbf{Delivery Agent Reviews:}
+            Delivery agent reviews are the feedback given by customers to delivery agents.
+            A customer can only post a review on a delivery agent they have received an order from.
+            \item \textbf{Wallet:}
+            A wallet is a belonging of a customer that stores attributes like the current balance of the customer, their UPI-ID etc.
+            Users' wallets are hidden from the admin's view. Wallets are weak entities since several people can be using the same UPI-ID, and we require the customerID to uniquely identify a wallet.
+            \item \textbf{Description:}
+            The description weak entity is used to store the description of different products.
+            This is used to avoid redundancy of data storage (in the case where multiple suppliers are selling the same products with the same descriptions).
+        \end{enumerate}
+
+    \subsubsection*{Relationships \& Cardinality Constraints}
+    To effectively manage the database, we will be using the following (non-exhaustive list of) relationships among the data:
+    \begin{enumerate}
+        \item \textbf{\textit{Cart}:}
+        Cart is a relationship between \textbf{Customer} and \textbf{Product}.
+        One customer can add multiple products to the cart (and choose a specific supplier).
+        The same products may be added to more than one cart. When a customer checks out, the cart is used to generate an order entity, and a delivery agent is assigned to it.
+        \item \textbf{\textit{Sells}:}
+        \textbf{Supplier} \textit{sells} \textbf{Product}.
+        This many-to-many relationship is used to keep track of what products one supplier sells.
+        Each supplier can supply multiple products. The same product may be sold by different suppliers.
+        \item \textbf{\textit{Sold}:}
+        \textbf{Supplier} has \textit{sold} \textbf{Product}.
+        This many-to-many relationship covers the products sold by a supplier and will be used to generate their sales statistics.
+        \item \textbf{\textit{Delivered}:}
+        \textbf{Delivery Agent} has \textit{delivered} to \textbf{Customer}.
+        This is a ternary relationship involving \textbf{Delivery Agent Review} as well.
+        There can be, at most, one (editable) review from one customer for a delivery agent.
+        \item \textbf{\textit{Purchased}:}
+        \textbf{Customer} has \textit{purchased} \textbf{Product}.
+        This is a ternary relationship involving \textbf{Product Review} as well.
+        There can be, at most, one (editable) review from one customer for a product.
+        \item \textbf{\textit{Describes}:}
+        \textbf{Description} \textit{describes} \textbf{Product}.
+        This is a one-to-one relationship.
+        \item \textbf{\textit{Belongs To}:}
+        \textbf{Wallet} \textit{belongs to} \textbf{Customer}.
+        This is a one-to-one relationship.
+        \item \textbf{\textit{Consists Of}:}
+        \textbf{Order} \textit{consists} \textbf{Products}.
+        This is a one-to-many relationship, as one order may consist of multiple products. The product quantities are moved from the cart to the order on checkout.
+        \item \textbf{\textit{Manages}:}
+        \textbf{Admin} \textit{manages} the app.
+        This relationship is used to hide entities like wallets from the admin's view.
+    \end{enumerate}
+    Most cardinality constraints have been mentioned above in the description of relationships.
+    Some other constraints are as follows:
+    \begin{enumerate}
+        \item \textbf{Existential:}
+        \begin{enumerate}
+            \item \textbf{Product - Supplier:} There can be no product without a supplier.
+            \item \textbf{Order - Customer:} An order cannot exist without a customer.
+            \item \textbf{Order - Delivery Agent:} An order cannot exist without a delivery agent.
+            \item \textbf{Product Review - Customer \textit{has purchased} Product:} To ensure that a customer can review only the products they have purchased.
+            \item \textbf{Delivery Agent Review - Delivery Agent \textit{delivered to} Customer:} to ensure that a customer can review only the delivery agents they have received orders from.
+        \end{enumerate}
+        \item \textbf{One-to-One:}
+        \textbf{Delivery Agent - Order:} One delivery agent can be assigned at most one order at a time.
+        We may remove this constraint later and implement an algorithm to find the best agent to assign an order to, based on the current delivery addresses, with a cap on the number of orders per agent.
+
+    \end{enumerate}
+
+    \subsubsection*{Access Constraints}
+    Since some data must remain private while other data must be accessible to all, the following access-control constraints will be implemented:
+    \begin{enumerate}
+        \item \textbf{Admin:} All data except for Customer passwords and Wallets
+        \item \textbf{Customer:} Personal records, past and current Orders, and all Products and Reviews
+        \item \textbf{Supplier:} Their Product catalogue, personal records, sales statistics, and Customer Reviews
+        \item \textbf{Delivery Agent:} Personal records, current Orders, and Reviews from past Orders
+    \end{enumerate}
+
+    \section*{\Huge Functional Requirements}
+    \vspace*{10pt}
+    All stakeholders except the \textbf{Admins} will need to create an account and log in.
+    The following (non-exhaustive list of) features are some of the functional requirements of the project:
+    \begin{enumerate}
+        \item As a \textbf{Customer:}
+        \begin{itemize}
+            \item Add balance to wallet
+            \item Browse and search/sort/filter for products
+            \item Manage (add/remove) items in their cart
+            \item Place an order (checkout cart)
+            \item Confirm/Authenticate transaction
+            \item View and search for previous orders
+        \end{itemize}
+
+        \item As an \textbf{Admin:}
+        \begin{itemize}
+            \item Add/Delete categories
+            \item Delete products
+            \item Add/Modify discounts
+            \item Create deals/combos
+            \item View transaction history
+            \item Appoint other Admins
+        \end{itemize}
+
+        \item As a \textbf{Supplier:}
+        \begin{itemize}
+            \item View products currently on sale
+            \item Add/Discontinue a product
+            \item Change price of a product
+            \item Change quantity of a product
+            \item View sales statistics
+        \end{itemize}
+
+        \item As a \textbf{Delivery Agent:}
+        \begin{itemize}
+            \item Confirm a delivery
+            \item View the address of the order
+            \item View the ETA of the order
+            \item View reviews
+            \item Choose current activity status
+        \end{itemize}
+    \end{enumerate}
+
+    \pagebreak
+
+    \deadline{2}{Designing the ER Model and converting it to a Relational Model}{February 3, 2023}
+
+    \section*{\Huge Entity-Relationship Model}
+    \vspace*{10pt}
+    Entity-Relationship (ER) Models are used to plan how different entities in a project interact with each other. \\
+    \newline
+    Our ER Model captures the nature of the relationships and entities planned to be used in the project.
+    The ER Model is designed in accordance with the assumptions and constraints as mentioned in the document above.
+    Hence, we plan to build our system on the basis of the following Entity-Relationship Model:
+    \vspace*{10pt}
+    \begin{center}
+        \hspace*{-37pt}
+        \includegraphics[scale=0.6]{Assets/ER-Model}
+    \end{center}
+
+    \section*{\Huge Relational Model}
+    \vspace*{10pt}
+    Relationship Models are used to represent how data will be stored in the database, along with the attributes of each entity and relationship.
+    The Relational Model is designed in accordance with the assumptions and constraints as mentioned in the document above. \\
+    \newline
+    \textbf{Note:} The arrows represent that a field is \textit{derived} from another.
+    For example, \verb|productID| in \verb|description| will contain values of \verb|productID| from table \verb|product|.
+    \vspace*{10pt}
+    \begin{center}
+        \hspace*{-20pt}
+        \includegraphics[scale=0.75]{Assets/Relational-Model}
+    \end{center}
+
+\end{document}
