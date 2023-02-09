@@ -1,35 +1,68 @@
+CREATE DATABASE IF NOT EXISTS EBMS;
+USE EBMS;
+
+CREATE TABLE address (
+    addressID INT NOT NULL AUTO_INCREMENT,
+    street_name VARCHAR(255) NOT NULL,
+    apt_number VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    zip INT NOT NULL,
+    country VARCHAR(255) NOT NULL,         -- added country
+    PRIMARY KEY (addressID)
+)
+
+-- ENTITY TABLES
+
 CREATE TABLE admin (
     adminID INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,        -- renamed all fields called hashed_password to password
     PRIMARY KEY (adminID)
 );
 
 CREATE TABLE supplier (
     supplierID INT NOT NULL AUTO_INCREMENT,
-    /* name VARCHAR(255) NOT NULL, */
-    /* address VARCHAR(255) NOT NULL, */
+    first_name VARCHAR(255) NOT NULL,
+    middle_initial VARCHAR(10),
+    last_name VARCHAR(255) NOT NULL,
+    addressID INT NOT NULL,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (supplierID)
+    FOREIGN KEY (addressID) REFERENCES address(addressID)
 );
 
 CREATE TABLE customer (
     customerID INT NOT NULL AUTO_INCREMENT,
-    /* name VARCHAR(255) NOT NULL, */
-    /* address VARCHAR(255) NOT NULL, */
+    first_name VARCHAR(255) NOT NULL,
+    middle_initial VARCHAR(10),
+    last_name VARCHAR(255) NOT NULL,
+    addressID INT NOT NULL,
     age INT NOT NULL,
     password VARCHAR(255) NOT NULL,
-    phone_number CHAR(15) NOT NULL,
+    phoneID INT NOT NULL,
+    UNIQUE (phoneID)
     PRIMARY KEY (customerID)
+    FOREIGN KEY (addressID) REFERENCES address(addressID)
 );
 
 CREATE TABLE delivery_agent (
     daID INT NOT NULL AUTO_INCREMENT,
-    /* name VARCHAR(255) NOT NULL, */
+    first_name VARCHAR(255) NOT NULL,
+    middle_initial VARCHAR(10),
+    last_name VARCHAR(255) NOT NULL,
     avalability BOOLEAN NOT NULL,
-    phone_number CHAR(15) NOT NULL,
+    phoneID INT NOT NULL,
+    UNIQUE (phoneID)
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (daID)
+);
+
+CREATE TABLE phone_number (
+    phoneID INT NOT NULL,
+    phone_number CHAR(15) NOT NULL,
+    FOREIGN KEY (phoneID) REFERENCES customer(phoneID)
+    FOREIGN KEY (phoneID) REFERENCES delivery_agent(phoneID)
 );
 
 CREATE TABLE product (
@@ -52,8 +85,8 @@ CREATE TABLE order (
     orderID INT NOT NULL AUTO_INCREMENT,
     customerID INT NOT NULL,
     daID INT NOT NULL,
-    /* order_date DATE NOT NULL, */
-    /* delivery_date DATE NOT NULL, */
+    order_date DATE NOT NULL,    -- added order_date
+    delivery_date DATE,          -- added delivery_date
     ETA DATE NOT NULL,
     status BOOLEAN NOT NULL,
     PRIMARY KEY (orderID)
@@ -69,33 +102,33 @@ CREATE TABLE wallet (
     FOREIGN KEY (customerID) REFERENCES customer(customerID)
 );
 
+-- removed reviewID
 CREATE TABLE product_review (
-    reviewID INT NOT NULL AUTO_INCREMENT,
     customerID INT NOT NULL,
     productID INT NOT NULL,
     supplierID INT NOT NULL,
-    stars INT NOT NULL,
+    rating INT NOT NULL,
     content VARCHAR(255) NOT NULL,
     review_date DATE NOT NULL,
-    PRIMARY KEY (reviewID)
-    /* PRIMARY KEY (productID, customerID) */
+    PRIMARY KEY (customerID, productID, supplierID)
     FOREIGN KEY (customerID) REFERENCES customer(customerID)
     FOREIGN KEY (productID) REFERENCES product(productID)
     FOREIGN KEY (supplierID) REFERENCES product(supplierID)
 );
 
+-- removed reviewID
 CREATE TABLE da_review (
-    reviewID INT NOT NULL AUTO_INCREMENT,
     customerID INT NOT NULL,
     daID INT NOT NULL,
-    stars INT NOT NULL,
+    rating INT NOT NULL,
     content VARCHAR(255) NOT NULL,
     review_date DATE NOT NULL,
-    PRIMARY KEY (reviewID)
-    /* PRIMARY KEY (daID, customerID) */
+    PRIMARY KEY (customerID, daID)
     FOREIGN KEY (customerID) REFERENCES customer(customerID)
     FOREIGN KEY (daID) REFERENCES delivery_agent(daID)
 );
+
+-- RELATIONSHIP TABLES
 
 CREATE TABLE cart (
     customerID INT NOT NULL,
@@ -108,7 +141,7 @@ CREATE TABLE cart (
     FOREIGN KEY (supplierID) REFERENCES product(supplierID)
 );
 
-/* consist_of relation */
+-- renamed "consists_of" relationship to "order_product"
 CREATE TABLE order_product (
     orderID INT NOT NULL,
     productID INT NOT NULL,
@@ -129,3 +162,6 @@ CREATE TABLE sold (
     FOREIGN KEY (productID) REFERENCES product(productID)
     FOREIGN KEY (supplierID) REFERENCES product(supplierID)
 );
+
+-- INDICES
+-- TO DO LATER
