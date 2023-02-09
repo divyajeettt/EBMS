@@ -51,7 +51,7 @@ CREATE TABLE delivery_agent (
     first_name VARCHAR(255) NOT NULL,
     middle_initial VARCHAR(10),
     last_name VARCHAR(255) NOT NULL,
-    avalability BOOLEAN NOT NULL,
+    avalability BOOLEAN NOT NULL DEFAULT TRUE,
     phoneID INT NOT NULL,
     UNIQUE (phoneID)
     password VARCHAR(255) NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE delivery_agent (
 
 CREATE TABLE phone_number (
     phoneID INT NOT NULL,
-    phone_number CHAR(15) NOT NULL,
+    number CHAR(15) NOT NULL,
     FOREIGN KEY (phoneID) REFERENCES customer(phoneID)
     FOREIGN KEY (phoneID) REFERENCES delivery_agent(phoneID)
 );
@@ -70,6 +70,7 @@ CREATE TABLE product (
     name VARCHAR(255) NOT NULL,
     supplierID INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
+    quantity INT NOT NULL,
     PRIMARY KEY (productID, supplierID)
     FOREIGN KEY (supplierID) REFERENCES supplier(supplierID)
 );
