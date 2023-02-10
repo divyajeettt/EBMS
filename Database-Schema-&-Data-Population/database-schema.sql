@@ -70,6 +70,7 @@ CREATE TABLE product (
     name VARCHAR(255) NOT NULL,
     supplierID INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
+    quantity INT NOT NULL,               -- added quantity
     PRIMARY KEY (productID, supplierID)
     FOREIGN KEY (supplierID) REFERENCES supplier(supplierID)
 );
