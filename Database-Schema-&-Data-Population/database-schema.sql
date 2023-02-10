@@ -28,7 +28,7 @@ CREATE TABLE supplier (
     last_name VARCHAR(255) NOT NULL,
     addressID INT NOT NULL,
     password VARCHAR(255) NOT NULL,
-    PRIMARY KEY (supplierID)
+    PRIMARY KEY (supplierID),
     FOREIGN KEY (addressID) REFERENCES address(addressID)
 );
 
@@ -41,8 +41,8 @@ CREATE TABLE customer (
     age INT NOT NULL,
     password VARCHAR(255) NOT NULL,
     phoneID INT NOT NULL,
-    UNIQUE (phoneID)
-    PRIMARY KEY (customerID)
+    UNIQUE (phoneID),
+    PRIMARY KEY (customerID),
     FOREIGN KEY (addressID) REFERENCES address(addressID)
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE delivery_agent (
     last_name VARCHAR(255) NOT NULL,
     avalability BOOLEAN NOT NULL DEFAULT TRUE,
     phoneID INT NOT NULL,
-    UNIQUE (phoneID)
+    UNIQUE (phoneID),
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY (daID)
 );
@@ -61,7 +61,7 @@ CREATE TABLE delivery_agent (
 CREATE TABLE phone_number (
     phoneID INT NOT NULL,
     number CHAR(15) NOT NULL,
-    FOREIGN KEY (phoneID) REFERENCES customer(phoneID)
+    FOREIGN KEY (phoneID) REFERENCES customer(phoneID),
     FOREIGN KEY (phoneID) REFERENCES delivery_agent(phoneID)
 );
 
@@ -71,14 +71,14 @@ CREATE TABLE product (
     supplierID INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (productID, supplierID)
+    PRIMARY KEY (productID, supplierID),
     FOREIGN KEY (supplierID) REFERENCES supplier(supplierID)
 );
 
 CREATE TABLE description (
     productID INT NOT NULL,
     description VARCHAR(255) NOT NULL,
-    PRIMARY KEY (productID)
+    PRIMARY KEY (productID),
     FOREIGN KEY (productID) REFERENCES product(productID)
 );
 
@@ -90,8 +90,8 @@ CREATE TABLE order (
     delivery_date DATE,          -- added delivery_date
     ETA DATE NOT NULL,
     status BOOLEAN NOT NULL,
-    PRIMARY KEY (orderID)
-    FOREIGN KEY (customerID) REFERENCES customer(customerID)
+    PRIMARY KEY (orderID),
+    FOREIGN KEY (customerID) REFERENCES customer(customerID),
     FOREIGN KEY (daID) REFERENCES delivery_agent(daID)
 );
 
@@ -99,7 +99,7 @@ CREATE TABLE wallet (
     customerID INT NOT NULL,
     balance DECIMAL(10,2) NOT NULL,
     upiID VARCHAR(255) NOT NULL,
-    PRIMARY KEY (customerID)
+    PRIMARY KEY (customerID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID)
 );
 
@@ -111,9 +111,9 @@ CREATE TABLE product_review (
     rating INT NOT NULL,
     content VARCHAR(255) NOT NULL,
     review_date DATE NOT NULL,
-    PRIMARY KEY (customerID, productID, supplierID)
-    FOREIGN KEY (customerID) REFERENCES customer(customerID)
-    FOREIGN KEY (productID) REFERENCES product(productID)
+    PRIMARY KEY (customerID, productID, supplierID),
+    FOREIGN KEY (customerID) REFERENCES customer(customerID),
+    FOREIGN KEY (productID) REFERENCES product(productID),
     FOREIGN KEY (supplierID) REFERENCES product(supplierID)
 );
 
@@ -124,8 +124,8 @@ CREATE TABLE da_review (
     rating INT NOT NULL,
     content VARCHAR(255) NOT NULL,
     review_date DATE NOT NULL,
-    PRIMARY KEY (customerID, daID)
-    FOREIGN KEY (customerID) REFERENCES customer(customerID)
+    PRIMARY KEY (customerID, daID),
+    FOREIGN KEY (customerID) REFERENCES customer(customerID),
     FOREIGN KEY (daID) REFERENCES delivery_agent(daID)
 );
 
@@ -136,9 +136,9 @@ CREATE TABLE cart (
     productID INT NOT NULL,
     supplierID INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (customerID, productID, supplierID)
-    FOREIGN KEY (customerID) REFERENCES customer(customerID)
-    FOREIGN KEY (productID) REFERENCES product(productID)
+    PRIMARY KEY (customerID, productID, supplierID),
+    FOREIGN KEY (customerID) REFERENCES customer(customerID),
+    FOREIGN KEY (productID) REFERENCES product(productID),
     FOREIGN KEY (supplierID) REFERENCES product(supplierID)
 );
 
@@ -148,9 +148,9 @@ CREATE TABLE order_product (
     productID INT NOT NULL,
     supplierID INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (orderID, productID, supplierID)
-    FOREIGN KEY (orderID) REFERENCES order(orderID)
-    FOREIGN KEY (productID) REFERENCES product(productID)
+    PRIMARY KEY (orderID, productID, supplierID),
+    FOREIGN KEY (orderID) REFERENCES order(orderID),
+    FOREIGN KEY (productID) REFERENCES product(productID),
     FOREIGN KEY (supplierID) REFERENCES product(supplierID)
 );
 
@@ -159,8 +159,8 @@ CREATE TABLE sold (
     productID INT NOT NULL,
     quantity INT NOT NULL,
     sale_date DATE NOT NULL,
-    PRIMARY KEY (productID, supplierID)
-    FOREIGN KEY (productID) REFERENCES product(productID)
+    PRIMARY KEY (productID, supplierID),
+    FOREIGN KEY (productID) REFERENCES product(productID),
     FOREIGN KEY (supplierID) REFERENCES product(supplierID)
 );
 
