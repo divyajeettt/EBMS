@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{multicol}
 \usepackage{graphicx}
+\usepackage{xcolor}
 
 \geometry{bottom=30mm, top=30mm, left=30mm, right=30mm}
 
@@ -11,7 +12,9 @@
     \hspace{0pt}
     \vfill
     \begin{center}
-        \Huge \textbf{Deadline #1} \\ \Large \textit{#2} \\
+        \Huge \textbf{Deadline #1} \\
+        \vspace*{5pt}
+        \Large \textit{#2} \\
         \vspace*{25pt}
         \large \textbf{#3}
     \end{center}
@@ -31,7 +34,7 @@
 }
 
 \author{
-    \href{mailto:divyajeet21529@iiitd.ac.in}{Divyajeet Singh (2021529)}
+    \href{mailto:divyajeet21529@iiitd.ac.in}{]Divyajeet Singh (2021529)}
     \and
     \href{mailto:mehar21541@iiitd.ac.in}{Mehar Khurana (2021541)}
 }
@@ -111,7 +114,8 @@
             A delivery agent will be assigned to each order.
             They will be responsible for delivering orders.
             \item \textbf{Products:}
-            As the name suggests, these are the products supplied to the store by suppliers. Products are weak entities since several sellers can sell the same product, ie, we can have several records for the same productID.
+            As the name suggests, these are the products supplied to the store by suppliers.
+            Products are weak entities since several sellers can sell the same product, ie, we can have several records for the same productID.
             \item \textbf{Orders:}
             An order entity is used to keep track of the orders placed by different customers.
             Each order also has one associated delivery agent.
@@ -297,5 +301,90 @@
         \hspace*{-40pt}
         \includegraphics[scale=0.8]{Assets/Relational-Model}
     \end{center}
+
+    \pagebreak
+
+    \deadline{3}{Implementing the Database Schema and Integrity Constraints, and Populating simulated data satisfying them}{February 10, 2023}
+
+    \section*{\Huge Assumptions \& Explanation}
+    \subsection*{Tables added or renamed:}
+    \begin{enumerate}
+        \item
+        Since \textbf{address} is a composite attribute, we store it in a separate table since we would rarely need to search for the address.
+        The search/join/union query efficiency would get affected if we store all the address data in the same stakeholder table.
+        \item
+        The \textbf{consists\_of} relationship table has been renamed to \textbf{order\_product} to make it more intuitive.
+        \item
+        Entity table \textbf{description} has been renamed to \textbf{product\_description}, since \verb|description| is a reserved keyword in MySQL.
+        Its field \textbf{description} has also been renamed to \textbf{content} for the same reason.
+        \item
+        Entity table \textbf{order} has also been renamed to \textbf{orders} for the same reason.
+    \end{enumerate}
+
+    \subsection*{Composite Attributes:}
+    \begin{enumerate}
+        \item
+        Addresses of all stakeholders are stored in a single table with a unique \textbf{addressID} assigned to each address.
+        This \textbf{addressID} is then stored along with other stakeholder data in their tables.
+        \item
+        Added sub-attribute \textbf{country} to the \textbf{address} composite attribute.
+        \item
+        The \textbf{name} composite attribute is stored in the same table, since we might need to search for the names of the stakeholders.
+        Each sub-attribute is kept as a column (\textbf{first\_name}, \textbf{middle\_initial}, \textbf{last\_name}) in the table.
+    \end{enumerate}
+
+    \subsection*{Multi-Valued Attributes:}
+    \begin{enumerate}
+        \item
+        Since \textbf{phone\_number} is a multivalued attribute, we store it in a separate table, with the \textbf{phoneID} attribute from this table being stored in the \textbf{delivery\_agent} and \textbf{customer} tables.
+        This table does not have a primary key since each \textbf{phoneID} associates to one or more \textbf{num}'s (phone numbers).
+    \end{enumerate}
+
+    \subsection*{Derived Attributes:}
+    \begin{enumerate}
+        \item
+        Changed \textbf{ETA} and \textbf{delivered} (earlier \textbf{status}) to derived attributes.
+        \textbf{ETA} will be calculated as \textbf{order\_date} + 15 days when required, and \textbf{delivered} will be \verb|true| if \textbf{delivery\_date} is not null, else \verb|false|.
+        We will implement these constraints/relations outside the database, and hence these fields are not present in the tables.
+    \end{enumerate}
+    \pagebreak
+
+    \subsection*{Columns/Fields added, removed, or renamed:}
+    \begin{enumerate}
+        \item
+        All fields called \textbf{hashed\_password} have been renamed to \textbf{pwd} for simplicity.
+        \item
+        Added field \textbf{email} to \textbf{customer}, \textbf{supplier}, and \textbf{delivery\_agent} tables.
+        \item
+        Added field \textbf{quantity} to table \textbf{product}.
+        \item
+        Removed fields \textbf{reviewID} from the \textbf{product\_review} and \textbf{da\_review} tables, so as to decompose the ternary relationships \textbf{delivered} and \textbf{purchased}.
+        \item
+        Added \textbf{order\_date} and \textbf{delivery\_date} to the \textbf{order} table.
+    \end{enumerate}
+
+    \subsection*{Other Assumptions:}
+    \begin{enumerate}
+        \item
+        All primary keys are defined with the \verb|AUTO_INCREMENT| constraints so that we do not need to insert ID values ourselves, and duplicity errors on primary keys are avoided.
+        \item
+        \textbf{Product descriptions} and \textbf{review contents} are being stored using \verb|TEXT| datatype in MySQL, which is not stored in the server memory and does not hamper query times.
+        \item
+        All attributes that can not have null values have been specified as \verb|NOT NULL|. Attributes like \textbf{last\_name}, \textbf{middle\_initial}, \textbf{content} in the \textbf{review} tables, and \textbf{delivery\_date} in the \textbf{orders} table can have null values.
+        \item
+        \textbf{Availability} of a delivery agent has been given a \verb|DEFAULT| value of true, ie, when a delivery agent is added to the database, he is available to deliver an order by default.
+        \item
+        \textbf{Balance} in a customer wallet, on account creation, has been given a \verb|DEFAULT| value of 0.
+        \item
+        \textbf{pwd}'s in all tables are stored as SHA1 hashes.
+    \end{enumerate}
+
+    \subsection*{Data Generation}
+    Most of the simulated data for the stakeholder and main entity tables was generated using \href{https://www.mockaroo.com}{\color{blue}\underline{https://www.mockaroo.com}}. \\
+    \newline
+    We utilised the (Ruby) code functionality to implement viable constraints on the data while data generation.
+    The data for each table was downloaded as a CSV-file.
+    We then used python scripts to generate the MySQL insertion queries and to populate relations.
+    Data for some tables (like \textbf{cart} and \textbf{orders}) was mainly done through python scripts so as to make sure the existential constraints were not violated.
 
 \end{document}
