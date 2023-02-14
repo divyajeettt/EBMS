@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{multicol}
 \usepackage{graphicx}
+\usepackage{xcolor}
 
 \geometry{bottom=30mm, top=30mm, left=30mm, right=30mm}
 
@@ -11,7 +12,9 @@
     \hspace{0pt}
     \vfill
     \begin{center}
-        \Huge \textbf{Deadline #1} \\ \Large \textit{#2} \\
+        \Huge \textbf{Deadline #1} \\
+        \vspace*{5pt}
+        \Large \textit{#2} \\
         \vspace*{25pt}
         \large \textbf{#3}
     \end{center}
@@ -31,7 +34,7 @@
 }
 
 \author{
-    \href{mailto:divyajeet21529@iiitd.ac.in}{Divyajeet Singh (2021529)}
+    \href{mailto:divyajeet21529@iiitd.ac.in}{]Divyajeet Singh (2021529)}
     \and
     \href{mailto:mehar21541@iiitd.ac.in}{Mehar Khurana (2021541)}
 }
@@ -106,12 +109,13 @@
             They must create an account and log in to use the app.
             \item \textbf{Suppliers:}
             Suppliers are responsible for supplying products to the store.
-            Different suppliers are allowed to supply the same products to the store.
+            Different suppliers are not allowed to supply the same products to the store.
             \item \textbf{Delivery Agents:}
             A delivery agent will be assigned to each order.
             They will be responsible for delivering orders.
             \item \textbf{Products:}
-            As the name suggests, these are the products supplied to the store by suppliers. Products are weak entities since several sellers can sell the same product, ie, we can have several records for the same productID.
+            As the name suggests, these are the products supplied to the store by suppliers.
+            One product can only be supplied by one supplier.
             \item \textbf{Orders:}
             An order entity is used to keep track of the orders placed by different customers.
             Each order also has one associated delivery agent.
@@ -124,9 +128,6 @@
             \item \textbf{Wallet:}
             A wallet is a belonging of a customer that stores attributes like the current balance of the customer, their UPI-ID etc.
             Users' wallets are hidden from the admin's view. Wallets are weak entities since several people can be using the same UPI-ID, and we require the customerID to uniquely identify a wallet.
-            \item \textbf{Description:}
-            The description weak entity is used to store the description of different products.
-            This is used to avoid redundancy of data storage (in the case where multiple suppliers are selling the same products with the same descriptions).
         \end{enumerate}
 
     \subsubsection*{Relationships \& Cardinality Constraints}
@@ -134,15 +135,17 @@
     \begin{enumerate}
         \item \textbf{\textit{Cart}:}
         Cart is a relationship between \textbf{Customer} and \textbf{Product}.
-        One customer can add multiple products to the cart (and choose a specific supplier).
-        The same products may be added to more than one cart. When a customer checks out, the cart is used to generate an order entity, and a delivery agent is assigned to it.
+        One customer can add multiple products to the cart.
+        The same products may be added to more than one cart.
+        When a customer checks out, the cart is used to generate an order entity, and a delivery agent is assigned to it.
         \item \textbf{\textit{Sells}:}
         \textbf{Supplier} \textit{sells} \textbf{Product}.
-        This many-to-many relationship is used to keep track of what products one supplier sells.
-        Each supplier can supply multiple products. The same product may be sold by different suppliers.
+        This one-to-many relationship is used to keep track of what products one supplier sells.
+        Each supplier can supply multiple products.
+        One product can be supplied by one supplier only.
         \item \textbf{\textit{Sold}:}
         \textbf{Supplier} has \textit{sold} \textbf{Product}.
-        This many-to-many relationship covers the products sold by a supplier and will be used to generate their sales statistics.
+        This one-to-many relationship covers the products sold by a supplier and will be used to generate their sales statistics.
         \item \textbf{\textit{Delivered}:}
         \textbf{Delivery Agent} has \textit{delivered} to \textbf{Customer}.
         This is a ternary relationship involving \textbf{Delivery Agent Review} as well.
@@ -151,15 +154,13 @@
         \textbf{Customer} has \textit{purchased} \textbf{Product}.
         This is a ternary relationship involving \textbf{Product Review} as well.
         There can be, at most, one (editable) review from one customer for a product.
-        \item \textbf{\textit{Describes}:}
-        \textbf{Description} \textit{describes} \textbf{Product}.
-        This is a one-to-one relationship.
         \item \textbf{\textit{Belongs To}:}
         \textbf{Wallet} \textit{belongs to} \textbf{Customer}.
         This is a one-to-one relationship.
         \item \textbf{\textit{Consists Of}:}
         \textbf{Order} \textit{consists} \textbf{Products}.
-        This is a one-to-many relationship, as one order may consist of multiple products. The product quantities are moved from the cart to the order on checkout.
+        This is a one-to-many relationship, as one order may consist of multiple products.
+        The product quantities are moved from the cart to the order on checkout.
         \item \textbf{\textit{Manages}:}
         \textbf{Admin} \textit{manages} the app.
         This relationship is used to hide entities like wallets from the admin's view.
@@ -290,12 +291,92 @@
     The Relational Model is designed in accordance with the assumptions and constraints as mentioned in the document above. \\
     \newline
     \textbf{Note:} The arrows represent that a field is \textit{derived} from another.
-    For example, \verb|productID| in \verb|description| will contain values of \verb|productID| from table \verb|product|.
+    For example, field \verb|customerID| in table \verb|wallet| will contain values of \verb|customerID| from table \verb|customer|.
     \pagebreak
     \vspace*{35pt}
     \begin{center}
         \hspace*{-40pt}
         \includegraphics[scale=0.8]{Assets/Relational-Model}
     \end{center}
+
+    \pagebreak
+
+    \deadline{3}{Implementing the Database Schema and Integrity Constraints, and Populating simulated data satisfying them}{February 10, 2023}
+
+    \section*{\Huge Assumptions \& Explanation}
+    \subsection*{Tables added or renamed:}
+    \begin{enumerate}
+        \item
+        Since \textbf{address} is a composite attribute, we store it in a separate table since we would rarely need to search for the address.
+        The search/join/union query efficiency would get affected if we store all the address data in the same stakeholder table.
+        \item
+        The \textbf{consists\_of} relationship table has been renamed to \textbf{order\_product} to make it more intuitive.
+        \item
+        Entity table \textbf{order} has been renamed to \textbf{orders} as \textbf{order} is a reserved keyword in MySQL.
+    \end{enumerate}
+
+    \subsection*{Composite Attributes:}
+    \begin{enumerate}
+        \item
+        Addresses of all stakeholders are stored in a single table with a unique \textbf{addressID} assigned to each address.
+        This \textbf{addressID} is then stored along with other stakeholder data in their tables.
+        \item
+        Added sub-attribute \textbf{country} to the \textbf{address} composite attribute.
+        \item
+        The \textbf{name} composite attribute is stored in the same table, since we might need to search for the names of the stakeholders.
+        Each sub-attribute is kept as a column (\textbf{first\_name}, \textbf{middle\_initial}, \textbf{last\_name}) in the table.
+    \end{enumerate}
+
+    \subsection*{Multi-Valued Attributes:}
+    \begin{enumerate}
+        \item
+        Since \textbf{phone\_number} is a multivalued attribute, we store it in a separate table, with the \textbf{phoneID} attribute from this table being stored in the \textbf{delivery\_agent} and \textbf{customer} tables.
+        This table does not have a primary key since each \textbf{phoneID} associates to one or more \textbf{num}'s (phone numbers).
+    \end{enumerate}
+
+    \subsection*{Derived Attributes:}
+    \begin{enumerate}
+        \item
+        Changed \textbf{ETA} and \textbf{delivered} (earlier \textbf{status}) to derived attributes.
+        \textbf{ETA} will be calculated as \textbf{order\_date} + 15 days when required, and \textbf{delivered} will be \verb|true| if \textbf{delivery\_date} is not null, else \verb|false|.
+        We will implement these constraints/relations outside the database, and hence these fields are not present in the tables.
+    \end{enumerate}
+    \pagebreak
+
+    \subsection*{Columns/Fields added, removed, or renamed:}
+    \begin{enumerate}
+        \item
+        All fields called \textbf{hashed\_password} have been renamed to \textbf{pwd} for simplicity.
+        \item
+        Added field \textbf{email} to \textbf{customer}, \textbf{supplier}, and \textbf{delivery\_agent} tables.
+        \item
+        Removed fields \textbf{reviewID} from the \textbf{product\_review} and \textbf{da\_review} tables, so as to decompose the ternary relationships \textbf{delivered} and \textbf{purchased}.
+        \item
+        Added \textbf{order\_date} and \textbf{delivery\_date} to the \textbf{order} table.
+    \end{enumerate}
+
+    \subsection*{Other Assumptions:}
+    \begin{enumerate}
+        \item
+        All primary keys are defined with the \verb|AUTO_INCREMENT| constraints so that we do not need to insert ID values ourselves, and duplicity errors on primary keys are avoided.
+        \item
+        The fields \textbf{description} in \textbf{product} and \textbf{review contents} are stored using \verb|TEXT| datatype in MySQL, which is not stored in the server memory and does not hamper query times.
+        \item
+        All attributes that can not have null values have been specified as \verb|NOT NULL|. Attributes like \textbf{last\_name}, \textbf{middle\_initial}, \textbf{content} in the \textbf{review} tables, and \textbf{delivery\_date} in the \textbf{orders} table can have null values.
+        \item
+        \textbf{Availability} of a delivery agent has been given a \verb|DEFAULT| value of true, ie, when a delivery agent is added to the database, he is available to deliver an order by default.
+        \item
+        \textbf{Balance} in a customer wallet, on account creation, has been given a \verb|DEFAULT| value of 0.
+        \item
+        \textbf{pwd}'s in all tables are stored as SHA1 hashes.
+    \end{enumerate}
+
+    \subsection*{Data Generation}
+    Most of the simulated data for the stakeholder and main entity tables was generated using \href{https://www.mockaroo.com}{\color{blue}\underline{https://www.mockaroo.com}}. \\
+    \newline
+    We utilised the (Ruby) code functionality to implement viable constraints on the data while data generation.
+    The data for each table was downloaded as a CSV-file.
+    We then used python scripts to generate the MySQL insertion queries and to populate relations.
+    Data for some tables (like \textbf{cart} and \textbf{orders}) was mainly done through python scripts so as to make sure the existential constraints were not violated.
 
 \end{document}
