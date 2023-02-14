@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS address (
     city VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
     zip INT NOT NULL,
-    country VARCHAR(255) NOT NULL,         -- added country
+    country VARCHAR(255) NOT NULL,
     PRIMARY KEY (addressID)
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS phone_number (
 CREATE TABLE IF NOT EXISTS admin (
     adminID INT NOT NULL AUTO_INCREMENT,
     username VARCHAR(255) UNIQUE NOT NULL,
-    pwd VARCHAR(255) NOT NULL,        -- renamed all fields called hashed_password to pwd
+    pwd VARCHAR(255) NOT NULL,
     PRIMARY KEY (adminID)
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS supplier (
     middle_initial VARCHAR(10),
     last_name VARCHAR(255),
     addressID INT NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,         -- added email
+    email VARCHAR(255) UNIQUE NOT NULL,
     pwd VARCHAR(255) NOT NULL,
     PRIMARY KEY (supplierID),
     FOREIGN KEY (addressID) REFERENCES address(addressID)
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS customer (
     addressID INT NOT NULL,
     age INT NOT NULL,
     phoneID INT UNIQUE NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,         -- added email
+    email VARCHAR(255) UNIQUE NOT NULL,
     pwd VARCHAR(255) NOT NULL,
     PRIMARY KEY (customerID),
     FOREIGN KEY (addressID) REFERENCES address(addressID)
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS delivery_agent (
     last_name VARCHAR(255),
     avalability BOOLEAN NOT NULL DEFAULT TRUE,
     phoneID INT UNIQUE NOT NULL,
-    email VARCHAR(255) NOT NULL,         -- added email
+    email VARCHAR(255) NOT NULL,
     pwd VARCHAR(255) NOT NULL,
     PRIMARY KEY (daID)
 );
@@ -71,27 +71,18 @@ CREATE TABLE IF NOT EXISTS product (
     name VARCHAR(255) NOT NULL,
     supplierID INT NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    quantity INT NOT NULL,               -- added quantity
-    PRIMARY KEY (productID, supplierID),
+    quantity INT NOT NULL,
+    product_description TEXT NOT NULL,
+    PRIMARY KEY (productID),
     FOREIGN KEY (supplierID) REFERENCES supplier(supplierID)
 );
 
-/* renamed description table to product_description and field description to content */
-CREATE TABLE IF NOT EXISTS product_description (
-    productID INT NOT NULL,
-    content TEXT NOT NULL,
-    PRIMARY KEY (productID),
-    FOREIGN KEY (productID) REFERENCES product(productID)
-);
-
-/* renamed order table to orders
-removed the column status (or delivered status) */
 CREATE TABLE IF NOT EXISTS orders (
     orderID INT NOT NULL AUTO_INCREMENT,
     customerID INT NOT NULL,
     daID INT NOT NULL,
-    order_date DATE NOT NULL,    -- added order_date
-    delivery_date DATE,          -- added delivery_date
+    order_date DATE NOT NULL,
+    delivery_date DATE,
     PRIMARY KEY (orderID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID),
     FOREIGN KEY (daID) REFERENCES delivery_agent(daID)
@@ -99,28 +90,24 @@ CREATE TABLE IF NOT EXISTS orders (
 
 CREATE TABLE IF NOT EXISTS wallet (
     customerID INT NOT NULL,
-    balance DECIMAL(10,2) NOT NULL,
+    balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     upiID VARCHAR(255) NOT NULL,
     PRIMARY KEY (customerID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID)
 );
 
--- removed reviewID
 CREATE TABLE IF NOT EXISTS product_review (
     customerID INT NOT NULL,
     productID INT NOT NULL,
-    supplierID INT NOT NULL,
     rating INT NOT NULL,
     content TEXT,
     review_date DATE NOT NULL,
     CHECK (rating >= 1 AND rating <= 5),
-    PRIMARY KEY (customerID, productID, supplierID),
+    PRIMARY KEY (customerID, productID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID),
-    FOREIGN KEY (productID) REFERENCES product(productID),
-    FOREIGN KEY (supplierID) REFERENCES product(supplierID)
+    FOREIGN KEY (productID) REFERENCES product(productID)
 );
 
--- removed reviewID
 CREATE TABLE IF NOT EXISTS da_review (
     customerID INT NOT NULL,
     daID INT NOT NULL,
@@ -138,34 +125,19 @@ CREATE TABLE IF NOT EXISTS da_review (
 CREATE TABLE IF NOT EXISTS cart (
     customerID INT NOT NULL,
     productID INT NOT NULL,
-    supplierID INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (customerID, productID, supplierID),
+    PRIMARY KEY (customerID, productID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID),
-    FOREIGN KEY (productID) REFERENCES product(productID),
-    FOREIGN KEY (supplierID) REFERENCES product(supplierID)
+    FOREIGN KEY (productID) REFERENCES product(productID)
 );
 
--- renamed "consists_of" relationship to "order_product"
 CREATE TABLE IF NOT EXISTS order_product (
     orderID INT NOT NULL,
     productID INT NOT NULL,
-    supplierID INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (orderID, productID, supplierID),
+    PRIMARY KEY (orderID, productID),
     FOREIGN KEY (orderID) REFERENCES orders(orderID),
-    FOREIGN KEY (productID) REFERENCES product(productID),
-    FOREIGN KEY (supplierID) REFERENCES product(supplierID)
-);
-
-CREATE TABLE IF NOT EXISTS sold (
-    supplierID INT NOT NULL,
-    productID INT NOT NULL,
-    quantity INT NOT NULL,
-    sale_date DATE NOT NULL,
-    PRIMARY KEY (productID, supplierID),
-    FOREIGN KEY (productID) REFERENCES product(productID),
-    FOREIGN KEY (supplierID) REFERENCES product(supplierID)
+    FOREIGN KEY (productID) REFERENCES product(productID)
 );
 
 -- INDICES
@@ -181,10 +153,9 @@ CREATE INDEX address_id ON address(addressID);
 CREATE INDEX product_name ON product(name);
 CREATE INDEX product_price ON product(price);
 CREATE INDEX product_review_rating ON product_review(rating);
-CREATE INDEX product_desc ON product_description(productID);
 CREATE INDEX product_review ON product_review(productID);
 CREATE INDEX da_review_rating ON da_review(rating);
 CREATE INDEX da_review ON da_review(daID);
 CREATE INDEX customer ON cart(customerID);
 CREATE INDEX order_num ON order_product(orderID);
-CREATE INDEX sale_stats ON sold(supplierID);
+CREATE INDEX sale_stats ON order_product(productID);

@@ -109,13 +109,13 @@
             They must create an account and log in to use the app.
             \item \textbf{Suppliers:}
             Suppliers are responsible for supplying products to the store.
-            Different suppliers are allowed to supply the same products to the store.
+            Different suppliers are not allowed to supply the same products to the store.
             \item \textbf{Delivery Agents:}
             A delivery agent will be assigned to each order.
             They will be responsible for delivering orders.
             \item \textbf{Products:}
             As the name suggests, these are the products supplied to the store by suppliers.
-            Products are weak entities since several sellers can sell the same product, ie, we can have several records for the same productID.
+            One product can only be supplied by one supplier.
             \item \textbf{Orders:}
             An order entity is used to keep track of the orders placed by different customers.
             Each order also has one associated delivery agent.
@@ -128,9 +128,6 @@
             \item \textbf{Wallet:}
             A wallet is a belonging of a customer that stores attributes like the current balance of the customer, their UPI-ID etc.
             Users' wallets are hidden from the admin's view. Wallets are weak entities since several people can be using the same UPI-ID, and we require the customerID to uniquely identify a wallet.
-            \item \textbf{Description:}
-            The description weak entity is used to store the description of different products.
-            This is used to avoid redundancy of data storage (in the case where multiple suppliers are selling the same products with the same descriptions).
         \end{enumerate}
 
     \subsubsection*{Relationships \& Cardinality Constraints}
@@ -138,15 +135,17 @@
     \begin{enumerate}
         \item \textbf{\textit{Cart}:}
         Cart is a relationship between \textbf{Customer} and \textbf{Product}.
-        One customer can add multiple products to the cart (and choose a specific supplier).
-        The same products may be added to more than one cart. When a customer checks out, the cart is used to generate an order entity, and a delivery agent is assigned to it.
+        One customer can add multiple products to the cart.
+        The same products may be added to more than one cart.
+        When a customer checks out, the cart is used to generate an order entity, and a delivery agent is assigned to it.
         \item \textbf{\textit{Sells}:}
         \textbf{Supplier} \textit{sells} \textbf{Product}.
-        This many-to-many relationship is used to keep track of what products one supplier sells.
-        Each supplier can supply multiple products. The same product may be sold by different suppliers.
+        This one-to-many relationship is used to keep track of what products one supplier sells.
+        Each supplier can supply multiple products.
+        One product can be supplied by one supplier only.
         \item \textbf{\textit{Sold}:}
         \textbf{Supplier} has \textit{sold} \textbf{Product}.
-        This many-to-many relationship covers the products sold by a supplier and will be used to generate their sales statistics.
+        This one-to-many relationship covers the products sold by a supplier and will be used to generate their sales statistics.
         \item \textbf{\textit{Delivered}:}
         \textbf{Delivery Agent} has \textit{delivered} to \textbf{Customer}.
         This is a ternary relationship involving \textbf{Delivery Agent Review} as well.
@@ -155,15 +154,13 @@
         \textbf{Customer} has \textit{purchased} \textbf{Product}.
         This is a ternary relationship involving \textbf{Product Review} as well.
         There can be, at most, one (editable) review from one customer for a product.
-        \item \textbf{\textit{Describes}:}
-        \textbf{Description} \textit{describes} \textbf{Product}.
-        This is a one-to-one relationship.
         \item \textbf{\textit{Belongs To}:}
         \textbf{Wallet} \textit{belongs to} \textbf{Customer}.
         This is a one-to-one relationship.
         \item \textbf{\textit{Consists Of}:}
         \textbf{Order} \textit{consists} \textbf{Products}.
-        This is a one-to-many relationship, as one order may consist of multiple products. The product quantities are moved from the cart to the order on checkout.
+        This is a one-to-many relationship, as one order may consist of multiple products.
+        The product quantities are moved from the cart to the order on checkout.
         \item \textbf{\textit{Manages}:}
         \textbf{Admin} \textit{manages} the app.
         This relationship is used to hide entities like wallets from the admin's view.
@@ -294,7 +291,7 @@
     The Relational Model is designed in accordance with the assumptions and constraints as mentioned in the document above. \\
     \newline
     \textbf{Note:} The arrows represent that a field is \textit{derived} from another.
-    For example, \verb|productID| in \verb|description| will contain values of \verb|productID| from table \verb|product|.
+    For example, field \verb|customerID| in table \verb|wallet| will contain values of \verb|customerID| from table \verb|customer|.
     \pagebreak
     \vspace*{35pt}
     \begin{center}
@@ -315,10 +312,7 @@
         \item
         The \textbf{consists\_of} relationship table has been renamed to \textbf{order\_product} to make it more intuitive.
         \item
-        Entity table \textbf{description} has been renamed to \textbf{product\_description}, since \verb|description| is a reserved keyword in MySQL.
-        Its field \textbf{description} has also been renamed to \textbf{content} for the same reason.
-        \item
-        Entity table \textbf{order} has also been renamed to \textbf{orders} for the same reason.
+        Entity table \textbf{order} has been renamed to \textbf{orders} as \textbf{order} is a reserved keyword in MySQL.
     \end{enumerate}
 
     \subsection*{Composite Attributes:}
@@ -356,8 +350,6 @@
         \item
         Added field \textbf{email} to \textbf{customer}, \textbf{supplier}, and \textbf{delivery\_agent} tables.
         \item
-        Added field \textbf{quantity} to table \textbf{product}.
-        \item
         Removed fields \textbf{reviewID} from the \textbf{product\_review} and \textbf{da\_review} tables, so as to decompose the ternary relationships \textbf{delivered} and \textbf{purchased}.
         \item
         Added \textbf{order\_date} and \textbf{delivery\_date} to the \textbf{order} table.
@@ -368,7 +360,7 @@
         \item
         All primary keys are defined with the \verb|AUTO_INCREMENT| constraints so that we do not need to insert ID values ourselves, and duplicity errors on primary keys are avoided.
         \item
-        \textbf{Product descriptions} and \textbf{review contents} are being stored using \verb|TEXT| datatype in MySQL, which is not stored in the server memory and does not hamper query times.
+        The fields \textbf{description} in \textbf{product} and \textbf{review contents} are stored using \verb|TEXT| datatype in MySQL, which is not stored in the server memory and does not hamper query times.
         \item
         All attributes that can not have null values have been specified as \verb|NOT NULL|. Attributes like \textbf{last\_name}, \textbf{middle\_initial}, \textbf{content} in the \textbf{review} tables, and \textbf{delivery\_date} in the \textbf{orders} table can have null values.
         \item
