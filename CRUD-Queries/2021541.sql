@@ -20,14 +20,8 @@ UPDATE delivery_agent SET avalability = 0 WHERE daID = 1;
 
 
 
--- READ
 
--- show all suppliers who have the average rating of their products above (or equal to 4);
--- SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS Name, avg(rating) FROM supplier s, product_review 
---     WHERE s.supplierID = (SELECT supplierID FROM product WHERE product_review.productID = product.productID AND product.supplierID=s.supplierID)
---     AND NOT EXISTS ((SELECT avg(rating) FROM product_review, product WHERE product_review.productID = product.productID AND product.supplierID = s.supplierID) EXCEPT (SELECT avg(rating) FROM product_review GROUP BY productID HAVING avg(rating) >= 4))
---     GROUP BY s.supplierID;
--- this is incorrect ^^
+-- READ
 
 
 -- show all suppliers who have all their products with rating above (or equal to) 4;
@@ -52,18 +46,8 @@ GROUP BY p.productID HAVING AVG(pr.rating) >= 3.5
 ORDER BY AVG(pr.rating) DESC;
 
 -- show the top 10 delivery agents with the highest average rating;
-SELECT da.daID, CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name AVG(dr.rating) FROM da_review dr, delivery_agent da WHERE da.daID = dr.daID GROUP BY da.daID ORDER BY AVG(dr.rating) DESC LIMIT 10;
-
-
--- select top 15 customers who have spent the most money on products;
-SELECT customer.customerID, COUNT(orders.orderID) as 'Total Orders', SUM(product.price * order_product.quantity) as 'Total Spent'
-FROM customer
-INNER JOIN orders ON customer.customerID = orders.customerID
-INNER JOIN order_product ON orders.orderID = order_product.orderID
-INNER JOIN product ON order_product.productID = product.productID
-GROUP BY customer.customerID
-ORDER BY SUM(product.price * order_product.quantity) DESC
-LIMIT 15;
+SELECT da.daID, CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name AVG(dr.rating)
+FROM da_review dr, delivery_agent da WHERE da.daID = dr.daID GROUP BY da.daID ORDER BY AVG(dr.rating) DESC LIMIT 10;
 
 
 -- show the entire record of a customer with customerID = 25;
@@ -83,15 +67,36 @@ AND customer.customerID = 25;
 
 
 -- show the orders of a delivery agent where delivery_date is null;
-SELECT orderID, customerID, daID, order_date, DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), "%Y-%m-%d") AS ETA FROM orders WHERE daID = 1 AND delivery_date IS NULL;
+SELECT orderID, customerID, daID, order_date, DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), "%Y-%m-%d") AS ETA
+FROM orders WHERE daID = 1 AND delivery_date IS NULL;
 
+
+
+
+
+-- select top 15 customers who have spent the most money on products;
+SELECT customer.customerID, COUNT(orders.orderID) as 'Total Orders', SUM(product.price * order_product.quantity) as 'Total Spent'
+FROM customer
+INNER JOIN orders ON customer.customerID = orders.customerID
+INNER JOIN order_product ON orders.orderID = order_product.orderID
+INNER JOIN product ON order_product.productID = product.productID
+GROUP BY customer.customerID
+ORDER BY SUM(product.price * order_product.quantity) DESC
+LIMIT 15;
 
 -- show the order history of a customer with customerID = 1;
-SELECT orders.orderID, op.productID, product.name, op.quantity, daID, order_date, delivery_date
-FROM (orders INNER JOIN order_product AS op ON op.orderID=orders.orderID)
-INNER JOIN product ON op.productID=product.productID
-WHERE customerID = 1 AND delivery_date IS NOT NULL;
-
+SELECT
+    orders.orderID, orders.order_date, orders.delivery_date, product.name, order_product.quantity, product.price,
+    (order_product.quantity * product.price) AS total_price,
+    CASE
+        WHEN (orders.delivery_date IS NULL) = 'True' THEN 'Delivered'
+        ELSE 'Not Delivered'
+    END AS delivered
+FROM orders
+INNER JOIN order_product ON orders.orderID = order_product.orderID
+INNER JOIN product ON order_product.productID = product.productID
+WHERE orders.customerID = 1
+ORDER BY orders.order_date;
 
 
 -- show the total price of an order with orderID = 1;
@@ -108,6 +113,22 @@ INNER JOIN customer ON orders.customerID = customer.customerID
 WHERE customer.customerID = 1 AND orders.delivery_date IS NULL
 ORDER BY order_date;
 
+
+-- show the total revenue and total quantity sold per product of that supplier
+SELECT product.name, SUM(order_product.quantity) AS total_quantity_sold, SUM(order_product.quantity * product.price) AS total_revenue
+FROM product
+INNER JOIN order_product ON product.productID = order_product.productID
+INNER JOIN orders ON order_product.orderID = orders.orderID
+WHERE product.supplierID = 1
+GROUP BY product.name;
+
+
+-- search for the names of products using pattern matching
+SELECT name, AVG(rating)
+FROM product
+JOIN product_review ON product.productID = product_review.productID
+WHERE name LIKE 'LED %'
+GROUP BY name;
 
 
 
@@ -131,26 +152,16 @@ WHERE addressID = (SELECT addressID FROM customer WHERE customerID = 1);
 UPDATE product SET quantity = quantity + 100 WHERE productID = 1;
 
 
+
+
+
+
+
 -- DELETE
 
 -- delete the product with productID = 5
 DELETE FROM product WHERE productID = 5;
 
--- delete products that have average rating below 2 and more than 2 reviews
-DELETE FROM product
-WHERE productID IN (
-    SELECT pID FROM (
-        SELECT p.productID AS pID FROM product_review pr, product p
-        WHERE p.productID = pr.productID
-        AND NOT EXISTS (
-            SELECT c.productID FROM cart AS c
-            WHERE p.productID = c.productID
-        )
-        GROUP BY p.productID
-        HAVING AVG(pr.rating) < 2 AND COUNT(pr.rating) > 2
-    ) AS t    
-);
 
-
--- auxiliary query for checking deletion
-SELECT productID, avg(rating), count(rating) FROM product_review GROUP BY productID HAVING avg(rating) < 2 AND count(rating) > 2;
+-- delete a product from the cart
+DELETE FROM cart WHERE productID = 14 AND customerID = 99;
