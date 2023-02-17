@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS customer (
     phoneID INT UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     pwd VARCHAR(255) NOT NULL,
+    CHECK (age >= 18 AND age <= 120),
     PRIMARY KEY (customerID),
     FOREIGN KEY (addressID) REFERENCES address(addressID)
 );
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS delivery_agent (
     last_name VARCHAR(255),
     avalability BOOLEAN NOT NULL DEFAULT TRUE,
     phoneID INT UNIQUE NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     pwd VARCHAR(255) NOT NULL,
     PRIMARY KEY (daID)
 );
@@ -70,9 +71,11 @@ CREATE TABLE IF NOT EXISTS product (
     productID INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     supplierID INT NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
     quantity INT NOT NULL,
     product_description TEXT NOT NULL,
+    CHECK (price > 0.00),
+    CHECK (quantity >= 0),
     PRIMARY KEY (productID),
     FOREIGN KEY (supplierID) REFERENCES supplier(supplierID)
 );
@@ -83,6 +86,7 @@ CREATE TABLE IF NOT EXISTS orders (
     daID INT NOT NULL,
     order_date DATE NOT NULL,
     delivery_date DATE,
+    CHECK (delivery_date >= order_date),
     PRIMARY KEY (orderID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID),
     FOREIGN KEY (daID) REFERENCES delivery_agent(daID)
@@ -92,6 +96,7 @@ CREATE TABLE IF NOT EXISTS wallet (
     customerID INT NOT NULL,
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     upiID VARCHAR(255) NOT NULL,
+    CHECK (balance >= 0.00),
     PRIMARY KEY (customerID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID)
 );
@@ -126,6 +131,7 @@ CREATE TABLE IF NOT EXISTS cart (
     customerID INT NOT NULL,
     productID INT NOT NULL,
     quantity INT NOT NULL,
+    CHECK (quantity >= 1),
     PRIMARY KEY (customerID, productID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID),
     FOREIGN KEY (productID) REFERENCES product(productID)
@@ -135,6 +141,7 @@ CREATE TABLE IF NOT EXISTS order_product (
     orderID INT NOT NULL,
     productID INT NOT NULL,
     quantity INT NOT NULL,
+    CHECK (quantity >= 1),
     PRIMARY KEY (orderID, productID),
     FOREIGN KEY (orderID) REFERENCES orders(orderID),
     FOREIGN KEY (productID) REFERENCES product(productID)
