@@ -1,0 +1,10 @@
+This query lists the suppliers who do not sell any products.
+
+\begin{lstlisting}
+SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name
+FROM supplier s
+WHERE NOT EXISTS (
+    SELECT * FROM product p
+    WHERE p.supplierID = s.supplierID
+);
+\end{lstlisting}

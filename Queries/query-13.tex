@@ -1,0 +1,9 @@
+This query is used to search through the product catalogue for names of the products using pattern matching.
+
+\begin{lstlisting}
+SELECT name, AVG(rating)
+FROM product
+JOIN product_review ON product.productID = product_review.productID
+WHERE name LIKE 'LED %'
+GROUP BY name;
+\end{lstlisting}
