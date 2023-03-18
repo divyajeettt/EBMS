@@ -1,0 +1,15 @@
+This query is used to view the order history of a customer.
+
+\begin{lstlisting}
+SELECT orders.orderID, orders.order_date, orders.delivery_date, product.name, order_product.quantity, product.price,
+    (order_product.quantity * product.price) AS total_price,
+    CASE
+        WHEN (orders.delivery_date IS NULL) = True THEN 'Not Delivered'
+        ELSE 'Delivered'
+    END AS delivered
+FROM orders
+INNER JOIN order_product ON orders.orderID = order_product.orderID
+INNER JOIN product ON order_product.productID = product.productID
+WHERE orders.customerID = 1
+ORDER BY orders.order_date;
+\end{lstlisting}
