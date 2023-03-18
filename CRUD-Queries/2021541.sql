@@ -3,18 +3,33 @@
 -- insert a new phone number for customer=1;
 INSERT INTO phone_number VALUES
 ((SELECT phoneID FROM customer WHERE customerID = 1), '1234567890');
+-- auxiliary query for checking insertion
+SELECT * FROM phone_number WHERE phoneID = (SELECT phoneID FROM customer WHERE customerID = 1);
 
 
 -- add a product to the cart of a customer with customerID = 50;
 INSERT INTO cart (customerID, productID, quantity) VALUES (50, 1, 1);
+-- auxiliary query for checking insertion
+SELECT * FROM cart WHERE customerID=50;
+
 
 -- when an order is placed, the product should be removed from the cart, and the quantity should be reduced from the product table;
-INSERT INTO order (orderID, customerID, daID, order_date) VALUES (1, 1, 1, '2021-04-01');
-INSERT INTO order_product (orderID, productID, quantity) VALUES (1, 1, 1);
-UPDATE product SET quantity = quantity - 1 WHERE productID = 1;
-DELETE FROM cart WHERE productID = 1 AND customerID = 1;
+INSERT INTO orders (customerID, daID, order_date) VALUES (1, 1, '2021-04-01');
+INSERT INTO order_product (orderID, productID, quantity) 
+    SELECT MAX(o.orderID), c.productID, c.quantity
+    FROM orders AS o INNER JOIN cart AS c ON o.customerID=c.customerID
+    WHERE o.customerID = 1
+    GROUP BY c.productID;
+-- reduce the quantity of the product in the product table by the quantity in the cart, products will be iterated through programatically;
+UPDATE product p SET quantity = quantity - 15 WHERE productID=82;
+DELETE FROM cart WHERE customerID = 1;
 UPDATE delivery_agent SET avalability = 0 WHERE daID = 1;
--- will have to run and check ^^
+-- auxiliary query for checking order placement
+SELECT * FROM orders WHERE customerID=1;
+SELECT * FROM order_product WHERE orderID=1001;
+SELECT * FROM product WHERE productID=82;
+SELECT * FROM cart WHERE customerID=1;
+SELECT * FROM delivery_agent WHERE daID=1;
 
 
 
@@ -45,9 +60,9 @@ WHERE p.productID = pr.productID
 GROUP BY p.productID HAVING AVG(pr.rating) >= 3.5
 ORDER BY AVG(pr.rating) DESC;
 
--- show the top 10 delivery agents with the highest average rating;
-SELECT da.daID, CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name AVG(dr.rating)
-FROM da_review dr, delivery_agent da WHERE da.daID = dr.daID GROUP BY da.daID ORDER BY AVG(dr.rating) DESC LIMIT 10;
+-- show the top 40 delivery agents with the highest average rating;
+SELECT da.daID, CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name, AVG(dr.rating)
+FROM da_review dr, delivery_agent da WHERE da.daID = dr.daID GROUP BY da.daID ORDER BY AVG(dr.rating) DESC LIMIT 40;
 
 
 -- show the entire record of a customer with customerID = 25;
@@ -156,12 +171,7 @@ UPDATE product SET quantity = quantity + 100 WHERE productID = 1;
 
 
 
-
 -- DELETE
-
--- delete the product with productID = 5
-DELETE FROM product WHERE productID = 5;
-
 
 -- delete a product from the cart
 DELETE FROM cart WHERE productID = 14 AND customerID = 99;
