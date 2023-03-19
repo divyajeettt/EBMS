@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}Home{% endblock %}
+</title>
+
+<body>
+    {% block main %}
+        <h1>Welcome to ebms!</h1>
+        <p>This is the home page.</p>
+
+
+
+    <!-- show the results of products in a table -->
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+        {% for product in rows %}
+        <tr>
+            <td>{{ product[1] }}</td>
+            <td>{{ product[3] }}</td>
+            <td>{{ product[2] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endblock %}
+</body>
