@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/register" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="re-password" placeholder="Password (again)" type="password">
+        </div>
+        <p style="font-size : 16px">The password <b>must</b> contain at least one special character, one capital letter and one digit, and should be at least 8 characters long<br><b>Spaces are not allowed.</b></p>
+        <div>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </div>
+
+        <br>
+        Already have an account? <a href="/login">Login</a>
+    </form>
+{% endblock %}
