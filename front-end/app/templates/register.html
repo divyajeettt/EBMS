@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block main %}
+    <h1><b>Register as a new User</b></h1>
+    <br>
+    {% if error %}
+        <p class="error">{{ error }}</p><br>
+    {% endif %}
     <form action="/register" method="post">
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
@@ -22,14 +27,26 @@
         </div>
         <img src="{{ url_for('static', filename='img/i-button.png') }}" alt="i-button" height="16px" width="16px"> -->
         <div class="form-group">
-            <input class="form-control" name="re-password" placeholder="Password (again)" type="password">
+            <input class="form-control" name="re-password" placeholder="Confirm Password" type="password">
         </div>
-        <p style="font-size : 16px">The password <b>must</b> contain at least one special character, one capital letter and one digit, and should be at least 8 characters long<br><b>Spaces are not allowed.</b></p>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault1" value="customer" checked>
+            <label class="form-check-label" for="flexRadioDefault1">
+                Customer &nbsp; &nbsp; &nbsp;
+            </label>
+            <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault2" value="supplier" >
+            <label class="form-check-label" for="flexRadioDefault2">
+                Supplier
+            </label>
+        </div>
+        <!-- <p style="font-size : 16px">The password <b>must</b> contain at least one special character, one capital letter and one digit, and should be at least 8 characters long<br><b>Spaces are not allowed.</b></p> -->
+        <br>
         <div>
             <button class="btn btn-primary" type="submit">Register</button>
         </div>
 
-        <br>
+        <br><br>
         Already have an account? <a href="/login">Login</a>
     </form>
+
 {% endblock %}
