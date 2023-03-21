@@ -1,30 +1,42 @@
 {% extends 'base.html' %}
 
-<title>
-    {% block title %}Home{% endblock %}
-</title>
+<head>
+    <title>
+        {% block title %}Home{% endblock %}
+    </title>
+</head>
 
 <body>
     {% block main %}
-        <h1>Welcome to ebms!</h1>
-        <p>This is the home page.</p>
+    <h1><b>Product Catalogue</b></h1>
 
-
+    <div>
+        <form id="form" role="search" action="{{ url_for('search') }}" method="GET">
+            <input type="text" id="query" name="q" placeholder="Search..." size="122" aria-label="Search through site content">
+            <button type="submit">
+                <img src="https://cdn-icons-png.flaticon.com/512/3917/3917754.png" alt="Search" width="25" height="25">
+            </button>
+        </form>
+    </div>
 
     <!-- show the results of products in a table -->
+    {% if rows == [] %}
+    <p>No results found</p>
+    {% else %}
     <table>
         <tr>
             <th>Product</th>
             <th>Price</th>
-            <th>Quantity</th>
+            <th>In Stock</th>
         </tr>
         {% for product in rows %}
         <tr>
             <td>{{ product[1] }}</td>
             <td>{{ product[3] }}</td>
-            <td>{{ product[2] }}</td>
+            <td>{{ "Yes" if product[2] > 0 else "No" }}</td>
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
     {% endblock %}
 </body>

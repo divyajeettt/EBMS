@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from dotenv import load_dotenv
@@ -42,33 +43,29 @@ Session(app)
 
 # Set up database connection
 cnx = mysql.connector.connect(
-                                user=os.getenv('DATABASE_USER'),
-                                host='localhost',
-                                password=os.getenv('DATABASE_PASSWORD'),
-                                database=os.getenv('DATABASE_NAME')
-                             )
+    user=os.getenv("DATABASE_USERNAME"),
+    host="localhost",
+    password=os.getenv("DATABASE_PASSWORD"),
+    database=os.getenv("DATABASE_NAME")
+)
 
 
-
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('home.html')
+    return render_template("home.html")
 
-# @app.route('/search', methods=['GET', 'POST'])
-@app.route('/search')
+
+@app.route("/search")
 def search():
-    # if request.method == 'POST':
-    #     search = request.form['search']
-    #     cursor = cnx.cursor()
-    #     cursor.execute("SELECT * FROM EBMS WHERE name LIKE %s", (search,))
-    #     results = cursor.fetchall()
-    #     return render_template('home.html', rows=results)
-    # return render_template('home.html')
-
     cursor = cnx.cursor()
 
+    search = request.args.get("q")
+    if search is None:
+        query = "SELECT * FROM product"
+    else:
+        query = f"SELECT * FROM product WHERE name LIKE '%{search}%'"
+
     # Execute a query
-    query = 'SELECT * FROM product'
     cursor.execute(query)
 
     # Fetch the results
@@ -171,4 +168,3 @@ def register():
     else:
         return render_template('register.html')
 
-       
