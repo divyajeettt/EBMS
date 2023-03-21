@@ -9,9 +9,18 @@
         <div class="form-group">
             <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
         </div>
+
+        <!-- code to have the i-button directly next to the password field -->
         <div class="form-group">
+            <img src="{{ url_for('static', filename='img/i-button.png') }}" alt="i-button" height="24px" width="24px" class="image-clear">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+            <img src="{{ url_for('static', filename='img/i-button.png') }}" alt="i-button" height="24px" width="24px" title="The password must contain at least one special character, one capital letter and one digit, and should be at least 8 characters long. Spaces are not allowed.">
+        </div>
+
+        <!-- <div class="form-group">
             <input class="form-control" name="password" placeholder="Password" type="password">
         </div>
+        <img src="{{ url_for('static', filename='img/i-button.png') }}" alt="i-button" height="16px" width="16px"> -->
         <div class="form-group">
             <input class="form-control" name="re-password" placeholder="Password (again)" type="password">
         </div>
