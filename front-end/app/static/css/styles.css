@@ -45,3 +45,10 @@ main img
     /* constrain images on small screens */
     max-width: 100%;
 }
+
+
+.image-clear
+{
+    /* make images opaque */
+    opacity: 0;
+}
