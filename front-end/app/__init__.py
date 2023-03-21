@@ -38,7 +38,7 @@ Session(app)
 
 
 
-
+# print(os.environ)
 
 
 # Set up database connection
@@ -81,6 +81,7 @@ def search():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # TODO check if the user is a customer or supplier
     session.clear()
 
     if request.method == 'POST':
@@ -90,17 +91,27 @@ def login():
         elif not request.form.get('password'):
             return render_template('login.html', error='Please enter your password')
         
-        cursor = cnx.cursor()
-        cursor.execute("SELECT * FROM users WHERE username = %s", (request.form.get('username'),))
+        cursor = cnx.cursor(dictionary=True)
+        if request.form['LoginRadio'] == 'customer':
+            cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('username'),))
+        elif request.form['LoginRadio'] == 'supplier':
+            cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('username'),))
         user = cursor.fetchone()
         cursor.close()
 
         if user is None:
             return render_template('login.html', error='Invalid username')
-        elif not check_password_hash(user[2], request.form.get('password')):
+        elif not check_password_hash(user['pwd'], request.form.get('password')):
             return render_template('login.html', error='Invalid password')
         
-        session['user_id'] = user[0]
+        
+        if request.form['LoginRadio'] == 'customer':
+            session['user_id'] = user['customerID']
+            session['user_type'] = 'customer'
+        elif request.form['LoginRadio'] == 'supplier':
+            session['user_id'] = user['supplierID']
+            session['user_type'] = 'supplier'
+        session['username'] = user['email']
         return redirect('/')
 
     else:
@@ -110,23 +121,32 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    # TODO check if the user is a customer or supplier
     session.clear()
 
     if request.method == 'POST':
+        
         if not request.form.get('username'):
             return render_template('register.html', error='Please enter your username')
         
         elif not request.form.get('password'):
             return render_template('register.html', error='Please enter your password')
         
-        elif not request.form.get('confirmation'):
+        elif not request.form.get('re-password'):
             return render_template('register.html', error='Please confirm your password')
         
-        elif request.form.get('password') != request.form.get('confirmation'):
+        elif request.form.get('password') != request.form.get('re-password'):
             return render_template('register.html', error='Passwords do not match')
         
+        utype = request.form['RegisterRadio']
+        
+
         cursor = cnx.cursor()
-        cursor.execute("SELECT * FROM users WHERE username = %s", (request.form.get('username'),))
+        if utype == 'customer':
+            cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('username'),))
+        elif utype == 'supplier':
+            cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('username'),))
+
         user = cursor.fetchone()
         cursor.close()
 
@@ -155,16 +175,67 @@ def register():
                 break
         else:
             return render_template('register.html', error="password doesn't meet the requirements")
-        cursor = cnx.cursor()
-        cursor.execute("INSERT INTO users (username, hash) VALUES (%s, %s)", (request.form.get('username'), password))
+        
+        cursor = cnx.cursor(dictionary=True)
+        if utype == 'customer':
+            cursor.execute("INSERT INTO customer (email, pwd) VALUES (%s, %s)", (request.form.get('username'), password))
+        elif utype == 'supplier':
+            cursor.execute("INSERT INTO supplier (email, pwd) VALUES (%s, %s)", (request.form.get('username'), password))
+
         cnx.commit()
 
-        cursor.execute("SELECT * FROM users WHERE username = %s", (request.form.get('username'),))
-        user = cursor.fetchone()
+        if utype == 'customer':
+            cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('username'),))
+            user = cursor.fetchone()
 
-        session['user_id'] = user[0]
+            session['user_id'] = user['customerID']
+            session['user_type'] = 'customer'
+            session['user_email'] = user['email']
+        elif utype == 'supplier':
+            cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('username'),))
+            user = cursor.fetchone()
+
+            session['user_id'] = user['supplierID']
+            session['user_type'] = 'supplier'
+            session['user_email'] = user['email']
+        cursor.close()
+
         return redirect('/')
 
     else:
         return render_template('register.html')
 
+
+
+@app.route('/adminlogin', methods=['GET', 'POST'])
+def adminlogin():
+    session.clear()
+
+    if request.method == 'POST':
+        if not request.form.get('username'):
+            return render_template('adminlogin.html', error='Please enter your username')
+        elif not request.form.get('password'):
+            return render_template('adminlogin.html', error='Please enter your password')
+        
+        cursor = cnx.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM admin WHERE username = %s", (request.form.get('username'),))
+        user = cursor.fetchone()
+        cursor.close()
+
+        if user is None:
+            return render_template('adminlogin.html', error='Invalid username')
+        # TODO add a check_password_hash function here
+        elif user['pwd'] != request.form.get('password'):
+            return render_template('adminlogin.html', error='Invalid password')
+        
+        print(user['adminID'])
+        session['user_id'] = user['adminID']
+        return redirect('/admin')
+    
+    else:
+        return render_template('adminlogin.html')
+    
+
+@app.route('/admin', methods=['GET'])
+def admin():
+    return render_template('admin.html')

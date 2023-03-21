@@ -68,20 +68,25 @@
             <ul class="navbar-nav ml-auto mt-2">
                 <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
                 <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
+                {% if session['user'] %}
                 <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                {% else %}
                 <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
         
-    <header>
+    <!-- <header>
         <img src="{{ url_for('static', filename='img/favicon.ico') }}" alt="Logo">
-    </header>
+    </header> -->
     <main class="container p-5">
         {% block main %}{% endblock %}
     </main>
     <footer class="small text-center text-muted">
-        &copy; 2023 by ebms.
+        &copy; 2023 by ebms. Login as <a href="/adminlogin">admin</a> to access admin features.
+        <br>
+        &nbsp;
     </footer>
     <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
 </body>

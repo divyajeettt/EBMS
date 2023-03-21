@@ -52,3 +52,17 @@ main img
     /* make images opaque */
     opacity: 0;
 }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+  
+footer {
+    margin-top: auto;
+}
+
+.error {
+    color: red;
+}
