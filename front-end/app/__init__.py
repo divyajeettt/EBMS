@@ -228,8 +228,10 @@ def adminlogin():
         elif user['pwd'] != request.form.get('password'):
             return render_template('adminlogin.html', error='Invalid password')
         
-        print(user['adminID'])
+        # print(user['adminID'])
         session['user_id'] = user['adminID']
+        session['user_type'] = 'admin'
+        session['username'] = user['username']
         return redirect('/admin')
     
     else:
@@ -239,3 +241,15 @@ def adminlogin():
 @app.route('/admin', methods=['GET'])
 def admin():
     return render_template('admin.html')
+
+
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")

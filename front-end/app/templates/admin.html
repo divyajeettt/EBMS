@@ -6,7 +6,7 @@
 
 <body>
     {% block main %}
-        <h1>Welcome to ebms, Admin!</h1>
+        <h1>Welcome to ebms, {{session['username']}}!</h1>
         <p>This is your home page.</p>
     {% endblock %}
 </body>

@@ -5,31 +5,67 @@
 {% endblock %}
 
 {% block main %}
-    <h1><b>Register as a new User</b></h1>
+    <h1 style="text-align: left;"><b>Register as a new User</b></h1>
     <br>
     {% if error %}
-        <p class="error">{{ error }}</p><br>
+        <div class="alert alert-danger" role="alert">{{ error }}</div><br>
     {% endif %}
+    
     <form action="/register" method="post">
-        <div class="form-group">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+        <div class="form-row">
+            <div class="form-group col-md-5" style="text-align: left; font-weight: bold;">
+                <label for="inputFirstName">First Name <span style="color: red">*</span></label>
+                <input type="text" class="form-control" id="inputFirstName" placeholder="John" style="width: 100%;">
+            </div>
+            <div class="form-group col-md-2" style="text-align: left; font-weight: bold;">
+                <label for="inputMiddleInitial">Middle Initial</label>
+                <input type="text" class="form-control" id="inputMiddleInitial" placeholder="E" style="width: 100%;">
+            </div>
+            <div class="form-group col-md-5" style="text-align: left; font-weight: bold;">
+                <label for="inputLastName">Last Name</label>
+                <input type="text" class="form-control" id="inputLastName" placeholder="Doe" style="width: 100%;">
+            </div>
         </div>
-
-        <!-- code to have the i-button directly next to the password field -->
-        <div class="form-group">
-            <img src="{{ url_for('static', filename='img/i-button.png') }}" alt="i-button" height="24px" width="24px" class="image-clear">
-            <input class="form-control" name="password" placeholder="Password" type="password">
-            <img src="{{ url_for('static', filename='img/i-button.png') }}" alt="i-button" height="24px" width="24px" title="The password must contain at least one special character, one capital letter and one digit, and should be at least 8 characters long. Spaces are not allowed.">
+        <div class="form-row">
+          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputEmail4">Email <span style="color: red">*</span></label>
+            <input type="email" class="form-control" id="inputEmail4" placeholder="john@example.com" style="width: 100%;">
+          </div>
+          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputPassword4">Password <span style="color: red">*</span></label> <img src="{{ url_for('static', filename='img/info-circle.svg') }}" alt="i-button" height="16px" width="16px"title="The password must contain at least one special character, one capital letter and one digit, and should be at least 8 characters long. Spaces are not allowed.">
+            <input type="password" class="form-control" id="inputPassword4" placeholder="Password" style="width: 100%;">
+          </div>
+          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputPassword4">Confirm Password <span style="color: red">*</span></label>
+            <input type="password" class="form-control" id="inputPassword4" placeholder="Password" style="width: 100%;">
+          </div>
         </div>
-
-        <!-- <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
+        <div class="form-group" style="text-align: left; font-weight: bold;">
+          <label for="inputAddress">Address (Street Name) <span style="color: red">*</span></label>
+          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" style="width: 100%;">
         </div>
-        <img src="{{ url_for('static', filename='img/i-button.png') }}" alt="i-button" height="16px" width="16px"> -->
-        <div class="form-group">
-            <input class="form-control" name="re-password" placeholder="Confirm Password" type="password">
+        <div class="form-group" style="text-align: left; font-weight: bold;">
+          <label for="inputAddress2">Address 2 <span style="color: red">*</span></label>
+          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" style="width: 100%;">
         </div>
-        <div class="form-check">
+        <div class="form-row">
+          <div class="form-group col-md-6" style="text-align: left; font-weight: bold;">
+            <label for="inputCity">City <span style="color: red">*</span></label>
+            <input type="text" class="form-control" id="inputCity" style="width: 100%;">
+          </div>
+          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputState">State <span style="color: red">*</span></label>
+            <select id="inputState" class="form-control" style="width: 100%;">
+              <option selected>Choose...</option>
+              <option>...</option>
+            </select>
+          </div>
+          <div class="form-group col-md-2" style="text-align: left; font-weight: bold;">
+            <label for="inputZip">Zip <span style="color: red">*</span></label>
+            <input type="text" class="form-control" id="inputZip" style="width: 100%;">
+          </div>
+        </div>
+        <div class="form-check" style="text-align: left; font-weight: bold;">
             <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault1" value="customer" checked>
             <label class="form-check-label" for="flexRadioDefault1">
                 Customer &nbsp; &nbsp; &nbsp;
@@ -39,14 +75,24 @@
                 Supplier
             </label>
         </div>
-        <!-- <p style="font-size : 16px">The password <b>must</b> contain at least one special character, one capital letter and one digit, and should be at least 8 characters long<br><b>Spaces are not allowed.</b></p> -->
+        <!-- <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck">
+            <label class="form-check-label" for="gridCheck">
+              Check me out
+            </label>
+          </div>
+        </div> -->
         <br>
         <div>
-            <button class="btn btn-primary" type="submit">Register</button>
+            <button type="submit" class="button"><span>Register</span></button>
         </div>
-
+        
         <br><br>
         Already have an account? <a href="/login">Login</a>
-    </form>
+      </form>
+
+
+    
 
 {% endblock %}

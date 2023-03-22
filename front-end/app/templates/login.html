@@ -8,7 +8,7 @@
     <h1><b>User Login</b></h1>
     <br>
     {% if error %}
-        <p class="error">{{ error }}</p><br>
+        <div class="alert alert-danger" role="alert">{{ error }}</div><br>
     {% endif %}
 
     <form action="/login" method="post">
@@ -30,7 +30,7 @@
         </div>
         <br>
         <div>
-        <button class="btn btn-primary" type="submit">Log In</button>
+            <button type="submit" class="button"><span>Log In</span></button>
         </div>
         <br><br>
         Don't have an account yet? <a href="/register">Register</a>
