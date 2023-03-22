@@ -8,7 +8,7 @@
     <h1><b>User Login</b></h1>
     <br>
     {% if error %}
-        <p class="error">{{ error }}</p><br>
+        <div class="alert alert-danger" role="alert">{{ error }}</div><br>
     {% endif %}
 
     <form action="/login" method="post">

@@ -46,6 +46,15 @@ main img
     max-width: 100%;
 }
 
+main .register
+{   
+    
+    /* properties for registration form */
+    display: inline-block;
+    text-align: left;
+    width: 100%;
+}
+
 
 .image-clear
 {

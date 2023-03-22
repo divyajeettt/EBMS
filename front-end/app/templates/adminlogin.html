@@ -8,7 +8,7 @@
     <h1><b>Admin Login</b></h1>
     <br>
     {% if error %}
-        <p class="error">{{ error }}</p><br>
+    <div class="alert alert-danger" role="alert">{{ error }}</div><br>
     {% endif %}
     <form action="/adminlogin" method="post">
         <div class="form-group">
