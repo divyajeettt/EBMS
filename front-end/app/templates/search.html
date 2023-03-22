@@ -25,6 +25,7 @@
     {% if rows == [] %}
     <p>No results found</p>
     {% else %}
+    <p>Showing results for "{{ request.args.get('q') }}"</p>
     <table>
         <tr>
             <th>Product</th>
