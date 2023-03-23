@@ -242,15 +242,27 @@ def admin():
     cursor = cnx.cursor(dictionary=True)
 
     cursor.execute("SELECT COUNT(*) AS n FROM customer")
-    customer_count = cursor.fetchone()["n"]
+    customer_count = round(cursor.fetchone()["n"], -1)
 
     cursor.execute("SELECT COUNT(*) AS n FROM supplier")
-    supplier_count = cursor.fetchone()["n"]
+    supplier_count = round(cursor.fetchone()["n"], -1)
 
     cursor.execute("SELECT COUNT(*) AS n FROM delivery_agent")
-    da_count = cursor.fetchone()["n"]
+    da_count = round(cursor.fetchone()["n"], -1)
 
-    return render_template('admin.html', customer_count=customer_count, supplier_count=supplier_count, da_count=da_count)
+    cursor.execute("SELECT COUNT(*) AS n FROM orders")
+    order_count = round(cursor.fetchone()["n"], -1)
+
+    cursor.execute("SELECT COUNT(*) AS n FROM order_product")
+    product_count = round(cursor.fetchone()["n"], -1)
+
+    cursor.close()
+
+    return render_template(
+        'admin.html',
+        customer_count=customer_count, supplier_count=supplier_count, da_count=da_count,
+        order_count=order_count, product_count=product_count
+    )
 
 
 @app.route("/logout")

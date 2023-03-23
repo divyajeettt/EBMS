@@ -32,9 +32,30 @@
                 <a class="card-link" href="/admin/deliveryagent">
                     <h1 style="font-size: 72px;"><b>{{ da_count }}+</b></h1>
                     <h2><b>Delivery Agents</b></h2>
-                    <p><br>are working to deliver Products to Customers through <b>EBMS</b>.</p>
+                    <p><br>are helping <b>EBMS</b> deliver Products to Customers.</p>
                 </a>
             </div>
         </div>
+
+        <div class="card-group" style="width: 100%;">
+            <div class="card">
+                <a class="card-link" href="/admin/order">
+                    <h1 style="font-size: 72px;"><b>{{ order_count }}+</b></h1>
+                    <h2><b>Orders</b></h2>
+                    <p><br>have been placed through through <b>EBMS</b>.</p>
+                </a>
+            </div>
+
+            <div class="card">
+                <a class="card-link" href="/admin/product">
+                    <h1 style="font-size: 72px;"><b>{{ product_count }}+</b></h1>
+                    <h2><b>Products</b></h2>
+                    <p><br>have been sold through through <b>EBMS</b>.</p>
+                </a>
+            </div>
+        </div>
+
+        <br>
+        <p style="text-align: left; color: gray; font-size: 95%;">*Click on a card to view more information.</p>
     {% endblock %}
 </body>

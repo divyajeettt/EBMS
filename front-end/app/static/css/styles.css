@@ -139,6 +139,7 @@ table.dataTable thead .sorting_desc_disabled:before {
     border-radius: 10px !important;
     display: flex;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 .card-link {
     color: black;
