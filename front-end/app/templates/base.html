@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon" type="image/x-icon">
@@ -11,12 +12,14 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/datatables2.min.css') }}">
+
     <!-- https://favicon.io/emoji-favicons/money-mouth-face/ -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css?family=Quicksand');
-
-        table {
+        /* table {
             border-collapse: collapse;
             border-spacing: 0;
             width: 100%;
@@ -34,8 +37,8 @@
 
         tr:nth-child(odd) {
           background-color: #FFFFFF;
-        }
-
+        } */
+        
         .center {
             margin: 0;
             position: absolute;
@@ -43,8 +46,8 @@
             -ms-transform: translateX(-50%);
             transform: translateX(-50%);
         }
-
-        body{
+        
+        body {
             font-family: 'Inter', sans-serif;
         }
     </style>
@@ -54,6 +57,7 @@
 
     <title> ebms: {% block title %}{% endblock %}</title>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light border">
         <a class="navbar-brand" href="/"><span class="blue">&nbsp;e</span><span class="red">b</span><span class="yellow">m</span><span class="green">s</span><span class="red">.</span></a>
@@ -70,8 +74,7 @@
                 <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
                 {% if session['user_id'] and session["user_type"] == 'customer' %}
                 <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
-                {% endif %}
-                {% if session['user_id'] %}
+                {% endif %} {% if session['user_id'] %}
                 <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
@@ -79,7 +82,7 @@
             </ul>
         </div>
     </nav>
-        
+
     <!-- <header>
         <img src="{{ url_for('static', filename='img/favicon.ico') }}" alt="Logo">
     </header> -->
@@ -88,9 +91,9 @@
     </main>
     <footer class="small text-center text-muted">
         &copy; 2023 by ebms. Login as <a href="/adminlogin">admin</a> to access admin features.
-        <br>
-        &nbsp;
+        <br> &nbsp;
     </footer>
     <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
 </body>
+
 </html>
