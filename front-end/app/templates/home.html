@@ -4,43 +4,36 @@
     <title>
         {% block title %}Home{% endblock %}
     </title>
-    <style>
-        table {
-            border-collapse: collapse;
-            border: none;
-        }
-        td {
-            border: 0px solid white;
-            padding: 10px;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-    </style>
 </head>
 
 <body>
     {% block main %}
-    <h1>Welcome to ElectroBase Management System!</h1>
+    <h1><b>Welcome to ElectroBase Management System!</b></h1>
     <br>
-    <table>
+    <table style="border: none; width: fit-content;">
         <tr>
-            <td><a href="search?q=laptop">
-                <img src="https://i.rtings.com/assets/pages/6S2WXjTl/best-laptop-medium.jpg" alt="Laptops"><br>Laptops
+            <td width="25%"><a href="search?q=tv">
+                <img src="https://5.imimg.com/data5/KG/OR/OJ/SELLER-47616313/55-inch-smart-4k-led-tv-500x500.jpeg" alt="TVs">
             </a></td>
-            <td><a href="search?q=smartphone">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/3/2022/05/Untitled-design-38-cccd4b7.png" alt="Smartphones"><br>Smartphones
+            <td width="25%"><a href="search?q=smartphone">
+                <img src="https://images.immediate.co.uk/production/volatile/sites/3/2022/05/Untitled-design-38-cccd4b7.png" alt="Smartphones">
             </a></td>
-            <td><a href="search?q=tv">
-                <img src="https://5.imimg.com/data5/KG/OR/OJ/SELLER-47616313/55-inch-smart-4k-led-tv-500x500.jpeg" alt="TVs"><br>TVs
+            <td width="25%"><a href="search?q=laptop">
+                <img src="https://economictimes.indiatimes.com/thumb/msid-93723806,width-1024,height-683,resizemode-4,imgsize-13660/thumbnail-.jpg?from=mdr" alt="Laptops">
             </a></td>
-            <td><a href="search?q=camera">
-                <img src="https://m.media-amazon.com/images/I/81vje3VMvuL._AC_SX466_.jpg" alt="Cameras"><br>Cameras
+            <td width="25%"><a href="search?q=camera">
+                <img src="https://m.media-amazon.com/images/I/81vje3VMvuL._AC_SX466_.jpg" alt="Cameras">
             </a></td>
         </tr>
+        <tr>
+            <td style="text-align: center;"><a href="search?q=tv"><b>TVs</b></a>
+            <td style="text-align: center;"><a href="search?q=smartphone"><b>Smartphones</b></a>
+            <td style="text-align: center;"><a href="search?q=laptop"><b>Laptops</b></a>
+            <td style="text-align: center;"><a href="search?q=camera"><b>Cameras</b></a>
+        </tr>
     </table>
-    <p>Browse our entire product catalogue <a href="search">here</a>.</p>
+    <br><p>Browse our entire product catalogue <a href="search">here</a>.</p>
+    <hr>
 
     <h2 style="text-align: left;">Why Choose ebms?</h2>
     <ul style="text-align: left;">
@@ -51,6 +44,7 @@
         <li>24/7 customer support</li>
     </ul>
 
+    <br>
     <h3 style="text-align: left;">About us</h2>
     <p dir="ltr" style="text-align: justify;">
         ElectroBase Management System is the ultimate destination for all your electronic needs.
@@ -63,7 +57,9 @@
         <br>
         We believe that shopping for electronics should be fun, which is why we offer a range of exclusive deals and competitive prices to help you get the best value for your money.
     </p>
+    <br>
 
+    <hr>
     <h3 style="text-align: left;">Contact us</h2>
     <p dir="ltr" style="text-align: justify;">
         Contact us at <u>helpline@ebms.ac.in</u>. <br>
@@ -71,5 +67,6 @@
         +91 0987654321 <br>
         Our customer support team is available 24/7 to answer any questions you may have.
     </p>
+    <hr>
     {% endblock %}
 </body>

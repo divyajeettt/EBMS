@@ -1,201 +1,201 @@
 productID,name,supplierID,price,quantity,product_description
-1,3D Pen,117,288.44,59038,In congue. Etiam justo. Etiam pretium iaculis justo.
-2,3D Printer,129,216.81,78289,Sed ante. Vivamus tortor. Duis mattis egestas metus.
-3,3D Printer Bed,103,0.7,77871,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
-4,3D Printer Controller,7,184.97,55397,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
-5,3D Printer Extruder,141,482.71,54023,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
-6,3D Printer Filament,160,460.04,78548,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
-7,3D Printer Heated Bed,50,774.75,63769,Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.
-8,3D Printer Hotend,77,101.75,50917,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus."
-9,3D Printer LCD Screen,67,870.12,69008,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
-10,3D Printer Motherboard,18,683.97,74695,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
-11,3D Printer Motor,83,752.02,67497,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
-12,3D Printer Nozzle,145,294.36,65139,Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.
-13,3D Printer Power Supply,78,670.65,60058,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
-14,3D Scanner,97,940.41,63627,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."
-15,3D TV,7,743.65,66085,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
-16,4K TV,63,336.26,66745,"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."
-17,8K TV,56,995.59,76044,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
-18,Adapter,142,518.51,73251,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
-19,Airpods,127,903.41,72466,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
-20,Battery,111,441.64,54688,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
-21,Bedside Lamp,45,941.43,59067,"Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam."
-22,CCTV,131,917.15,63998,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
-23,CCTV Camera Unit,95,661.45,67533,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
-24,CPU,1,303.45,57968,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-25,Cable,6,4.34,59546,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
-26,Camera,46,121.12,59740,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
-27,Case,79,60.12,61231,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
-28,Ceiling Fan,35,253.24,73175,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
-29,Ceiling Lamp,2,551.34,78045,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.
-30,Ceiling Light,61,26.58,70216,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
-31,Charger,109,711.91,58041,"Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros."
-32,Cooler,104,226.05,53524,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
-33,Curved TV,76,774.53,68301,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
-34,DVI Cables,124,393.52,75298,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
-35,Desktop,31,225.62,67504,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
-36,Digital Flashlight,89,14.49,79826,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
-37,Digital Wrist Watch,84,666.91,72584,Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.
-38,DisplayPort Cables,194,349.4,70014,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
-39,Earpods,161,924.94,52766,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
-40,Ethernet Cables,95,820.12,52390,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
-41,Fan,173,895.19,66670,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-42,Gaming Cable,185,933.51,55406,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
-43,Gaming Desktop,61,531.15,53552,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
-44,Gaming Headphone,38,832.86,56092,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
-45,Gaming Keyboard,97,419.13,74326,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
-46,Gaming Laptop,165,117.9,52040,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
-47,Gaming Microphone,136,335.74,57840,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
-48,Gaming Modem,70,298.77,76976,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
-49,Gaming Monitor,152,103.42,56723,"Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam."
-50,Gaming Mouse,175,887.79,51189,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
-51,Gaming Printer,170,953.26,78259,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
-52,Gaming Router,110,13.85,70359,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
-53,Gaming Scanner,62,376.38,74998,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.
-54,Gaming Speaker,31,753.19,61139,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus."
-55,Gaming Switch,191,557.5,74692,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
-56,Graphics Card,199,735.89,60124,Sed ante. Vivamus tortor. Duis mattis egestas metus.
-57,HDD,72,880.79,66669,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-58,HDMI Cables,128,949.62,67293,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
-59,Headphone,146,547.53,61894,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-60,Headphone Cables,36,49.07,52607,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
-61,Inverter,136,701.21,61408,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
-62,Keyboard,45,222.35,72092,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
-63,LCD TV,76,345.04,64237,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
-64,LED Bulb,38,441.68,51607,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-65,LED Ceiling Light,33,4.89,78027,"Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem."
-66,LED Chandelier,116,702.05,68898,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
-67,LED Desk Lamp,63,615.77,69814,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum."
-68,LED Downlight,66,111.79,74560,Fusce consequat. Nulla nisl. Nunc nisl.
-69,LED Floodlight,1,444.48,60223,In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.
-70,LED Floor Lamp,183,804.41,79195,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
-71,LED Grow Light,169,261.19,78650,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus."
-72,LED Light Bar,168,162.78,50012,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
-73,LED Light Box,83,290.1,74410,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
-74,LED Light Cube,129,190.79,68188,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum."
-75,LED Light Curtain,39,80.83,78714,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
-76,LED Light Panel,30,470.2,51823,Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
-77,LED Light Tube,99,523.89,59001,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
-78,LED Light Wall,2,47.24,75733,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
-79,LED Lights,186,576.63,58858,In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.
-80,LED Panel,124,481.53,59465,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
-81,LED Pendant Light,116,942.17,69828,"Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh."
-82,LED Spot Light,151,347.91,51056,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat."
-83,LED Spotlight,123,270.03,50327,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
-84,LED Stage Light,145,399.25,71605,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
-85,LED Strip,190,46.09,70491,"Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam."
-86,LED TV,171,932.6,60967,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-87,LED Table Lamp,198,902.36,59663,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
-88,LED Track Light,150,400.28,67802,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
-89,LED Tube,89,902.16,53823,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
-90,LED Under Cabinet Light,128,129.47,55936,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
-91,LED Underwater Light,6,304.11,57478,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
-92,LED Wall Light,104,391.3,53410,Phasellus in felis. Donec semper sapien a libero. Nam dui.
-93,Laptop,148,91.38,65823,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
-94,Laser Printer,110,322.33,56231,Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.
-95,Laser Printer Drum,124,997.5,76216,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-96,Laser Printer Fuser,70,701.27,68382,"In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus."
-97,Laser Printer Toner,178,988.01,62135,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-98,Laser Printer Transfer Belt,81,963.2,51960,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
-99,Laser Printer Transfer Roller,132,99.61,68459,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
-100,Macbook,47,52.23,67753,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
-101,Macbook Air,162,77.69,50275,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."
-102,Macbook Pro,91,30.99,75201,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
-103,Microphone,128,950.43,57907,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
-104,Microphone Cables,57,181.08,52455,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
-105,Modem,170,176.86,72346,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
-106,Monitor,136,338.96,79185,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat."
-107,Motherboard,23,230.05,79281,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."
-108,Mouse,149,459.41,77994,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
-109,OLED TV,1,897.14,68880,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
-110,Phone Cover,57,183.82,71990,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
-111,Plasma TV,177,737.62,54262,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
-112,Power Bank,49,634.37,67533,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
-113,Power Cables,90,335.6,52833,"In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus."
-114,Printer,74,896.8,55013,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
-115,Projector,167,466.45,65163,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.
-116,Projector Ceiling Mount,82,529.18,58266,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
-117,Projector Lamp,9,426.63,57423,"Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh."
-118,Projector Mount,51,918.28,64901,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
-119,Projector Screen,85,688.3,66467,Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
-120,Projector Stand,27,725.71,74905,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
-121,Projector Tripod,12,301.74,53875,In congue. Etiam justo. Etiam pretium iaculis justo.
-122,Projector Wall Mount,181,185.12,77331,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
-123,QLED TV,41,793.76,65796,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
-124,RAM,51,383.49,59738,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-125,Refrigerator,32,83.48,65071,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
-126,Router,169,620.65,59041,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
-127,SSD,49,106.02,69254,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
-128,Scanner,96,174.46,62471,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
-129,Smart Bracelet,15,955.36,67879,"Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh."
-130,Smart Bulb,194,125.59,50550,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
-131,Smart Card,145,929.67,73200,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
-132,Smart Door,20,524.6,58180,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
-133,Smart Glasses,163,641.86,60531,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
-134,Smart Key,42,686.96,52221,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
-135,Smart Lock,110,975.61,72199,Fusce consequat. Nulla nisl. Nunc nisl.
-136,Smart Pen,62,69.1,63262,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
-137,Smart Plug,132,283.04,72313,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
-138,Smart Ring,157,958.18,64391,Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.
-139,Smart Socket,89,808.96,72171,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-140,Smart TV,136,420.51,74152,In congue. Etiam justo. Etiam pretium iaculis justo.
-141,Smart VR Glasses,198,115.56,73843,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
-142,Smart VR Headset,104,317.04,61544,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
-143,Smart Watch,82,968.72,68277,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
-144,Smart Wrist Band,128,123.7,79710,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
-145,Smartband,9,168.56,54765,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
-146,Smartbulb,113,871.25,57016,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-147,Smartcard,149,887.73,72119,"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."
-148,Smartdoor,28,33,64331,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
-149,Smartglasses,136,914.3,52812,In congue. Etiam justo. Etiam pretium iaculis justo.
-150,Smartkey,190,545.85,68093,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
-151,Smartlock,13,976.43,64150,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
-152,Smartpen,7,679.69,71523,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
-153,Smartphone,38,772.44,52887,"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."
-154,Smartphone Battery,85,417.11,56777,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
-155,Smartphone Cable,138,907.08,76148,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
-156,Smartphone Case,47,576.28,52873,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
-157,Smartphone Charger,44,37.3,58676,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
-158,Smartphone Gamepad,30,23.75,76147,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
-159,Smartphone Headphone,92,976.51,76685,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
-160,Smartphone Holder,78,839.11,66124,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
-161,Smartphone Joystick,24,116.03,66964,Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
-162,Smartphone Keyboard,192,340.24,63074,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
-163,Smartphone Lens,139,177.69,70611,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-164,Smartphone Microphone,35,473.83,58902,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
-165,Smartphone Mouse,157,976.36,66114,Fusce consequat. Nulla nisl. Nunc nisl.
-166,Smartphone Ring Light,12,290.95,56526,"In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus."
-167,Smartphone Screen Protector,141,397.88,69786,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
-168,Smartphone Selfie Stick,44,809.31,61482,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
-169,Smartphone Speaker,130,972.09,78178,Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.
-170,Smartphone Stand,186,830.61,65809,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
-171,Smartphone Stylus,83,127.01,62286,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
-172,Smartphone Tripod,31,274.31,57905,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
-173,Smartphone VR,5,765.53,68680,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
-174,Smartplug,79,542.7,50125,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
-175,Smartsocket,156,438.43,57311,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-176,Smartwatch,127,554.16,72905,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
-177,Speaker,37,38.64,59650,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
-178,Speaker Cables,137,456.56,50825,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
-179,Stabilizer,159,527.56,57833,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
-180,Switch,173,939.07,79349,"Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros."
-181,TV,149,138.44,74662,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
-182,Tablet,81,120.02,60604,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."
-183,Type-B Cables,11,291.05,69013,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."
-184,Type-C Cables,137,645.11,77834,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
-185,UPS,124,89.12,68062,Sed ante. Vivamus tortor. Duis mattis egestas metus.
-186,USB Cable,153,63.8,55924,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
-187,USB Cables,198,725.24,68572,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
-188,USB Card Reader,132,94.14,62037,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
-189,USB Flash Drive,98,29.28,74975,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
-190,USB Hub,18,786.15,65545,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
-191,USB Stick,29,277.24,77089,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-192,Ultra HD TV,51,33.65,75939,"Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros."
-193,VGA Cables,158,825.97,62410,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
-194,VR Box,27,558.86,74024,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
-195,VR Goggles,198,919.19,58398,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
-196,VR Headset,46,494.88,63325,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
-197,Washing Machine,94,255.87,60931,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
-198,iPad,185,799.32,75960,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
-199,iPhone,28,8.25,65521,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
-200,iPod,20,679.55,53311,Phasellus in felis. Donec semper sapien a libero. Nam dui.
+1,3D Pen,117,28844.0,59038,In congue. Etiam justo. Etiam pretium iaculis justo.
+2,3D Printer,129,21681.0,78289,Sed ante. Vivamus tortor. Duis mattis egestas metus.
+3,3D Printer Bed,103,70.0,77871,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
+4,3D Printer Controller,7,18497.0,55397,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
+5,3D Printer Extruder,141,48271.0,54023,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
+6,3D Printer Filament,160,46004.0,78548,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
+7,3D Printer Heated Bed,50,77475.0,63769,Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.
+8,3D Printer Hotend,77,10175.0,50917,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus."
+9,3D Printer LCD Screen,67,87012.0,69008,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
+10,3D Printer Motherboard,18,68397.0,74695,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
+11,3D Printer Motor,83,75202.0,67497,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
+12,3D Printer Nozzle,145,29436.0,65139,Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.
+13,3D Printer Power Supply,78,67065.0,60058,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
+14,3D Scanner,97,94041.0,63627,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."
+15,3D TV,7,74365.0,66085,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
+16,4K TV,63,33626.0,66745,"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."
+17,8K TV,56,99559.0,76044,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
+18,Adapter,142,51851.0,73251,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
+19,Airpods,127,90341.0,72466,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
+20,Battery,111,44164.0,54688,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
+21,Bedside Lamp,45,94143.0,59067,"Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam."
+22,CCTV,131,91715.0,63998,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
+23,CCTV Camera Unit,95,66145.0,67533,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
+24,CPU,1,30345.0,57968,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+25,Cable,6,434.0,59546,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
+26,Camera,46,12112.0,59740,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
+27,Case,79,6012.0,61231,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
+28,Ceiling Fan,35,25324.0,73175,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
+29,Ceiling Lamp,2,55134.0,78045,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.
+30,Ceiling Light,61,2658.0,70216,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
+31,Charger,109,71191.0,58041,"Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros."
+32,Cooler,104,22605.0,53524,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
+33,Curved TV,76,77453.0,68301,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
+34,DVI Cables,124,39352.0,75298,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
+35,Desktop,31,22562.0,67504,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
+36,Digital Flashlight,89,1449.0,79826,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
+37,Digital Wrist Watch,84,66691.0,72584,Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.
+38,DisplayPort Cables,194,34940.0,70014,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
+39,Earpods,161,92494.0,52766,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+40,Ethernet Cables,95,82012.0,52390,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
+41,Fan,173,89519.0,66670,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+42,Gaming Cable,185,93351.0,55406,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
+43,Gaming Desktop,61,53115.0,53552,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
+44,Gaming Headphone,38,83286.0,56092,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
+45,Gaming Keyboard,97,41913.0,74326,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
+46,Gaming Laptop,165,11790.0,52040,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
+47,Gaming Microphone,136,33574.0,57840,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
+48,Gaming Modem,70,29877.0,76976,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
+49,Gaming Monitor,152,10342.0,56723,"Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam."
+50,Gaming Mouse,175,88779.0,51189,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
+51,Gaming Printer,170,95326.0,78259,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
+52,Gaming Router,110,1385.0,70359,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
+53,Gaming Scanner,62,37638.0,74998,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.
+54,Gaming Speaker,31,75319.0,61139,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus."
+55,Gaming Switch,191,55750.0,74692,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
+56,Graphics Card,199,73589.0,60124,Sed ante. Vivamus tortor. Duis mattis egestas metus.
+57,HDD,72,88079.0,66669,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+58,HDMI Cables,128,94962.0,67293,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
+59,Headphone,146,54753.0,61894,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+60,Headphone Cables,36,4907.0,52607,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
+61,Inverter,136,70121.0,61408,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+62,Keyboard,45,22235.0,72092,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
+63,LCD TV,76,34504.0,64237,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
+64,LED Bulb,38,44168.0,51607,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+65,LED Ceiling Light,33,488.99999999999994,78027,"Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem."
+66,LED Chandelier,116,70205.0,68898,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
+67,LED Desk Lamp,63,61577.0,69814,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum."
+68,LED Downlight,66,11179.0,74560,Fusce consequat. Nulla nisl. Nunc nisl.
+69,LED Floodlight,1,44448.0,60223,In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.
+70,LED Floor Lamp,183,80441.0,79195,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
+71,LED Grow Light,169,26119.0,78650,"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus."
+72,LED Light Bar,168,16278.0,50012,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
+73,LED Light Box,83,29010.000000000004,74410,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
+74,LED Light Cube,129,19079.0,68188,"Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum."
+75,LED Light Curtain,39,8083.0,78714,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+76,LED Light Panel,30,47020.0,51823,Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
+77,LED Light Tube,99,52389.0,59001,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
+78,LED Light Wall,2,4724.0,75733,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
+79,LED Lights,186,57663.0,58858,In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus.
+80,LED Panel,124,48153.0,59465,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
+81,LED Pendant Light,116,94217.0,69828,"Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh."
+82,LED Spot Light,151,34791.0,51056,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat."
+83,LED Spotlight,123,27002.999999999996,50327,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
+84,LED Stage Light,145,39925.0,71605,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
+85,LED Strip,190,4609.0,70491,"Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam."
+86,LED TV,171,93260.0,60967,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+87,LED Table Lamp,198,90236.0,59663,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
+88,LED Track Light,150,40028.0,67802,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
+89,LED Tube,89,90216.0,53823,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
+90,LED Under Cabinet Light,128,12947.0,55936,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
+91,LED Underwater Light,6,30411.0,57478,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
+92,LED Wall Light,104,39130.0,53410,Phasellus in felis. Donec semper sapien a libero. Nam dui.
+93,Laptop,148,9138.0,65823,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
+94,Laser Printer,110,32233.0,56231,Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.
+95,Laser Printer Drum,124,99750.0,76216,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+96,Laser Printer Fuser,70,70127.0,68382,"In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus."
+97,Laser Printer Toner,178,98801.0,62135,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+98,Laser Printer Transfer Belt,81,96320.0,51960,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
+99,Laser Printer Transfer Roller,132,9961.0,68459,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
+100,Macbook,47,5223.0,67753,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
+101,Macbook Air,162,7769.0,50275,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."
+102,Macbook Pro,91,3099.0,75201,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
+103,Microphone,128,95043.0,57907,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
+104,Microphone Cables,57,18108.0,52455,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
+105,Modem,170,17686.0,72346,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
+106,Monitor,136,33896.0,79185,"Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat."
+107,Motherboard,23,23005.0,79281,"Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."
+108,Mouse,149,45941.0,77994,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
+109,OLED TV,1,89714.0,68880,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
+110,Phone Cover,57,18382.0,71990,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
+111,Plasma TV,177,73762.0,54262,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
+112,Power Bank,49,63437.0,67533,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
+113,Power Cables,90,33560.0,52833,"In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus."
+114,Printer,74,89680.0,55013,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
+115,Projector,167,46645.0,65163,Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.
+116,Projector Ceiling Mount,82,52917.99999999999,58266,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
+117,Projector Lamp,9,42663.0,57423,"Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh."
+118,Projector Mount,51,91828.0,64901,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
+119,Projector Screen,85,68830.0,66467,Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
+120,Projector Stand,27,72571.0,74905,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
+121,Projector Tripod,12,30174.0,53875,In congue. Etiam justo. Etiam pretium iaculis justo.
+122,Projector Wall Mount,181,18512.0,77331,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
+123,QLED TV,41,79376.0,65796,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
+124,RAM,51,38349.0,59738,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+125,Refrigerator,32,8348.0,65071,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
+126,Router,169,62065.0,59041,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
+127,SSD,49,10602.0,69254,"Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl."
+128,Scanner,96,17446.0,62471,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
+129,Smart Bracelet,15,95536.0,67879,"Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh."
+130,Smart Bulb,194,12559.0,50550,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
+131,Smart Card,145,92967.0,73200,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
+132,Smart Door,20,52460.0,58180,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
+133,Smart Glasses,163,64186.0,60531,"Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem."
+134,Smart Key,42,68696.0,52221,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
+135,Smart Lock,110,97561.0,72199,Fusce consequat. Nulla nisl. Nunc nisl.
+136,Smart Pen,62,6909.999999999999,63262,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
+137,Smart Plug,132,28304.000000000004,72313,Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.
+138,Smart Ring,157,95818.0,64391,Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.
+139,Smart Socket,89,80896.0,72171,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+140,Smart TV,136,42051.0,74152,In congue. Etiam justo. Etiam pretium iaculis justo.
+141,Smart VR Glasses,198,11556.0,73843,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
+142,Smart VR Headset,104,31704.000000000004,61544,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
+143,Smart Watch,82,96872.0,68277,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
+144,Smart Wrist Band,128,12370.0,79710,Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.
+145,Smartband,9,16856.0,54765,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+146,Smartbulb,113,87125.0,57016,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+147,Smartcard,149,88773.0,72119,"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."
+148,Smartdoor,28,3300.0,64331,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
+149,Smartglasses,136,91430.0,52812,In congue. Etiam justo. Etiam pretium iaculis justo.
+150,Smartkey,190,54585.0,68093,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
+151,Smartlock,13,97643.0,64150,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
+152,Smartpen,7,67969.0,71523,Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.
+153,Smartphone,38,77244.0,52887,"Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis."
+154,Smartphone Battery,85,41711.0,56777,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
+155,Smartphone Cable,138,90708.0,76148,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
+156,Smartphone Case,47,57628.0,52873,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
+157,Smartphone Charger,44,3729.9999999999995,58676,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
+158,Smartphone Gamepad,30,2375.0,76147,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
+159,Smartphone Headphone,92,97651.0,76685,"Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+160,Smartphone Holder,78,83911.0,66124,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
+161,Smartphone Joystick,24,11603.0,66964,Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
+162,Smartphone Keyboard,192,34024.0,63074,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
+163,Smartphone Lens,139,17769.0,70611,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+164,Smartphone Microphone,35,47383.0,58902,Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.
+165,Smartphone Mouse,157,97636.0,66114,Fusce consequat. Nulla nisl. Nunc nisl.
+166,Smartphone Ring Light,12,29095.0,56526,"In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus."
+167,Smartphone Screen Protector,141,39788.0,69786,Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.
+168,Smartphone Selfie Stick,44,80931.0,61482,Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit.
+169,Smartphone Speaker,130,97209.0,78178,Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.
+170,Smartphone Stand,186,83061.0,65809,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
+171,Smartphone Stylus,83,12701.0,62286,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
+172,Smartphone Tripod,31,27431.0,57905,"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."
+173,Smartphone VR,5,76553.0,68680,"Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti."
+174,Smartplug,79,54270.00000000001,50125,"Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus."
+175,Smartsocket,156,43843.0,57311,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+176,Smartwatch,127,55416.0,72905,"Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem."
+177,Speaker,37,3864.0,59650,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
+178,Speaker Cables,137,45656.0,50825,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
+179,Stabilizer,159,52755.99999999999,57833,Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.
+180,Switch,173,93907.0,79349,"Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros."
+181,TV,149,13844.0,74662,"Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam. Cras pellentesque volutpat dui."
+182,Tablet,81,12002.0,60604,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."
+183,Type-B Cables,11,29105.0,69013,"Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est."
+184,Type-C Cables,137,64511.0,77834,"Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque."
+185,UPS,124,8912.0,68062,Sed ante. Vivamus tortor. Duis mattis egestas metus.
+186,USB Cable,153,6380.0,55924,"Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede."
+187,USB Cables,198,72524.0,68572,Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.
+188,USB Card Reader,132,9414.0,62037,Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.
+189,USB Flash Drive,98,2928.0,74975,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
+190,USB Hub,18,78615.0,65545,"Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus."
+191,USB Stick,29,27724.0,77089,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+192,Ultra HD TV,51,3365.0,75939,"Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros."
+193,VGA Cables,158,82597.0,62410,"In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo."
+194,VR Box,27,55886.0,74024,"Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus."
+195,VR Goggles,198,91919.0,58398,"Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis."
+196,VR Headset,46,49488.0,63325,Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.
+197,Washing Machine,94,25587.0,60931,Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.
+198,iPad,185,79932.0,75960,"Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem."
+199,iPhone,28,825.0,65521,Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris.
+200,iPod,20,67955.0,53311,Phasellus in felis. Donec semper sapien a libero. Nam dui.
