@@ -1,100 +1,101 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block title %} Register {% endblock %} {% block main %}
+<h1 style="text-align: left;"><b>Register as a new User</b></h1>
+<br> {% if error %}
+<div class="alert alert-danger" role="alert">{{ error }}</div><br> {% endif %}
 
-{% block title %}
-    Register
-{% endblock %}
-
-{% block main %}
-    <h1 style="text-align: left;"><b>Register as a new User</b></h1>
-    <br>
-    {% if error %}
-        <div class="alert alert-danger" role="alert">{{ error }}</div><br>
-    {% endif %}
-
-    <form action="/register" method="post">
-        <div class="form-row">
-            <div class="form-group col-md-5" style="text-align: left; font-weight: bold;">
-                <label for="inputFirstName">First Name <span style="color: red">*</span></label>
-                <input type="text" class="form-control" id="inputFirstName" placeholder="John" style="width: 100%;">
-            </div>
-            <div class="form-group col-md-2" style="text-align: left; font-weight: bold;">
-                <label for="inputMiddleInitial">Middle Initial</label>
-                <input type="text" class="form-control" id="inputMiddleInitial" placeholder="E" style="width: 100%;">
-            </div>
-            <div class="form-group col-md-5" style="text-align: left; font-weight: bold;">
-                <label for="inputLastName">Last Name</label>
-                <input type="text" class="form-control" id="inputLastName" placeholder="Doe" style="width: 100%;">
-            </div>
+<form action="/register" method="post">
+    <div class="form-row">
+        <div class="form-group col-md-5" style="text-align: left; font-weight: bold;">
+            <label for="inputFirstName">First Name <span style="color: red">*</span></label>
+            <input type="text" class="form-control" id="inputFirstName" placeholder="John" style="width: 100%;" name="first_name">
         </div>
-        <div class="form-row">
-          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
-            <label for="inputEmail4">Email <span style="color: red">*</span></label>
-            <input type="email" class="form-control" id="inputEmail4" placeholder="john@example.com" style="width: 100%;">
-          </div>
-          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
-            <label for="inputPassword4">Password <span style="color: red">*</span></label> <img src="{{ url_for('static', filename='img/info-circle.svg') }}" alt="i-button" height="16px" width="16px"title="The password must contain at least one special character, one capital letter and one digit, and should be at least 8 characters long. Spaces are not allowed.">
-            <input type="password" class="form-control" id="inputPassword4" placeholder="Password" style="width: 100%;">
-          </div>
-          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
-            <label for="inputPassword4">Confirm Password <span style="color: red">*</span></label>
-            <input type="password" class="form-control" id="inputPassword4" placeholder="Password" style="width: 100%;">
-          </div>
+        <div class="form-group col-md-2" style="text-align: left; font-weight: bold;">
+            <label for="inputMiddleInitial">Middle Initial</label>
+            <input type="text" class="form-control" id="inputMiddleInitial" placeholder="E" style="width: 100%;" name="middle_initial">
         </div>
-        <div class="form-group" style="text-align: left; font-weight: bold;">
-          <label for="inputAddress">Address (Street Name) <span style="color: red">*</span></label>
-          <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" style="width: 100%;">
+        <div class="form-group col-md-5" style="text-align: left; font-weight: bold;">
+            <label for="inputLastName">Last Name</label>
+            <input type="text" class="form-control" id="inputLastName" placeholder="Doe" style="width: 100%;" name="last_name">
         </div>
-        <div class="form-group" style="text-align: left; font-weight: bold;">
-          <label for="inputAddress2">Address 2 <span style="color: red">*</span></label>
-          <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" style="width: 100%;">
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputEmail">Email <span style="color: red">*</span></label>
+            <input type="email" class="form-control" id="inputEmail" placeholder="john@example.com" style="width: 100%;" name="email">
         </div>
-        <div class="form-row">
-          <div class="form-group col-md-6" style="text-align: left; font-weight: bold;">
+        <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputPassword">Password <span style="color: red">*</span></label> <img src="{{ url_for('static', filename='img/info-circle.svg') }}" alt="i-button" height="16px" width="16px" title="The password must contain at least one special character, one capital letter and one digit, and should be at least 8 characters long. Spaces are not allowed.">
+            <input type="password" class="form-control" id="inputPassword" placeholder="Password" style="width: 100%;" name="password">
+        </div>
+        <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputRePassword">Confirm Password <span style="color: red">*</span></label>
+            <input type="password" class="form-control" id="inputRePassword" placeholder="Password" style="width: 100%;" name="re_password">
+        </div>
+    </div>
+    <div class="form-group" style="text-align: left; font-weight: bold;">
+        <label for="inputAddress">Address (Street Name) <span style="color: red">*</span></label>
+        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" style="width: 100%;" name="address">
+    </div>
+    <div class="form-group" style="text-align: left; font-weight: bold;">
+        <label for="inputAddress2">Address 2 <span style="color: red">*</span></label>
+        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" style="width: 100%;" name="address2">
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6" style="text-align: left; font-weight: bold;">
+            <label for="inputPhoneNo">Phone No. <span style="color: red">*</span></label>
+            <input type="text" class="form-control" id="inputPhoneNo" style="width: 100%;" placeholder="98XXXXXXXX" name="phone_no">
+        </div>
+        <div class="form-group col-md-6" style="text-align: left; font-weight: bold;">
+            <label for="inputAge">Age <span style="color: red">*</span></label>
+            <input type="number" class="form-control" id="inputAge" style="width: 100%;" name="age">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3" style="text-align: left; font-weight: bold;">
             <label for="inputCity">City <span style="color: red">*</span></label>
-            <input type="text" class="form-control" id="inputCity" style="width: 100%;">
-          </div>
-          <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <input type="text" class="form-control" id="inputCity" style="width: 100%;" name="city">
+        </div>
+        <div class="form-group col-md-3" style="text-align: left; font-weight: bold;">
             <label for="inputState">State <span style="color: red">*</span></label>
-            <select id="inputState" class="form-control" style="width: 100%;">
-              <option selected>Choose...</option>
-              <option>...</option>
-            </select>
-          </div>
-          <div class="form-group col-md-2" style="text-align: left; font-weight: bold;">
+            <input type="text" class="form-control" id="inputState" style="width: 100%;" name="state">
+        </div>
+        <div class="form-group col-md-2" style="text-align: left; font-weight: bold;">
             <label for="inputZip">Zip <span style="color: red">*</span></label>
-            <input type="text" class="form-control" id="inputZip" style="width: 100%;">
-          </div>
+            <input type="text" class="form-control" id="inputZip" style="width: 100%;" name="zip">
         </div>
-        <div class="form-check" style="text-align: left; font-weight: bold;">
-            <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault1" value="customer" checked>
-            <label class="form-check-label" for="flexRadioDefault1">
-                Customer &nbsp; &nbsp; &nbsp;
-            </label>
-            <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault2" value="supplier">
-            <label class="form-check-label" for="flexRadioDefault2">
-                Supplier &nbsp; &nbsp; &nbsp;
-            </label>
-            <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault3" value="delivery_agent" >
-            <label class="form-check-label" for="flexRadioDefault3">
-                Delivery Agent &nbsp; &nbsp; &nbsp;
-            </label>
+        <div class="form-group col-md-4" style="text-align: left; font-weight: bold;">
+            <label for="inputCountry">Country <span style="color: red">*</span></label>
+            <input type="text" class="form-control" id="inputCountry" style="width: 100%;" name="country">
+    </div>
+    <div class="form-check" style="text-align: left; font-weight: bold;">
+        <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault1" value="customer" checked>
+        <label class="form-check-label" for="flexRadioDefault1">
+            Customer &nbsp; &nbsp; &nbsp;
+        </label>
+        <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault2" value="supplier">
+        <label class="form-check-label" for="flexRadioDefault2">
+            Supplier &nbsp; &nbsp; &nbsp;
+        </label>
+        <input class="form-check-input" type="radio" name="RegisterRadio" id="flexRadioDefault3" value="delivery_agent">
+        <label class="form-check-label" for="flexRadioDefault3">
+            Delivery Agent &nbsp; &nbsp; &nbsp;
+        </label>
+    </div>
+    <!-- <div class="form-group">
+        <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="gridCheck">
+        <label class="form-check-label" for="gridCheck">
+            Check me out
+        </label>
         </div>
-        <!-- <div class="form-group">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck">
-            <label class="form-check-label" for="gridCheck">
-              Check me out
-            </label>
-          </div>
-        </div> -->
-        <br>
-        <div>
-            <button type="submit" class="button"><span>Register</span></button>
-        </div>
+    </div> -->
+    <br>
+    <div>
+        <button type="submit" class="button"><span>Register</span></button>
+    </div>
 
-        <br><br>
-        Already have an account? <a href="/login">Login</a>
-      </form>
+        <br><br> Already have an account? <a href="/login">Login</a>
+</form>
 
 
 
