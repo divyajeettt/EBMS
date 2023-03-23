@@ -14,31 +14,8 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/datatables2.min.css') }}">
 
-    <!-- https://favicon.io/emoji-favicons/money-mouth-face/ -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Quicksand');
-        /* table {
-            border-collapse: collapse;
-            border-spacing: 0;
-            width: 100%;
-            border: 1px solid #000000;
-        }
-
-        th, td {
-          text-align: left;
-          padding: 12px;
-        }
-
-        tr:nth-child(even) {
-          background-color: #DDDDDD;
-        }
-
-        tr:nth-child(odd) {
-          background-color: #FFFFFF;
-        } */
-        
         .center {
             margin: 0;
             position: absolute;
@@ -46,7 +23,6 @@
             -ms-transform: translateX(-50%);
             transform: translateX(-50%);
         }
-        
         body {
             font-family: 'Inter', sans-serif;
             /* background-color: black;
@@ -81,13 +57,11 @@
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
                 {% endif %}
+                <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- <header>
-        <img src="{{ url_for('static', filename='img/favicon.ico') }}" alt="Logo">
-    </header> -->
     <main class="container p-5">
         {% block main %}{% endblock %}
     </main>
@@ -95,7 +69,6 @@
         &copy; 2023 by ebms. Login as <a href="/adminlogin">admin</a> to access admin features.
         <br> &nbsp;
     </footer>
-    <!-- <script src="{{ url_for('static', filename='js/script.js') }}"></script> -->
 </body>
 
 </html>

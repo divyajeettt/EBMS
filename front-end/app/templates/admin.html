@@ -6,7 +6,35 @@
 
 <body>
     {% block main %}
-        <h1>Welcome to ebms, {{session['username']}}!</h1>
-        <p>This is your home page.</p>
+        <h1><b>Welcome back, {{ session['username'] }}.</b></h1>
+        <br>
+        <p>No issues or bugs have been reported to our customer care in the past week.</p>
+        <br>
+
+        <div class="card-group" style="width: 100%;">
+            <div class="card">
+                <a class="card-link" href="/admin/customer">
+                    <h1 style="font-size: 72px;"><b>{{ customer_count }}+</b></h1>
+                    <h2><b>Customers</b></h2>
+                    <p><br>have been using <b>EBMS</b> for their electronics needs.</p>
+                </a>
+            </div>
+
+            <div class="card">
+                <a class="card-link" href="/admin/supplier">
+                    <h1 style="font-size: 72px;"><b>{{ supplier_count }}+</b></h1>
+                    <h2><b>Suppliers</b></h2>
+                    <p><br>are supplying products to the <b>EBMS</b> warehouse.</p>
+                </a>
+            </div>
+
+            <div class="card">
+                <a class="card-link" href="/admin/deliveryagent">
+                    <h1 style="font-size: 72px;"><b>{{ da_count }}+</b></h1>
+                    <h2><b>Delivery Agents</b></h2>
+                    <p><br>are working to deliver Products to Customers through <b>EBMS</b>.</p>
+                </a>
+            </div>
+        </div>
     {% endblock %}
 </body>

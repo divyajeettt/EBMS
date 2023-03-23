@@ -95,12 +95,12 @@ def login():
     session.clear()
 
     if request.method == 'POST':
-        
+
         if not request.form.get('username'):
             return render_template('login.html', error='Please enter your username')
         elif not request.form.get('password'):
             return render_template('login.html', error='Please enter your password')
-        
+
         cursor = cnx.cursor(dictionary=True)
         if request.form['LoginRadio'] == 'customer':
             cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('username'),))
@@ -113,8 +113,8 @@ def login():
             return render_template('login.html', error='Invalid username')
         elif not check_password_hash(user['pwd'], request.form.get('password')):
             return render_template('login.html', error='Invalid password')
-        
-        
+
+
         if request.form['LoginRadio'] == 'customer':
             session['user_id'] = user['customerID']
             session['user_type'] = 'customer'
@@ -171,9 +171,9 @@ def register():
         
         elif request.form.get('password') != request.form.get('re_password'):
             return render_template('register.html', error='Passwords do not match')
-        
+
         utype = request.form['RegisterRadio']
-        
+
 
         cursor = cnx.cursor()
         if utype == 'customer':
@@ -209,7 +209,7 @@ def register():
                 break
         else:
             return render_template('register.html', error="password doesn't meet the requirements")
-        
+
         cursor = cnx.cursor(dictionary=True)
         if utype == 'customer':
             cursor.execute("SELECT MAX(phoneID) FROM phone_number")
@@ -260,7 +260,7 @@ def adminlogin():
             return render_template('adminlogin.html', error='Please enter your username')
         elif not request.form.get('password'):
             return render_template('adminlogin.html', error='Please enter your password')
-        
+
         cursor = cnx.cursor(dictionary=True)
         cursor.execute("SELECT * FROM admin WHERE username = %s", (request.form.get('username'),))
         user = cursor.fetchone()
@@ -271,26 +271,35 @@ def adminlogin():
         # TODO add a check_password_hash function here
         elif user['pwd'] != request.form.get('password'):
             return render_template('adminlogin.html', error='Invalid password')
-        
-        # print(user['adminID'])
+
         session['user_id'] = user['adminID']
         session['user_type'] = 'admin'
         session['username'] = user['username']
         return redirect('/admin')
-    
+
     else:
         return render_template('adminlogin.html')
-    
+
 
 @app.route('/admin', methods=['GET'])
 @admin_login_required
 def admin():
     print(session)
-    if session.get('user_type') == 'admin':
-        return render_template('admin.html')
-    else:
+    if session.get('user_type') != 'admin':
         return redirect('/adminlogin')
 
+    cursor = cnx.cursor(dictionary=True)
+
+    cursor.execute("SELECT COUNT(*) AS n FROM customer")
+    customer_count = cursor.fetchone()["n"]
+
+    cursor.execute("SELECT COUNT(*) AS n FROM supplier")
+    supplier_count = cursor.fetchone()["n"]
+
+    cursor.execute("SELECT COUNT(*) AS n FROM delivery_agent")
+    da_count = cursor.fetchone()["n"]
+
+    return render_template('admin.html', customer_count=customer_count, supplier_count=supplier_count, da_count=da_count)
 
 
 @app.route("/logout")
@@ -323,3 +332,11 @@ def account():
     else:
         return redirect('/login')
 
+
+@app.route("/blog", methods=["GET", "POST"])
+def blog():
+    subbed = None
+    if request.method == "POST":
+        subbed = "You'll be notified as soon as the page has been constructed!"
+
+    return render_template("blog.html", subbed=subbed)

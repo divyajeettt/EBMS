@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}Home{% endblock %}
+</title>
+
+<body>
+    {% block main %}
+    <h1><b>Coming Soon...</b></h1>
+
+    <br>
+    <p>
+        We're currently working on something awesome. Be the first to know!
+        Till then, browse through our <a href="/search">Product Catalogue</a>.
+    </p>
+    <hr>
+    <br>
+
+    <div>
+        <form id="form" action="/blog" method="POST">
+            <div class="input-group" width="100%">
+                <input type="email" id="query" name="email" aria-label="Search through site content" class="form-control" placeholder="E-Mail Address...">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Subscribe!</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if subbed %}
+        <br>
+        <p>{{ subbed }}</p>
+    {% endif %}
+
+    {% endblock %}
+</body>
