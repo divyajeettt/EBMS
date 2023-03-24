@@ -1,5 +1,4 @@
-
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, abort
 from flask_session import Session
 from dotenv import load_dotenv
 from tempfile import mkdtemp
@@ -21,34 +20,11 @@ load_dotenv(verbose=True)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# Ensure responses aren't cached
-# @app.after_request
-# def after_request(response):
-#     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-#     response.headers["Expires"] = 0
-#     response.headers["Pragma"] = "no-cache"
-#     return response
-
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-# Ensure responses aren't cached
-@app.after_request
-def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-
-
-
-
-
-# print(os.environ)
 
 
 # Set up database connection
@@ -60,6 +36,15 @@ cnx = mysql.connector.connect(
 )
 
 
+# Ensure responses aren't cached
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+
 @app.route("/")
 def index():
     return render_template("home.html")
@@ -67,23 +52,13 @@ def index():
 
 @app.route("/search")
 def search():
-    cursor = cnx.cursor()
-
     search = request.args.get("q")
-    if search is None:
-        query = "SELECT * FROM product"
-    else:
-        query = f"SELECT * FROM product WHERE name LIKE '%{search}%'"
+    query = "SELECT * FROM product"
+    query += f" WHERE name LIKE '%{search}%'" if search else ""
 
-    # Execute a query
-    cursor.execute(query)
-
-    # Fetch the results
-    # converting to list to fully exhaust the generator before closing the cursor
-    results = list(cursor.fetchall())
-
-    # Close the cursor and connection
-    cursor.close()
+    with cnx.cursor() as cursor:
+        cursor.execute(query)
+        results = list(cursor.fetchall())
 
     return render_template('search.html', rows=results)
 
@@ -95,19 +70,17 @@ def login():
     session.clear()
 
     if request.method == 'POST':
-
         if not request.form.get('username'):
             return render_template('login.html', error='Please enter your username')
         elif not request.form.get('password'):
             return render_template('login.html', error='Please enter your password')
 
-        cursor = cnx.cursor(dictionary=True)
-        if request.form['LoginRadio'] == 'customer':
-            cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('username'),))
-        elif request.form['LoginRadio'] == 'supplier':
-            cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('username'),))
-        user = cursor.fetchone()
-        cursor.close()
+        with cnx.cursor(dictionary=True) as cursor:
+            if request.form['LoginRadio'] == 'customer':
+                cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('username'),))
+            elif request.form['LoginRadio'] == 'supplier':
+                cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('username'),))
+            user = cursor.fetchone()
 
         if user is None:
             return render_template('login.html', error='Invalid username')
@@ -138,55 +111,52 @@ def register():
     if request.method == 'POST':
         if not request.form.get('first_name'):
             return render_template('register.html', error='Please enter your first name')
-        
+
         elif not request.form.get('email'):
             return render_template('register.html', error='Please enter your email')
-        
+
         elif not request.form.get('password'):
             return render_template('register.html', error='Please enter your password')
-        
+
         elif not request.form.get('re_password'):
             return render_template('register.html', error='Please confirm your password')
-        
+
         elif not request.form.get('phone_no'):
             return render_template('register.html', error='Please enter your phone number')
-        
+
         elif not request.form.get('age'):
             return render_template('register.html', error='Please enter your age')
-        
+
         elif not request.form.get('address'):
             return render_template('register.html', error='Please enter your address')
-        
+
         elif not request.form.get('address2'):
             return render_template('register.html', error='Please enter your address')
-        
+
         elif not request.form.get('city'):
             return render_template('register.html', error='Please enter your city')
-        
+
         elif not request.form.get('state'):
             return render_template('register.html', error='Please enter your state')
-        
+
         elif not request.form.get('zip'):
             return render_template('register.html', error='Please enter your zip code')
-        
+
         elif request.form.get('password') != request.form.get('re_password'):
             return render_template('register.html', error='Passwords do not match')
 
         utype = request.form['RegisterRadio']
 
-
-        cursor = cnx.cursor()
-        if utype == 'customer':
-            cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('email'),))
-        elif utype == 'supplier':
-            cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('email'),))
-
-        user = cursor.fetchone()
-        cursor.close()
+        with cnx.cursor() as cursor:
+            if utype == 'customer':
+                cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('email'),))
+            elif utype == 'supplier':
+                cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('email'),))
+            user = cursor.fetchone()
 
         if user is not None:
             return render_template('register.html', error='Email already exists')
-        
+
         password = request.form.get('password')
         for i in password:
             if i == ' ':
@@ -210,39 +180,38 @@ def register():
         else:
             return render_template('register.html', error="password doesn't meet the requirements")
 
-        cursor = cnx.cursor(dictionary=True)
-        if utype == 'customer':
-            cursor.execute("SELECT MAX(phoneID) FROM phone_number")
-            phoneID = cursor.fetchone()
-            cursor.execute("INSERT INTO phone_number (num, phoneID) VALUES (%s, %s)", (request.form.get('phone_no'), int(phoneID['MAX(phoneID)'])+1))
-            cursor.execute("INSERT INTO address (street_name, apt_number, city, state, zip, country) VALUES (%s, %s, %s, %s, %s, %s)", (request.form.get('address'), request.form.get('address2'), request.form.get('city'), request.form.get('state'), request.form.get('zip'), request.form.get('country')))
-            cursor.execute("SELECT MAX(addressID) FROM address")
-            addressID = cursor.fetchone()
-            cursor.execute("INSERT INTO customer (first_name, middle_initial, last_name, age, email, pwd, addressID, phoneID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('age'), request.form.get('email'), generate_password_hash(request.form.get('password')), addressID['MAX(addressID)'], int(phoneID["MAX(phoneID)"]) + 1) )
+        with cnx.cursor(dictionary=True) as cursor:
+            if utype == 'customer':
+                cursor.execute("SELECT MAX(phoneID) FROM phone_number")
+                phoneID = cursor.fetchone()
+                cursor.execute("INSERT INTO phone_number (num, phoneID) VALUES (%s, %s)", (request.form.get('phone_no'), int(phoneID['MAX(phoneID)'])+1))
+                cursor.execute("INSERT INTO address (street_name, apt_number, city, state, zip, country) VALUES (%s, %s, %s, %s, %s, %s)", (request.form.get('address'), request.form.get('address2'), request.form.get('city'), request.form.get('state'), request.form.get('zip'), request.form.get('country')))
+                cursor.execute("SELECT MAX(addressID) FROM address")
+                addressID = cursor.fetchone()
+                cursor.execute("INSERT INTO customer (first_name, middle_initial, last_name, age, email, pwd, addressID, phoneID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('age'), request.form.get('email'), generate_password_hash(request.form.get('password')), addressID['MAX(addressID)'], int(phoneID["MAX(phoneID)"]) + 1) )
 
-        elif utype == 'supplier':
-            cursor.execute("INSERT INTO supplier (first_name, middle_initial, last_name, email, pwd) VALUES (%s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('email'), generate_password_hash(request.form.get('password'))))
-            cursor.execute("INSERT INTO address (street_name, apt_number, city, state, zip, country) VALUES (%s, %s, %s, %s, %s, %s)", (request.form.get('address'), request.form.get('address2'), request.form.get('city'), request.form.get('state'), request.form.get('zip'), request.form.get('country')))
+            elif utype == 'supplier':
+                cursor.execute("INSERT INTO supplier (first_name, middle_initial, last_name, email, pwd) VALUES (%s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('email'), generate_password_hash(request.form.get('password'))))
+                cursor.execute("INSERT INTO address (street_name, apt_number, city, state, zip, country) VALUES (%s, %s, %s, %s, %s, %s)", (request.form.get('address'), request.form.get('address2'), request.form.get('city'), request.form.get('state'), request.form.get('zip'), request.form.get('country')))
 
-        cnx.commit()
+            cnx.commit()
 
-        if utype == 'customer':
-            cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('email'),))
-            user = cursor.fetchone()
+            if utype == 'customer':
+                cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('email'),))
+                user = cursor.fetchone()
 
-            session['user_id'] = user['customerID']
-            session['user_type'] = 'customer'
-            session['user_email'] = user['email']
-            session['username'] = user['first_name']
-        elif utype == 'supplier':
-            cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('email'),))
-            user = cursor.fetchone()
+                session['user_id'] = user['customerID']
+                session['user_type'] = 'customer'
+                session['user_email'] = user['email']
+                session['username'] = user['first_name']
+            elif utype == 'supplier':
+                cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('email'),))
+                user = cursor.fetchone()
 
-            session['user_id'] = user['supplierID']
-            session['user_type'] = 'supplier'
-            session['user_email'] = user['email']
-            session['username'] = user['first_name']
-        cursor.close()
+                session['user_id'] = user['supplierID']
+                session['user_type'] = 'supplier'
+                session['user_email'] = user['email']
+                session['username'] = user['first_name']
 
         return redirect('/')
 
@@ -261,10 +230,9 @@ def adminlogin():
         elif not request.form.get('password'):
             return render_template('adminlogin.html', error='Please enter your password')
 
-        cursor = cnx.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM admin WHERE username = %s", (request.form.get('username'),))
-        user = cursor.fetchone()
-        cursor.close()
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM admin WHERE username = %s", (request.form.get('username'),))
+            user = cursor.fetchone()
 
         if user is None:
             return render_template('adminlogin.html', error='Invalid username')
@@ -288,30 +256,48 @@ def admin():
     if session.get('user_type') != 'admin':
         return redirect('/adminlogin')
 
-    cursor = cnx.cursor(dictionary=True)
+    context = {}
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute("SELECT COUNT(*) AS n FROM customer")
+        context["customer_count"] = cursor.fetchone()["n"]
 
-    cursor.execute("SELECT COUNT(*) AS n FROM customer")
-    customer_count = round(cursor.fetchone()["n"], -1)
+        cursor.execute("SELECT COUNT(*) AS n FROM supplier")
+        context["supplier_count"] = cursor.fetchone()["n"]
 
-    cursor.execute("SELECT COUNT(*) AS n FROM supplier")
-    supplier_count = round(cursor.fetchone()["n"], -1)
+        cursor.execute("SELECT COUNT(*) AS n FROM delivery_agent")
+        context["da_count"] = cursor.fetchone()["n"]
 
-    cursor.execute("SELECT COUNT(*) AS n FROM delivery_agent")
-    da_count = round(cursor.fetchone()["n"], -1)
+        cursor.execute("SELECT COUNT(*) AS n FROM orders")
+        context["order_count"] = cursor.fetchone()["n"]
 
-    cursor.execute("SELECT COUNT(*) AS n FROM orders")
-    order_count = round(cursor.fetchone()["n"], -1)
+        cursor.execute("SELECT COUNT(*) AS n FROM order_product")
+        context["product_count"] = cursor.fetchone()["n"]
 
-    cursor.execute("SELECT COUNT(*) AS n FROM order_product")
-    product_count = round(cursor.fetchone()["n"], -1)
+    for key in context:
+        context[key] = round(context[key], -1)
 
-    cursor.close()
+    return render_template("admin.html", context=context)
 
-    return render_template(
-        'admin.html',
-        customer_count=customer_count, supplier_count=supplier_count, da_count=da_count,
-        order_count=order_count, product_count=product_count
-    )
+
+@app.route("/admin/<string:page>", methods=["GET"])
+@admin_login_required
+def admin_stats(page: str):
+    if session.get("user_type") != "admin":
+        return redirect("/adminlogin")
+
+    table = {
+        "customer": "customer", "supplier": "supplier",
+        "deliveryagent": "delivery_agent", "order": "orders", "product": "order_product"
+    }.get(page)
+
+    if table is None:
+        abort(404)
+
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute(f"SELECT COUNT(*) AS n FROM {table}")
+        results = cursor.fetchone()["n"]
+
+    return render_template(f"admin/{page}.html", count=round(results, -1))
 
 
 @app.route("/logout")
@@ -328,18 +314,15 @@ def logout():
 @app.route('/account', methods=['GET'])
 @login_required
 def account():
-
     if session.get('user_type') == 'customer':
-        cursor = cnx.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM customer WHERE customerID = %s", (session.get('user_id'),))
-        user = cursor.fetchone()
-        cursor.close()
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM customer WHERE customerID = %s", (session.get('user_id'),))
+            user = cursor.fetchone()
         return render_template('customer.html', user=user)
     elif session.get('user_type') == 'supplier':
-        cursor = cnx.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM supplier WHERE supplierID = %s", (session.get('user_id'),))
-        user = cursor.fetchone()
-        cursor.close()
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM supplier WHERE supplierID = %s", (session.get('user_id'),))
+            user = cursor.fetchone()
         return render_template('supplier.html', user=user)
     else:
         return redirect('/login')

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}Order Stats{% endblock %}
+</title>
+
+<body>
+    {% block main %}
+
+    <div class="card" style="margin-right: 0px !important;">
+        <h1 style="font-size: 72px;"><b>{{ count }}+</b></h1>
+        <h2><b>Orders</b></h2>
+        <p>have been placed through through <b>EBMS</b>.</p>
+    </div>
+
+    <br>
+    <hr>
+    <p style="color: gray; text-align: left;">Get the details of a specific order.</p>
+    <div>
+        <form id="form" role="search" method="GET">
+            <div class="input-group" width="100%">
+                <input type="search" id="query" name="orderID" aria-label="Search through site content" class="form-control" placeholder="Order ID...">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">
+                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="Search" width="20" height="20">
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% endblock %}
+</body>

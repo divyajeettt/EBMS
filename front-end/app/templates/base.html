@@ -65,10 +65,13 @@
     <main class="container p-5">
         {% block main %}{% endblock %}
     </main>
-    <footer class="small text-center text-muted">
-        &copy; 2023 by ebms. Login as <a href="/adminlogin">admin</a> to access admin features.
-        <br> &nbsp;
-    </footer>
+
+    {% if 'admin' not in request.path %}
+        <footer class="small text-center text-muted">
+            &copy; 2023 by ebms. Login as <a href="/adminlogin">admin</a> to access admin features.
+            <br> &nbsp;
+        </footer>
+    {% endif %}
 </body>
 
 </html>
