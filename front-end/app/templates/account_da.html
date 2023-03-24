@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}Account{% endblock %}
+</title>
+
+<body>
+    {% block main %}
+        <h1>Welcome to ebms, {{session['username']}}!</h1>
+        <p>This is your home page.</p>
+    {% endblock %}
+</body>

@@ -180,6 +180,8 @@ def register():
             cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('email'),))
         elif utype == 'supplier':
             cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('email'),))
+        elif utype == 'delivery_agent':
+            cursor.execute("SELECT * FROM delivery_agent WHERE email = %s", (request.form.get('email'),))
 
         user = cursor.fetchone()
         cursor.close()
@@ -221,9 +223,16 @@ def register():
             cursor.execute("INSERT INTO customer (first_name, middle_initial, last_name, age, email, pwd, addressID, phoneID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('age'), request.form.get('email'), generate_password_hash(request.form.get('password')), addressID['MAX(addressID)'], int(phoneID["MAX(phoneID)"]) + 1) )
 
         elif utype == 'supplier':
-            cursor.execute("INSERT INTO supplier (first_name, middle_initial, last_name, email, pwd) VALUES (%s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('email'), generate_password_hash(request.form.get('password'))))
             cursor.execute("INSERT INTO address (street_name, apt_number, city, state, zip, country) VALUES (%s, %s, %s, %s, %s, %s)", (request.form.get('address'), request.form.get('address2'), request.form.get('city'), request.form.get('state'), request.form.get('zip'), request.form.get('country')))
-
+            cursor.execute("SELECT MAX(addressID) FROM address")
+            addressID = cursor.fetchone()
+            cursor.execute("INSERT INTO supplier (first_name, middle_initial, last_name, email, pwd, addressID) VALUES (%s, %s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('email'), generate_password_hash(request.form.get('password')), addressID['MAX(addressID)']))
+            
+        elif utype == 'delivery_agent':
+            cursor.execute("SELECT MAX(phoneID) FROM phone_number")
+            phoneID = cursor.fetchone()
+            cursor.execute("INSERT INTO phone_number (num, phoneID) VALUES (%s, %s)", (request.form.get('phone_no'), int(phoneID['MAX(phoneID)'])+1))
+            cursor.execute("INSERT INTO delivery_agent (first_name, middle_initial, last_name, email, pwd, phoneID) VALUES (%s, %s, %s, %s, %s, %s)", (request.form.get('first_name'), request.form.get('middle_initial'), request.form.get('last_name'), request.form.get('email'), generate_password_hash(request.form.get('password')), int(phoneID['MAX(phoneID)'])+1))
         cnx.commit()
 
         if utype == 'customer':
@@ -242,6 +251,16 @@ def register():
             session['user_type'] = 'supplier'
             session['user_email'] = user['email']
             session['username'] = user['first_name']
+
+        elif utype == 'delivery_agent':
+            cursor.execute("SELECT * FROM delivery_agent WHERE email = %s", (request.form.get('email'),))
+            user = cursor.fetchone()
+
+            session['user_id'] = user['daID']
+            session['user_type'] = 'delivery_agent'
+            session['user_email'] = user['email']
+            session['username'] = user['first_name']
+        
         cursor.close()
 
         return redirect('/')
@@ -322,13 +341,19 @@ def account():
         cursor.execute("SELECT * FROM customer WHERE customerID = %s", (session.get('user_id'),))
         user = cursor.fetchone()
         cursor.close()
-        return render_template('customer.html', user=user)
+        return render_template('account_customer.html', user=user)
     elif session.get('user_type') == 'supplier':
         cursor = cnx.cursor(dictionary=True)
         cursor.execute("SELECT * FROM supplier WHERE supplierID = %s", (session.get('user_id'),))
         user = cursor.fetchone()
         cursor.close()
-        return render_template('supplier.html', user=user)
+        return render_template('account_supplier.html', user=user)
+    elif session.get('user_type') == 'delivery_agent':
+        cursor = cnx.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM delivery_agent WHERE daID = %s", (session.get('user_id'),))
+        user = cursor.fetchone()
+        cursor.close()
+        return render_template('account_da.html', user=user)
     else:
         return redirect('/login')
 
@@ -340,3 +365,22 @@ def blog():
         subbed = "You'll be notified as soon as the page has been constructed!"
 
     return render_template("blog.html", subbed=subbed)
+
+
+@app.route("/account/cart", methods=["GET", "POST"])
+@login_required
+def cart():
+    if request.method == "POST":
+        return redirect("/account/cart/checkout")
+    
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute("SELECT p.name as n, c.quantity as q, p.price as pr FROM cart c JOIN product p on c.productID=p.productID WHERE c.customerID = %s", (session.get('user_id'),))
+    cart = cursor.fetchall()
+    cursor.close()
+
+    # find cart total
+    total = 0
+    for item in cart:
+        total += float(item["q"]) * float(item["pr"])
+
+    return render_template("cart.html", cart=cart, total=round(total, 3))
