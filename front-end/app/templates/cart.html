@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}Cart{% endblock %}
+</title>
+
+<body>
+    {% block main %}
+        <h1 style="text-align: left;"><b>Your Cart</b></h1>
+        <br>
+        <!-- code to list items in cart as a table -->
+        <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="cartTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr class="clickable-row">
+                    <td>{{item['i']}}</td>
+                    <td>{{item['n']}}</td>
+                    <td>{{item['q']}}</td>
+                    <td>{{item['pr']}}</td>
+                    <td>{{ item['q']*item['pr'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+
+        <div style="text-align: right;">
+            <h3>Total: ${{total}}</h3>
+        </div>
+
+        <script>
+            const pid = 0;
+            const table = document.getElementById("cartTable");
+            table.addEventListener("click", function(event) {
+                const clickedElement = event.target;
+                if (clickedElement.tagName === "TD") {
+                const row = clickedElement.parentNode;
+                const firstCell = row.querySelector("td:first-child");
+                const pid = firstCell.textContent;
+                console.log("Clicked row value: " + pid);
+                window.location = "/product/".concat(pid.toString());
+                }
+            });
+
+        </script>
+
+    {% endblock %}
+</body>

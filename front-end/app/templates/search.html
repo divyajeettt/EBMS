@@ -33,9 +33,10 @@
     {% if request.args.get("q") not in [None, ""] %}
     <p>Showing results for "{{ request.args.get('q') }}"</p>
     {% endif %}
-    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="dtBasicExample">
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
         <thead class="thead-dark">
             <tr>
+                <th class="sorting">ID</th>
                 <th class="sorting">Product</th>
                 <th class="sorting">Price</th>
                 <th class="sorting">In Stock</th>
@@ -43,7 +44,8 @@
         </thead>
 
         {% for product in rows %}
-        <tr>
+        <tr class="clickable-row">
+            <td>{{ product[0] }}</td>
             <td>{{ product[1] }}</td>
             <td>{{ product[3] }}</td>
             <td>{{ "Yes" if product[2] > 0 else "No" }}</td>
@@ -54,8 +56,27 @@
     <script src="{{ url_for('static', filename='js/datatables2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#dtBasicExample').DataTable();
+            $('#searchTable').DataTable({
+                "aaSorting": [],
+                columnDefs: [{
+                    orderable: false,
+                    targets: 0
+                }]
+            });
             $('.dataTables_length').addClass('bs-select');
+        });
+
+        const pid = 0;
+        const table = document.getElementById("searchTable");
+        table.addEventListener("click", function(event) {
+            const clickedElement = event.target;
+            if (clickedElement.tagName === "TD") {
+            const row = clickedElement.parentNode;
+            const firstCell = row.querySelector("td:first-child");
+            const pid = firstCell.textContent;
+            console.log("Clicked row value: " + pid);
+            window.location = "/product/".concat(pid.toString());
+            }
         });
     </script>
     {% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+<head>
+    <title>
+        {% block title %}{{ product["name"] }}{% endblock %}
+    </title>
+</head>
+
+<body>
+    {% block main %}
+        <h3 style="text-align: left;">
+            <b>{{ product["name"] }}</b>
+        </h3>
+
+        <br>
+        <p style="text-align: left;">
+            <b>Price:</b> ${{ product["price"] }}
+            <br>
+            <b>Quantity:</b> {{ product["quantity"] }}
+        </p>
+
+        <br>
+
+        <p style="text-align: left;">
+            <b>Description:</b> {{ product["product_description"] }}
+        </p>
+
+    {% endblock %}
+</body>
