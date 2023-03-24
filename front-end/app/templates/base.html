@@ -68,9 +68,10 @@
         {% block main %}{% endblock %}
     </main>
     <footer class="small text-center text-muted">
-        &copy; 2023 by ebms. Login as <a href="/adminlogin">admin</a> to access admin features.
+        &copy; 2023 by ebms. {% if not session['user_id'] %} <span>Login as <a href="/adminlogin">admin</a> to access admin features.</span> {% endif %}
         <br> &nbsp;
     </footer>
+    
 </body>
 
 </html>

@@ -148,3 +148,7 @@ table.dataTable thead .sorting_desc_disabled:before {
     text-decoration: none;
     transition: 0.3s;
 }
+
+.clickable-row :hover {
+    cursor: pointer;
+}
