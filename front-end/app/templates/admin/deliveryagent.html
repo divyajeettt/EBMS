@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}Delivery Agent Stats{% endblock %}
+</title>
+
+<body>
+    {% block main %}
+
+    <div class="card" style="margin-right: 0px !important;">
+        <h1 style="font-size: 72px;"><b>{{ count }}+</b></h1>
+        <h2><b>Delivery Agents</b></h2>
+        <p>are helping <b>EBMS</b> deliver Products to Customers.</p>
+    </div>
+
+    <br>
+    <hr>
+    <p style="color: gray; text-align: left;">Get the details of a specific delivery agent.</p>
+    <div>
+        <form id="form" role="search" method="GET">
+            <div class="input-group" width="100%">
+                <input type="search" id="query" name="daID" aria-label="Search through site content" class="form-control" placeholder="Delivery Agent ID...">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">
+                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="Search" width="20" height="20">
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% endblock %}
+</body>

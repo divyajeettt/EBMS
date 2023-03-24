@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 
 <title>
-    {% block title %}Home{% endblock %}
+    {% block title %}Admin Dashboard{% endblock %}
 </title>
 
 <body>
     {% block main %}
-        <h1><b>Welcome back, {{ session['username'] }}.</b></h1>
+        <h1><b>
+            Welcome back,
+            <span class="blue">{{ session['username'][0] }}</span><span class="red">{{ session['username'][1] }}</span><span class="yellow">{{ session['username'][2] }}</span><span class="green">{{ session['username'][3] }}</span>.
+        </b></h1>
         <br>
         <p>No issues or bugs have been reported to our customer care in the past week.</p>
         <br>
@@ -14,27 +17,48 @@
         <div class="card-group" style="width: 100%;">
             <div class="card">
                 <a class="card-link" href="/admin/customer">
-                    <h1 style="font-size: 72px;"><b>{{ customer_count }}+</b></h1>
+                    <h1 style="font-size: 72px;"><b>{{ context['customer_count'] }}+</b></h1>
                     <h2><b>Customers</b></h2>
-                    <p><br>have been using <b>EBMS</b> for their electronics needs.</p>
+                    <p><br>are using <b>EBMS</b> for their electronics needs.</p>
                 </a>
             </div>
 
             <div class="card">
                 <a class="card-link" href="/admin/supplier">
-                    <h1 style="font-size: 72px;"><b>{{ supplier_count }}+</b></h1>
+                    <h1 style="font-size: 72px;"><b>{{ context['supplier_count'] }}+</b></h1>
                     <h2><b>Suppliers</b></h2>
                     <p><br>are supplying products to the <b>EBMS</b> warehouse.</p>
                 </a>
             </div>
 
-            <div class="card">
+            <div class="card" style="margin-right: 0px !important;">
                 <a class="card-link" href="/admin/deliveryagent">
-                    <h1 style="font-size: 72px;"><b>{{ da_count }}+</b></h1>
+                    <h1 style="font-size: 72px;"><b>{{ context['da_count'] }}+</b></h1>
                     <h2><b>Delivery Agents</b></h2>
-                    <p><br>are working to deliver Products to Customers through <b>EBMS</b>.</p>
+                    <p><br>are helping <b>EBMS</b> deliver Products to Customers.</p>
                 </a>
             </div>
         </div>
+
+        <div class="card-group" style="width: 100%;">
+            <div class="card">
+                <a class="card-link" href="/admin/order">
+                    <h1 style="font-size: 72px;"><b>{{ context['order_count'] }}+</b></h1>
+                    <h2><b>Orders</b></h2>
+                    <p><br>have been placed through through <b>EBMS</b>.</p>
+                </a>
+            </div>
+
+            <div class="card" style="margin-right: 0px !important;">
+                <a class="card-link" href="/admin/product">
+                    <h1 style="font-size: 72px;"><b>{{ context['product_count'] }}+</b></h1>
+                    <h2><b>Products</b></h2>
+                    <p><br>have been sold through through <b>EBMS</b>.</p>
+                </a>
+            </div>
+        </div>
+
+        <br>
+        <p style="text-align: left; color: gray; font-size: 95%;">*Click on a card to view more information.</p>
     {% endblock %}
 </body>
