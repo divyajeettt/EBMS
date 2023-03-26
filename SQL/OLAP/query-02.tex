@@ -1,0 +1,24 @@
+\textbf{Feature:} This query is used to find out the country-wise trends in the number of orders and revenue. \\
+\textbf{Location:} In function \texttt{admin\_stats(page)} in \texttt{front-end/\_\_init\_\_.py}
+
+\textbf{Usage:}
+When the HTML page is rendered, the rolled-up data is separated.
+Due to an overwhelmingly large number of states, cities, etc., the data is grouped by country only.
+The query can be extended to rollup with states, cities, etc. by adding them to the \texttt{SELECT} and \texttt{GROUP BY} clause.
+The data record where country is empty gives the total global revenue and order count.
+
+\vspace*{10pt}
+
+\begin{lstlisting}
+SELECT
+    a.country,
+    COUNT(DISTINCT o.orderID) AS order_count,
+    SUM(op.quantity * p.price) AS revenue
+FROM orders o
+JOIN order_product op ON o.orderID = op.orderID
+JOIN product p ON op.productID = p.productID
+JOIN customer c ON o.customerID = c.customerID
+JOIN address a ON c.addressID = a.addressID
+GROUP BY a.country WITH ROLLUP
+ORDER BY revenue DESC;
+\end{lstlisting}

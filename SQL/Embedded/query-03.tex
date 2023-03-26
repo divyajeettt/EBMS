@@ -1,0 +1,10 @@
+\textbf{Feature:} These queries are used to get an overview of statistics for the admin. \\
+\textbf{Location:} In function \texttt{admin()} in \texttt{front-end/\_\_init\_\_.py}
+
+\begin{lstlisting}
+SELECT COUNT(*) AS customer_count FROM customer;
+SELECT COUNT(*) AS supplier_count FROM supplier;
+SELECT COUNT(*) AS da_count FROM delivery_agent;
+SELECT COUNT(*) AS order_count FROM orders;
+SELECT COUNT(*) AS product_count FROM order_product;
+\end{lstlisting}

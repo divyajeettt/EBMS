@@ -5,6 +5,6 @@ SELECT p.productID, p.name, AVG(pr.rating) AS avg_rating
 FROM product_review pr, product p
 WHERE p.productID = pr.productID
 GROUP BY p.productID
-HAVING AVG(pr.rating) >= 3.5
-ORDER BY AVG(pr.rating) DESC;
+HAVING avg_rating >= 3.5
+ORDER BY avg_rating DESC;
 \end{lstlisting}

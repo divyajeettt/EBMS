@@ -1,8 +1,12 @@
 This query shows the undelivered orders of a delivery agent (where delivery date is NULL).
 
 \begin{lstlisting}
-SELECT orderID, customerID, daID, order_date,
-DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
+SELECT
+    orderID,
+    customerID,
+    daID,
+    order_date,
+    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
 FROM orders
 WHERE daID = 1 AND delivery_date IS NULL;
 \end{lstlisting}

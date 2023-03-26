@@ -1,7 +1,10 @@
 This query is used to view the order history of a customer.
 
 \begin{lstlisting}
-SELECT orders.orderID, orders.order_date, orders.delivery_date, product.name, order_product.quantity, product.price,
+SELECT
+    orders.orderID,
+    orders.order_date, orders.delivery_date,
+    product.name, order_product.quantity, product.price,
     (order_product.quantity * product.price) AS total_price,
     CASE
         WHEN (orders.delivery_date IS NULL) = True THEN 'Not Delivered'

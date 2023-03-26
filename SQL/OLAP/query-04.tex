@@ -1,0 +1,30 @@
+\textbf{Feature:} This query is used to retrieve the demographics of supplier activity. \\
+\textbf{Location:} In function \texttt{admin\_stats(page)} in \texttt{front-end/\_\_init\_\_.py}
+
+\textbf{Usage:}
+When the HTML page is rendered, the rolled-up data is separated by regional demographics (country and state).
+The data contains the number of suppliers that are selling products on EBMS grouped by country and state.
+Empty values in the field \texttt{state} indicate that the data is an aggregate of country-wise data.
+The data record where country is empty gives the global aggregated data.
+The average earning per order along with total earning is also shown.
+
+\vspace*{30pt}
+
+\begin{lstlisting}
+SELECT
+    country, state,
+    COUNT(DISTINCT supplier.supplierID) AS supplier_count,
+    AVG(product.price * order_product.quantity) AS avg_earned,
+    SUM(product.price * order_product.quantity) AS total_earned
+FROM supplier
+JOIN orders ON supplier.supplierID IN (
+    SELECT supplierID FROM product WHERE productID IN (
+        SELECT productID FROM order_product WHERE orderID = orders.orderID
+    )
+)
+JOIN order_product ON orders.orderID = order_product.orderID
+JOIN product ON order_product.productID = product.productID
+JOIN address ON supplier.addressID = address.addressID
+GROUP BY country, state WITH ROLLUP
+ORDER BY country ASC, total_earned DESC
+\end{lstlisting}

@@ -1,8 +1,10 @@
 This query is used to show all underlivered orders with their ETA for a customer.
 
 \begin{lstlisting}
-SELECT orderID, order_date,
-DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), "%Y-%m-%d") AS ETA
+SELECT
+    orderID,
+    order_date,
+    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), "%Y-%m-%d") AS ETA
 FROM orders
 INNER JOIN customer ON orders.customerID = customer.customerID
 WHERE customer.customerID = 1 AND orders.delivery_date IS NULL

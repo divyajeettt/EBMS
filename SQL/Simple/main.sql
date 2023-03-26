@@ -43,7 +43,9 @@ WHERE daID = (
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-02: Get a list of all suppliers who have all their products with average rating above 3
-SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name
+SELECT
+    s.supplierID,
+    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name
 FROM supplier s
 WHERE (
     SELECT AVG(pr.rating) FROM product_review pr, product p
@@ -54,11 +56,12 @@ WHERE (
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-03: List the suppliers who do not sell any products
-SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name
+SELECT
+    s.supplierID,
+    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name
 FROM supplier s
 WHERE NOT EXISTS (
-    SELECT * FROM product p
-    WHERE p.supplierID = s.supplierID
+    SELECT * FROM product p WHERE p.supplierID = s.supplierID
 );
 
 ---------------------------------------------------------------------------------------------------------------------------------
@@ -68,23 +71,30 @@ SELECT p.productID, p.name, AVG(pr.rating) AS avg_rating
 FROM product_review pr, product p
 WHERE p.productID = pr.productID
 GROUP BY p.productID
-HAVING AVG(pr.rating) >= 3.5
-ORDER BY AVG(pr.rating) DESC;
+HAVING avg_rating >= 3.5
+ORDER BY avg_rating DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-05: Display the top 40 delivery agents with the highest average rating
-SELECT da.daID, CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name, AVG(dr.rating) AS avg_rating
-FROM da_review dr, delivery_agent da
+SELECT
+    da.daID,
+    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+    AVG(dr.rating) AS avg_rating
+FROM
+    da_review dr,
+    delivery_agent da
 WHERE da.daID = dr.daID
 GROUP BY da.daID
-ORDER BY AVG(dr.rating) DESC
+ORDER BY avg_rating DESC
 LIMIT 40;
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-06: Show the undelivered orders of a delivery agent
-SELECT orderID, customerID, daID, order_date, DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
+SELECT
+    orderID, customerID, daID, order_date,
+    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
 FROM orders
 WHERE daID = 1 AND delivery_date IS NULL;
 
@@ -102,15 +112,15 @@ FROM
     customer,
     address,
     (SELECT num FROM phone_number, customer WHERE phone_number.phoneID = customer.phoneID AND customerID = 50 LIMIT 1) AS ph
-WHERE customer.addressID = address.addressID
-AND customer.customerID = 50;
+WHERE customer.addressID = address.addressID AND customer.customerID = 50;
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-08: Show the top 15 customers who have spent the most money on their orders
-SELECT customer.customerID,
-COUNT(orders.orderID) AS total_orders,
-SUM(product.price * order_product.quantity) AS total_spent
+SELECT
+    customer.customerID,
+    COUNT(orders.orderID) AS total_orders,
+    SUM(product.price * order_product.quantity) AS total_spent
 FROM customer
 INNER JOIN orders ON customer.customerID = orders.customerID
 INNER JOIN order_product ON orders.orderID = order_product.orderID
@@ -122,7 +132,10 @@ LIMIT 15;
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-09: View the order history of a customer
-SELECT orders.orderID, orders.order_date, orders.delivery_date, product.name, order_product.quantity, product.price,
+SELECT
+    orders.orderID,
+    orders.order_date, orders.delivery_date,
+    product.name, order_product.quantity, product.price,
     (order_product.quantity * product.price) AS total_price,
     CASE
         WHEN (orders.delivery_date IS NULL) = True THEN 'Not Delivered'
@@ -155,7 +168,8 @@ ORDER BY order_date;
 
 -- Query-12: Find out the total revenue and total quantity sold per product for a supplier (sales statistics)
 SELECT
-    product.name, SUM(order_product.quantity) AS total_quantity_sold,
+    product.name,
+    SUM(order_product.quantity) AS total_quantity_sold,
     SUM(order_product.quantity * product.price) AS total_revenue
 FROM product
 INNER JOIN order_product ON product.productID = order_product.productID
@@ -180,8 +194,8 @@ INSERT INTO cart (customerID, productID, quantity) VALUES (50, 1, 1);
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-15: Add a new phone number into the table for a customer
-INSERT INTO phone_number VALUES
-((SELECT phoneID FROM customer WHERE customerID = 50), '1234567890');
+INSERT INTO phone_number
+VALUES ((SELECT phoneID FROM customer WHERE customerID = 50), '1234567890');
 
 ---------------------------------------------------------------------------------------------------------------------------------
 

@@ -1,7 +1,9 @@
 This query is used to get a list of all suppliers who have all their products with average rating above 3.
 
 \begin{lstlisting}
-SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name
+SELECT
+    s.supplierID,
+    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name
 FROM supplier s
 WHERE (
     SELECT AVG(pr.rating) FROM product_review pr, product p

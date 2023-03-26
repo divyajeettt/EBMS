@@ -57,8 +57,7 @@
     <hr>
 
     <h1><b>Order Trends</b></h1>
-
-    Here is a summary of the number of orders and generated revenue over the past term
+    Here is a detailed monthly, quarterly, yearly, and overall summary of the number of orders and ebms' generated revenue
     <br>
     <br>
 
@@ -74,13 +73,122 @@
         </thead>
 
         {% for row in context['order_trend'] %}
+        {% if row['date_year'] != None and row['date_quarter'] != None and row['date_month'] != None %}
         <tr>
-            <td>{{ row['year'] }}</td>
-            <td>{{ row['quarter'] }}</td>
-            <td>{{ context['month'][row['month']] }}</td>
+            <td>{{ row['date_year'] }}</td>
+            <td>{{ row['date_quarter'] }}</td>
+            <td>{{ context['month'][row['date_month']] }}</td>
             <td>{{ row['order_count'] }}</td>
             <td>{{ row['revenue'] }}</td>
         </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Year</th>
+                <th>Quarter</th>
+                <th>Number of Orders</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+
+        {% for row in context['order_trend'] %}
+        {% if row['date_year'] != None and row['date_quarter'] != None and row['date_month'] == None %}
+        <tr>
+            <td>{{ row['date_year'] }}</td>
+            <td>{{ row['date_quarter'] }}</td>
+            <td>{{ row['order_count'] }}</td>
+            <td>{{ row['revenue'] }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Year</th>
+                <th>Number of Orders</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+
+        {% for row in context['order_trend'] %}
+        {% if row['date_year'] != None and row['date_quarter'] == None and row['date_month'] == None %}
+        <tr>
+            <td>{{ row['date_year'] }}</td>
+            <td>{{ row['order_count'] }}</td>
+            <td>{{ row['revenue'] }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Number of Orders</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+
+        {% for row in context['order_trend'] %}
+        {% if row['date_year'] == None and row['date_quarter'] == None and row['date_month'] == None %}
+        <tr>
+            <td>{{ row['order_count'] }}</td>
+            <td>{{ row['revenue'] }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+
+    <br>
+    <hr>
+
+    <h1><b>Region-wise Order Statistics</b></h1>
+    Here is detailed summary of performance of ebms worldwide
+
+    <br>
+    <br>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Country</th>
+                <th>Number of Orders</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+
+        {% for row in context['country_trend'] %}
+        {% if row['country'] != None %}
+        <tr>
+            <td>{{ row['country'] }}</td>
+            <td>{{ row['order_count'] }}</td>
+            <td>{{ row['revenue'] }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Total Number of Orders</th>
+                <th>Total Global Revenue</th>
+            </tr>
+        </thead>
+
+        {% for row in context['country_trend'] %}
+        {% if row['country'] == None %}
+        <tr>
+            <td>{{ row['order_count'] }}</td>
+            <td>{{ row['revenue'] }}</td>
+        </tr>
+        {% endif %}
         {% endfor %}
     </table>
 

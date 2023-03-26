@@ -1,0 +1,29 @@
+\textbf{Feature:} This query is used to find out a supplier's statistics by date and region. \\
+\textbf{Location:} This query has not been added yet, as it is a supplier-specific query and supplier-pages are not yet implemented.
+
+\textbf{Usage:}
+A supplier's sales grouped by a particular month/year and country are returned by this query.
+We can separate this rolled up data into monthly, yearly, and country-wise trends.
+\footnote{
+    Here, \texttt{s\_id} is the supplier ID of the currently logged in supplier.
+    The string is substituted into the query using an \texttt{f-string} in Python.
+}
+
+\vspace*{10pt}
+
+\begin{lstlisting}
+SELECT
+    YEAR(order_date) AS year,
+    MONTH(order_date) AS month,
+    country,
+    COUNT(DISTINCT o.orderID) AS total_quantity,
+    SUM(op.quantity * p.price) AS total_sales
+FROM orders o
+JOIN order_product op ON o.orderID = op.orderID
+JOIN product p ON op.productID = p.productID
+JOIN customer c ON o.customerID = c.customerID
+JOIN address a ON c.addressID = a.addressID
+JOIN supplier s ON p.supplierID = s.supplierID
+WHERE s.supplierID = {s_id}
+GROUP BY year, month, a.country WITH ROLLUP;
+\end{lstlisting}
