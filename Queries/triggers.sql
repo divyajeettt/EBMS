@@ -51,8 +51,9 @@ INSERT INTO order_product (orderID, productID, quantity) VALUES (1, 1, 1000000);
 DROP TRIGGER IF EXISTS create_wallet;
 DELIMITER $$
 CREATE TRIGGER create_wallet AFTER INSERT ON customer
+FOR EACH ROW
 BEGIN
-    INSERT INTO wallet (customer_id, balance) VALUES (NEW.id, 0);
+    INSERT INTO wallet (customerID, balance) VALUES (NEW.customerID, 0);
 END;
 $$
 DELIMITER ;

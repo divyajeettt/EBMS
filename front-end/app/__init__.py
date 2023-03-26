@@ -549,7 +549,7 @@ def account():
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT * FROM customer WHERE customerID = %s", (session.get('user_id'),))
             user = cursor.fetchone()
-        return render_template('customer.html', user=user)
+        return render_template('account/customer.html', user=user)
 
     elif session.get('user_type') == 'supplier':
         with cnx.cursor(dictionary=True) as cursor:
