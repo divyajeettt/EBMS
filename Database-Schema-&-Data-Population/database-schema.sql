@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS delivery_agent (
     first_name VARCHAR(255) NOT NULL,
     middle_initial VARCHAR(10),
     last_name VARCHAR(255),
-    avalability BOOLEAN NOT NULL DEFAULT TRUE,
+    availability BOOLEAN NOT NULL DEFAULT TRUE,
     phoneID INT UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     pwd VARCHAR(255) NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE TABLE IF NOT EXISTS wallet (
     customerID INT NOT NULL,
     balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-    upiID VARCHAR(255) NOT NULL,
+    upiID VARCHAR(255),
     CHECK (balance >= 0.00),
     PRIMARY KEY (customerID),
     FOREIGN KEY (customerID) REFERENCES customer(customerID)

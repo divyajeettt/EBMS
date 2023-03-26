@@ -1,15 +1,13 @@
 \textbf{Feature:} This query is used to find out a supplier's statistics by date and region. \\
-\textbf{Location:} This query has not been added yet, as it is a supplier-specific query and supplier-pages are not yet implemented.
+\textbf{Location:} Not been added yet, as it is a supplier-specific query and supplier-pages are not yet implemented.
 
 \textbf{Usage:}
 A supplier's sales grouped by a particular month/year and country are returned by this query.
-We can separate this rolled up data into monthly, yearly, and country-wise trends.
+We can separate the rolled up data into monthly, yearly, and country-wise trends.
 \footnote{
     Here, \texttt{s\_id} is the supplier ID of the currently logged in supplier.
     The string is substituted into the query using an \texttt{f-string} in Python.
 }
-
-\vspace*{10pt}
 
 \begin{lstlisting}
 SELECT

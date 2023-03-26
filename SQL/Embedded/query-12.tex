@@ -1,0 +1,15 @@
+\textbf{Feature:} This query is used to display the top-10 highest rated delivery agents. \\
+\textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
+
+\begin{lstlisting}
+SELECT
+    da.daID,
+    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+    email,
+    COUNT(o.orderID) AS total_orders
+FROM delivery_agent da
+LEFT JOIN orders o ON da.daID = o.daID
+GROUP BY da.daID
+ORDER BY total_orders DESC
+LIMIT 10;
+\end{lstlisting}

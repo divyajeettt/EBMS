@@ -1,0 +1,20 @@
+\textbf{Feature:} This query is used to display the top-10 highest rated suppliers. \\
+\textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
+
+\begin{lstlisting}
+SELECT
+    s.supplierID,
+    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
+    email,
+    AVG(pr.rating) AS avg_rating
+FROM supplier s, product_review pr, product prod
+WHERE (
+    SELECT AVG(pr.rating) FROM product_review pr, product p
+    WHERE p.productID = pr.productID AND p.supplierID = s.supplierID
+    GROUP BY p.supplierID
+) > 3
+AND s.supplierID = prod.supplierID AND pr.productID = prod.productID
+GROUP BY s.supplierID
+ORDER BY avg_rating DESC
+LIMIT 10;
+\end{lstlisting}

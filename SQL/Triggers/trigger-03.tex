@@ -1,0 +1,18 @@
+\textbf{Trigger Name:} \texttt{da\_unavailable} \\
+This trigger is used to toggle a delivery agent's availability to to True when they complete an order
+
+\begin{lstlisting}
+DROP TRIGGER IF EXISTS da_available;
+DELIMITER $$
+CREATE TRIGGER da_available AFTER UPDATE ON orders
+FOR EACH ROW
+BEGIN
+    IF NOT EXISTS (
+        SELECT * FROM orders WHERE daID = NEW.daID AND delivery_date IS NULL
+    ) THEN
+        UPDATE delivery_agent SET avalability = TRUE WHERE daID = NEW.daID;
+    END IF;
+END;
+$$
+DELIMITER ;
+\end{lstlisting}

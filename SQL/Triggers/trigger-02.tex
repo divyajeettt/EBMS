@@ -1,0 +1,14 @@
+\textbf{Trigger Name:} \texttt{da\_unavailable} \\
+This trigger is used to toggle a delivery agent's availability to False when they are assigned to an order
+
+\begin{lstlisting}
+DROP TRIGGER IF EXISTS da_unavailable;
+DELIMITER $$
+CREATE TRIGGER da_unavailable AFTER INSERT ON orders
+FOR EACH ROW
+BEGIN
+    UPDATE delivery_agent SET avalability = FALSE WHERE daID = NEW.daID;
+END;
+$$
+DELIMITER ;
+\end{lstlisting}

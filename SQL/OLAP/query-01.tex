@@ -2,13 +2,8 @@
 \textbf{Location:} In function \texttt{admin\_stats(page)} in \texttt{front-end/\_\_init\_\_.py}
 
 \textbf{Usage:}
-When the HTML page is rendered, the rolled-up data is separated.
-The data records having non-empty months are displayed as monthly trends.
-Similarly, the data where quarters are not empty but the months are, constitutes quarterly trends.
-Finally, where all except year is empty is the yearly trend.
-An overall total is also shown, as provided by the rollup query.
-
-\vspace*{10pt}
+Non-empty month, quarter, and year values indicate monthly, querterly, and yearly trends in order.
+An overall total is also provided by the roll-up query.
 
 \begin{lstlisting}
 SELECT

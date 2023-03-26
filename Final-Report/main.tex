@@ -502,14 +502,22 @@
         \item \input{./../SQL/Embedded/query-01.tex}
         \item \input{./../SQL/Embedded/query-02.tex}
         \item \input{./../SQL/Embedded/query-03.tex}
+        \item \input{./../SQL/Embedded/query-04.tex}
+        \item \input{./../SQL/Embedded/query-05.tex}
+        \item \input{./../SQL/Embedded/query-06.tex}
+        \item \input{./../SQL/Embedded/query-07.tex}
+        \item \input{./../SQL/Embedded/query-08.tex}
+        \item \input{./../SQL/Embedded/query-09.tex}
+        \item \input{./../SQL/Embedded/query-10.tex}
+        \item \input{./../SQL/Embedded/query-11.tex}
+        \item \input{./../SQL/Embedded/query-12.tex}
     \end{enumerate}
 
     \section*{\Huge OLAP SQL Queries}
     \vspace*{10pt}
 
-    OLAP queries are used to analyse and overview data in the database without looking at individual transactions.
-    Hence, they do not require user input and are (mainly) utilised by the Admin in our use case.
-    These queries are also embedded in Python.
+    OLAP queries are (mainly) utilised by the Admin in our use case to perform data analytics.
+    The OLAP data is separated from the rolled-up form before rendering the HTML page. These queries are also embedded in Python.
     \vspace*{10pt} \\
     The following is a (non-exhaustive) list of already implemented OLAP SQL queries:
 
@@ -522,5 +530,23 @@
     \end{enumerate}
 
     \section*{\Huge Triggers}
+
+    The following triggers are identified according to the use cases and implemented in the database:
+
+    \begin{enumerate}
+        \item \input{./../SQL/Triggers/trigger-01.tex}
+        \item \input{./../SQL/Triggers/trigger-02.tex}
+        \item \input{./../SQL/Triggers/trigger-03.tex}
+    \end{enumerate}
+
+    \vfill \pagebreak
+
+    \section*{References and Bibliography}
+
+    \begin{itemize}
+        \item \href{https://mdbootstrap.com/docs/b4/jquery/tables/sort/}{\color{blue}\underline{Sortable Tables in HTML}} \\
+        The JavaScript code to implement sorting on tables in HTML is taken from this website.
+        \item \href{https://www.w3schools.com/howto/howto_css_animate_buttons.asp}{\color{blue}\underline{Button animations using CSS}}
+    \end{itemize}
 
 \end{document}

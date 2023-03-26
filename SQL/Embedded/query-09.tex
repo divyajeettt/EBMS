@@ -1,0 +1,12 @@
+\textbf{Feature:} This query is used to display inactive suppliers. \\
+\textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
+
+\begin{lstlisting}
+SELECT
+    s.supplierID,
+    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
+    email
+FROM supplier s
+WHERE NOT EXISTS (SELECT * FROM product p WHERE p.supplierID = s.supplierID)
+LIMIT 10;
+\end{lstlisting}
