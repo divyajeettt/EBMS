@@ -6,7 +6,9 @@ DELIMITER $$
 CREATE TRIGGER create_wallet AFTER INSERT ON customer
 FOR EACH ROW
 BEGIN
-    INSERT INTO wallet (customerID, balance) VALUES (NEW.customerID, 0);
+    IF NOT EXISTS (SELECT * FROM wallet WHERE customerID = NEW.customerID) THEN
+        INSERT INTO wallet (customerID, balance) VALUES (NEW.customerID, 0);
+    END IF;
 END;
 $$
 DELIMITER ;
