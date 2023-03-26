@@ -55,19 +55,32 @@ def search():
     search = request.args.get("q")
     if search is None:
         query = """
-            SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-            FROM product p, product_review pr
-            WHERE p.productID = pr.productID
-            GROUP BY p.productID
-            ORDER BY p.name ASC
+            (
+                SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+                FROM product p, product_review pr
+                WHERE p.productID = pr.productID
+                GROUP BY p.productID
+            ) UNION (
+                SELECT p.name, p.price, "No Reviews", p.quantity
+                FROM product p
+                WHERE p.productID NOT IN (SELECT productID FROM product_review)
+            )
+            ORDER BY name ASC
         """
     else:
         query = f"""
-            SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-            FROM product p, product_review pr
-            WHERE p.productID = pr.productID AND p.name LIKE '%{search}%'
-            GROUP BY p.productID
-            ORDER BY p.name ASC
+            (
+                SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+                FROM product p, product_review pr
+                WHERE p.productID = pr.productID AND p.name LIKE '%{search}%'
+                GROUP BY p.productID
+            ) UNION (
+                SELECT p.name, p.price, "No Reviews", p.quantity
+                FROM product p
+                WHERE p.productID NOT IN (SELECT productID FROM product_review)
+                AND p.name LIKE '%{search}%'
+            )
+            ORDER BY name ASC
         """
 
     with cnx.cursor(dictionary=True) as cursor:
@@ -580,7 +593,7 @@ def account():
             user = cursor.fetchone()
 
         return render_template('account/deliveryagent.html', user=user)
-    
+
     elif session.get('user_type') == 'admin':
         return redirect('/admin')
 
