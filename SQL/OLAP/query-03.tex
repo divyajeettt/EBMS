@@ -2,13 +2,10 @@
 \textbf{Location:} In function \texttt{admin\_stats(page)} in \texttt{front-end/\_\_init\_\_.py}
 
 \textbf{Usage:}
-When the HTML page is rendered, the rolled-up data is separated by regional demographics (country and state).
-The data contains the number of customers that are registered on EBMS grouped by country and state.
+The OLAP data contains the number of customers that are registered on EBMS grouped by demographics.
 Empty values in the field \texttt{state} indicate that the data is an aggregate of country-wise data.
 The data record where country is empty gives the global aggregated data.
 The average spending per order along with total spending is also shown.
-
-\vspace*{30pt}
 
 \begin{lstlisting}
 SELECT
@@ -22,5 +19,5 @@ JOIN order_product ON orders.orderID = order_product.orderID
 JOIN product ON order_product.productID = product.productID
 JOIN address ON customer.addressID = address.addressID
 GROUP BY country, state WITH ROLLUP
-ORDER BY country ASC, total_spent DESC
+ORDER BY country ASC, total_spent DESC;
 \end{lstlisting}
