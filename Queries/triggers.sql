@@ -1,50 +1,3 @@
--- trigger to check if quantity in order is less than or equal to product quantity from order_product
-
-DROP TRIGGER IF EXISTS check_product_qty;
-DELIMITER $$
-CREATE TRIGGER check_product_qty BEFORE INSERT ON order_product
-FOR EACH ROW
-BEGIN
-    DECLARE product_qty INT;
-    DECLARE order_product_id INT;
-    DECLARE order_product_qty INT;
-    DECLARE done INT DEFAULT FALSE;
-    SELECT quantity INTO product_qty FROM product WHERE productID = NEW.productID;
-    IF (product_qty < NEW.quantity) THEN
-        
-    END IF;
-END;
-$$
-DELIMITER ;
-
-
-    DECLARE cur CURSOR FOR SELECT productID, quantity FROM order_product WHERE orderID = NEW.orderID;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-    OPEN cur;
-    read_loop: LOOP
-        FETCH cur INTO order_product_id, order_product_qty;
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
-        SELECT quantity INTO product_qty FROM product WHERE productID = order_product_id;
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'working';
-        IF (product_qty < order_product_qty) THEN
-            DELETE FROM order_product WHERE orderID = NEW.orderID;
-            DELETE FROM orders WHERE orderID = NEW.orderID;
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantity in order is more than available quantity';
-        END IF;
-    END LOOP;
-    CLOSE cur;
-END;
-$$
-DELIMITER ;
-
--- sample query to test the above trigger
-INSERT INTO orders (customerID, daID, order_date) VALUES (202, 1, '2020-12-12');
-INSERT INTO order_product (orderID, productID, quantity) VALUES (1, 1, 1000000);
-
-
-
 
 -- trigger to create a wallet for a new customer
 
@@ -79,7 +32,7 @@ DELIMITER ;
 
 -- sample query to test the above trigger
 SELECT * FROM delivery_agent WHERE daID = 1;
-INSERT INTO orders (customerID, daID, order_date) VALUES (202, 1, '2020-12-12');
+INSERT INTO orders (customerID, daID, order_date) VALUES (202, 1, '2020-12-12'); -- check orderID and daID in this query
 SELECT * FROM delivery_agent WHERE daID = 1;
 
 
@@ -91,7 +44,14 @@ DELIMITER $$
 CREATE TRIGGER da_available AFTER UPDATE ON orders
 FOR EACH ROW
 BEGIN
-    UPDATE delivery_agent SET avalability = true WHERE daID = NEW.daID;
+    IF NOT EXISTS (SELECT * FROM orders WHERE daID = NEW.daID AND delivery_date IS NULL) THEN
+        UPDATE delivery_agent SET avalability = TRUE WHERE daID = NEW.daID;
+    END IF;
 END;
 $$
 DELIMITER ;
+
+-- sample query to test the above trigger
+SELECT * FROM delivery_agent WHERE daID = 1;
+UPDATE orders SET order_date = '2020-12-12' WHERE orderID = 1; -- check orderID and daID in this query
+SELECT * FROM delivery_agent WHERE daID = 1;

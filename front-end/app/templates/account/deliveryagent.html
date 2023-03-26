@@ -6,7 +6,55 @@
 
 <body>
     {% block main %}
-        <h1>Welcome to ebms, {{session['username']}}!</h1>
-        <p>This is your home page.</p>
+        <h1><b>Welcome to ebms, {{session['username']}}!</b></h1>
+        
+        <!-- table showing active orders -->
+        <br>
+        <br>
+        <h2 style="text-align: left;"><b>Active Orders</b></h2>
+        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Customer ID</th>
+                    <th scope="col">Order Date</th>
+                    <th scope="col">ETA</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in active_orders %}
+                    <tr>
+                        <th scope="row">{{order['orderID']}}</th>
+                        <td>{{order['customerID']}}</td>
+                        <td>{{order['order_date']}}</td>
+                        <td>{{order['ETA']}}</td>
+                        <td>
+                            <form action="/account" method="post">
+                                <input type="hidden" name="order_id" value="{{order['orderID']}}">
+                                <button class="btn btn-primary" name="delivered_button" onclick="sendData(this.parentNode)">Delivered...</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endblock %}
+
+    <script>
+        // function sendData(row) {
+        //     var firstCell = row.querySelector(":first-child");
+        //     var formData = new FormData();
+        //     formData.append("order_id", firstCell.textContent);
+
+        //     fetch("/account", {
+        //         method: "POST",
+        //         body: formData
+        //     }).then(function(response) {
+        //         // handle the response
+        //     }).catch(function(error) {
+        //         // handle the error
+        //     });
+        // }
+    </script>
 </body>
