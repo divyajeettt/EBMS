@@ -1,9 +1,7 @@
 nav .navbar-brand {
-    /* size for brand */
     font-size: xx-large;
 }
 
-/* colors for brand */
 nav .navbar-brand .blue, .blue {
     color: #537fbe;
 }
@@ -18,18 +16,12 @@ nav .navbar-brand .green, .green {
 }
 
 main .form-control {
-    /* center form controls */
     display: inline-block;
-
-    /* override Bootstrap's 100% width for form controls */
     width: auto;
 }
 
 main {
-    /* scroll horizontally as needed */
     overflow-x: auto;
-
-    /* center contents */
     text-align: center;
 }
 
@@ -48,7 +40,6 @@ main .register {
 
 
 .image-clear {
-    /* make images opaque */
     opacity: 0;
 }
 
@@ -75,12 +66,12 @@ footer {
     transform: translateX(-50%);
 }
 .button {
-    border-radius: 4px;
-    background-color: #f4511e;
-    border: none;
     color: #FFFFFF;
     text-align: center;
     font-size: 18px;
+    border-radius: 4px;
+    background-color: #f56320;
+    border: none;
     padding: 13px;
     transition: all 0.5s;
     cursor: pointer;

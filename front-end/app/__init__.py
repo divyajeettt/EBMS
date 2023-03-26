@@ -55,7 +55,7 @@ def search():
     search = request.args.get("q")
     if search is None:
         query = """
-            SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
             FROM product p, product_review pr
             WHERE p.productID = pr.productID
             GROUP BY p.productID
@@ -63,7 +63,7 @@ def search():
         """
     else:
         query = f"""
-            SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
             FROM product p, product_review pr
             WHERE p.productID = pr.productID AND p.name LIKE '%{search}%'
             GROUP BY p.productID
