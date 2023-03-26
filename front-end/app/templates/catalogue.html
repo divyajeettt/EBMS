@@ -49,7 +49,7 @@
             <td>{{ product['productID'] }}</td>
             <td>{{ product['name'] }}</td>
             <td>{{ product['price'] }}</td>
-            <td>{{ product['avg_rating'] }}</td>
+            <td>{{ "No Reviews" if product['avg_rating'] == None else product['avg_rating'] }}</td>
             <td>{{ "No" if product['quantity'] == 0 else "Yes" }}</td>
         </tr>
         {% endfor %}

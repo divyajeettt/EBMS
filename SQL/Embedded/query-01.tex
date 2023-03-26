@@ -2,19 +2,24 @@
 \textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
 
 \begin{lstlisting}
-(
-    SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-    FROM product p, product_review pr
-    WHERE p.productID = pr.productID
-    GROUP BY p.productID
-) UNION (
-    SELECT p.name, p.price, "No Reviews", p.quantity
-    FROM product p
-    WHERE p.productID NOT IN (SELECT productID FROM product_review)
-)
-ORDER BY name ASC;
+SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+FROM product p
+LEFT JOIN product_review pr ON p.productID = pr.productID
+GROUP BY p.productID
+ORDER BY p.name ASC;
 \end{lstlisting}
 
 A variation of the same query (which uses pattern matching in SQL) is also used to search through the product catalogue.
-It is obtained by the addition of a \texttt{LIKE} clause as a condition.
-This variant can also be found in the function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}. \\
+\footnote{
+    In this variant, \texttt{search} is the key entered by the user for searching.
+    It is substituted into the query using Python f-strings.
+}
+
+\begin{lstlisting}
+SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+FROM product p
+LEFT JOIN product_review pr ON p.productID = pr.productID
+WHERE p.name LIKE '%{search}%'
+GROUP BY p.productID
+ORDER BY p.name ASC;
+\end{lstlisting}

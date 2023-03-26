@@ -55,32 +55,20 @@ def search():
     search = request.args.get("q")
     if search is None:
         query = """
-            (
-                SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-                FROM product p, product_review pr
-                WHERE p.productID = pr.productID
-                GROUP BY p.productID
-            ) UNION (
-                SELECT p.name, p.price, "No Reviews", p.quantity
-                FROM product p
-                WHERE p.productID NOT IN (SELECT productID FROM product_review)
-            )
-            ORDER BY name ASC
+            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            FROM product p
+            LEFT JOIN product_review pr ON p.productID = pr.productID
+            GROUP BY p.productID
+            ORDER BY p.name ASC
         """
     else:
         query = f"""
-            (
-                SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-                FROM product p, product_review pr
-                WHERE p.productID = pr.productID AND p.name LIKE '%{search}%'
-                GROUP BY p.productID
-            ) UNION (
-                SELECT p.name, p.price, "No Reviews", p.quantity
-                FROM product p
-                WHERE p.productID NOT IN (SELECT productID FROM product_review)
-                AND p.name LIKE '%{search}%'
-            )
-            ORDER BY name ASC
+            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            FROM product p
+            LEFT JOIN product_review pr ON p.productID = pr.productID
+            WHERE p.name LIKE '%{search}%'
+            GROUP BY p.productID
+            ORDER BY p.name ASC
         """
 
     with cnx.cursor(dictionary=True) as cursor:
@@ -608,7 +596,7 @@ def account():
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT * FROM delivery_agent WHERE daID = %s;", (session.get('user_id'),))
             user = cursor.fetchone()
-        
+
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute(f"""
             SELECT
@@ -618,13 +606,13 @@ def account():
             WHERE daID = {session.get('user_id')} AND delivery_date IS NULL;""")
 
             active_orders = cursor.fetchall()
-        
+
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT * FROM orders WHERE daID = %s AND delivery_date IS NOT NULL;", (session.get('user_id'),))
             completed_orders = cursor.fetchall()
-        
+
         return render_template('account/deliveryagent.html', user=user, active_orders=active_orders, completed_orders=completed_orders)
-    
+
     elif session.get('user_type') == 'admin':
         return redirect('/admin')
 

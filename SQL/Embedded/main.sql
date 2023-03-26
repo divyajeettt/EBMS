@@ -1,16 +1,17 @@
 -- Query-01: Display the product catalogue
 
 -- Show the entire catalogue
-SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-FROM product p, product_review pr
-WHERE p.productID = pr.productID
+SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+FROM product p
+LEFT JOIN product_review pr ON p.productID = pr.productID
 GROUP BY p.productID
 ORDER BY p.name ASC;
 
 -- Show the catalogue using searching for a product name
-SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-FROM product p, product_review pr
-WHERE p.productID = pr.productID AND p.name LIKE '%{search}%'
+SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+FROM product p
+LEFT JOIN product_review pr ON p.productID = pr.productID
+WHERE p.name LIKE '%{search}%'
 GROUP BY p.productID
 ORDER BY p.name ASC;
 
