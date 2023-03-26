@@ -1,0 +1,15 @@
+This query shows the top 15 customers who have spent the most money on their orders.
+
+\begin{lstlisting}
+SELECT
+    customer.customerID,
+    COUNT(orders.orderID) AS total_orders,
+    SUM(product.price * order_product.quantity) AS total_spent
+FROM customer
+INNER JOIN orders ON customer.customerID = orders.customerID
+INNER JOIN order_product ON orders.orderID = order_product.orderID
+INNER JOIN product ON order_product.productID = product.productID
+GROUP BY customer.customerID
+ORDER BY total_spent DESC
+LIMIT 15;
+\end{lstlisting}

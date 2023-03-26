@@ -1,0 +1,13 @@
+This query find out the total revenue and total quantity sold per product for a supplier (sales statistics).
+
+\begin{lstlisting}
+SELECT
+    product.name,
+    SUM(order_product.quantity) AS total_quantity_sold,
+    SUM(order_product.quantity * product.price) AS total_revenue
+FROM product
+INNER JOIN order_product ON product.productID = order_product.productID
+INNER JOIN orders ON order_product.orderID = orders.orderID
+WHERE product.supplierID = 1
+GROUP BY product.name;
+\end{lstlisting}

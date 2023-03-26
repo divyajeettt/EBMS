@@ -1,0 +1,6 @@
+This query adds a new phone number into the table for a customer.
+
+\begin{lstlisting}
+INSERT INTO phone_number
+VALUES ((SELECT phoneID FROM customer WHERE customerID = 50), '1234567890');
+\end{lstlisting}

@@ -1,0 +1,18 @@
+\textbf{Feature:} This query is used to get the login credentials of a customer. \\
+\textbf{Location:} In function \texttt{login()} in \texttt{front-end/\_\_init\_\_.py}
+
+\begin{lstlisting}
+SELECT customerID, first_name, email, pwd FROM customer WHERE email = %s;
+\end{lstlisting}
+
+A variation of the same query is also used for supplier login.
+\footnote{
+    \ \texttt{\%s} denotes a placeholder in Python, which will be substituted by the value entered by the user in the login form.
+}
+
+\begin{lstlisting}
+SELECT supplierID, first_name, email, pwd FROM supplier WHERE email = %s;
+\end{lstlisting}
+
+Another variant will also be added for delivery agent login.
+This variant can also be found in the function \texttt{login()} in \texttt{front-end/\_\_init\_\_.py}. \\
