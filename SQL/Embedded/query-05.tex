@@ -1,0 +1,7 @@
+\textbf{Feature:} This query is used to get the number of orders by status. \\
+\textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
+
+\begin{lstlisting}
+SELECT (delivery_date IS NULL) as status, COUNT(*) AS n
+FROM orders GROUP BY status;
+\end{lstlisting}

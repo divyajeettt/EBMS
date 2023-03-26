@@ -1,0 +1,18 @@
+\textbf{Feature:} This query is used to display the customers having the least orders. \\
+\textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
+
+\begin{lstlisting}
+SELECT
+    customer.customerID,
+    CONCAT(customer.first_name, ' ', customer.middle_initial, ' ', customer.last_name) AS name,
+    COUNT(orders.orderID) AS total_orders,
+    SUM(product.price * order_product.quantity) AS total_spent
+FROM customer
+INNER JOIN orders ON customer.customerID = orders.customerID
+INNER JOIN order_product ON orders.orderID = order_product.orderID
+INNER JOIN product ON order_product.productID = product.productID
+GROUP BY customer.customerID
+HAVING total_orders <= 10
+ORDER BY total_orders ASC
+LIMIT 10;
+\end{lstlisting}
