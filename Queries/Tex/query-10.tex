@@ -1,8 +1,0 @@
-This query is used to find out the total price of an order.
-
-\begin{lstlisting}
-SELECT orderID, SUM(product.price * order_product.quantity) AS order_price
-FROM order_product
-INNER JOIN product ON order_product.productID = product.productID
-WHERE order_product.orderID = 1;
-\end{lstlisting}
