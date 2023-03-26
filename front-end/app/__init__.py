@@ -50,17 +50,31 @@ def index():
     return render_template("home.html")
 
 
-@app.route("/search")
+@app.route("/catalogue")
 def search():
     search = request.args.get("q")
-    query = "SELECT * FROM product"
-    query += f" WHERE name LIKE '%{search}%'" if search else ""
+    if search is None:
+        query = """
+            SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            FROM product p, product_review pr
+            WHERE p.productID = pr.productID
+            GROUP BY p.productID
+            ORDER BY p.name ASC
+        """
+    else:
+        query = f"""
+            SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            FROM product p, product_review pr
+            WHERE p.productID = pr.productID AND p.name LIKE '%{search}%'
+            GROUP BY p.productID
+            ORDER BY p.name ASC
+        """
 
-    with cnx.cursor() as cursor:
+    with cnx.cursor(dictionary=True) as cursor:
         cursor.execute(query)
         results = list(cursor.fetchall())
 
-    return render_template('search.html', rows=results)
+    return render_template("catalogue.html", rows=results)
 
 
 
@@ -77,16 +91,15 @@ def login():
 
         with cnx.cursor(dictionary=True) as cursor:
             if request.form['LoginRadio'] == 'customer':
-                cursor.execute("SELECT * FROM customer WHERE email = %s", (request.form.get('username'),))
+                cursor.execute("SELECT customerID, first_name, email, pwd FROM customer WHERE email = %s", (request.form.get('username'),))
             elif request.form['LoginRadio'] == 'supplier':
-                cursor.execute("SELECT * FROM supplier WHERE email = %s", (request.form.get('username'),))
+                cursor.execute("SELECT supplierID, first_name, email, pwd FROM supplier WHERE email = %s", (request.form.get('username'),))
             user = cursor.fetchone()
 
         if user is None:
             return render_template('login.html', error='Invalid username')
         elif not check_password_hash(user['pwd'], request.form.get('password')):
             return render_template('login.html', error='Invalid password')
-
 
         if request.form['LoginRadio'] == 'customer':
             session['user_id'] = user['customerID']
@@ -278,20 +291,20 @@ def admin():
 
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
-        cursor.execute("SELECT COUNT(*) AS n FROM customer")
-        context["customer_count"] = cursor.fetchone()["n"]
+        cursor.execute("SELECT COUNT(*) AS customer_count FROM customer")
+        context["customer_count"] = cursor.fetchone()["customer_count"]
 
-        cursor.execute("SELECT COUNT(*) AS n FROM supplier")
-        context["supplier_count"] = cursor.fetchone()["n"]
+        cursor.execute("SELECT COUNT(*) AS supplier_count FROM supplier")
+        context["supplier_count"] = cursor.fetchone()["supplier_count"]
 
-        cursor.execute("SELECT COUNT(*) AS n FROM delivery_agent")
-        context["da_count"] = cursor.fetchone()["n"]
+        cursor.execute("SELECT COUNT(*) AS da_count FROM delivery_agent")
+        context["da_count"] = cursor.fetchone()["da_count"]
 
-        cursor.execute("SELECT COUNT(*) AS n FROM orders")
-        context["order_count"] = cursor.fetchone()["n"]
+        cursor.execute("SELECT COUNT(*) AS order_count FROM orders")
+        context["order_count"] = cursor.fetchone()["order_count"]
 
-        cursor.execute("SELECT COUNT(*) AS n FROM order_product")
-        context["product_count"] = cursor.fetchone()["n"]
+        cursor.execute("SELECT COUNT(*) AS product_count FROM order_product")
+        context["product_count"] = cursor.fetchone()["product_count"]
 
     for key in context:
         context[key] = round(context[key], -1)
@@ -353,6 +366,22 @@ def admin_stats(page: str):
             """)
             context["inactive"] = cursor.fetchall()
 
+            cursor.execute("""
+                SELECT
+                    country, state,
+                    COUNT(DISTINCT customer.customerID) AS customer_count,
+                    AVG(product.price * order_product.quantity) AS avg_spent,
+                    SUM(product.price * order_product.quantity) AS total_spent
+                FROM customer
+                JOIN orders ON customer.customerID = orders.customerID
+                JOIN order_product ON orders.orderID = order_product.orderID
+                JOIN product ON order_product.productID = product.productID
+                JOIN address ON customer.addressID = address.addressID
+                GROUP BY country, state WITH ROLLUP
+                ORDER BY country ASC, total_spent DESC
+            """)
+            context["demographics"] = cursor.fetchall()
+
         elif page == "order":
             cursor.execute("""
                 SELECT (delivery_date IS NULL) as status, COUNT(*) AS n
@@ -363,24 +392,38 @@ def admin_stats(page: str):
 
             cursor.execute("""
                 SELECT
-                    YEAR(order_date) AS year,
-                    QUARTER(order_date) AS quarter,
-                    MONTH(order_date) AS month,
+                    YEAR(order_date) AS date_year,
+                    QUARTER(order_date) AS date_quarter,
+                    MONTH(order_date) AS date_month,
                     COUNT(orders.orderID) AS order_count,
                     SUM(price * order_product.quantity) AS revenue
                 FROM
                     orders
                     JOIN order_product ON orders.orderID = order_product.orderID
                     JOIN product ON order_product.productID = product.productID
-                WHERE orders.delivery_date IS NOT NULL
-                GROUP BY year, quarter, month
-                ORDER BY year DESC, month DESC
+                GROUP BY date_year, date_quarter, date_month WITH ROLLUP
+                ORDER BY date_year DESC, date_month DESC
             """)
             context["order_trend"] = cursor.fetchall()
             context["month"] = {
                 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June",
                 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"
             }
+
+            cursor.execute("""
+                SELECT
+                    a.country,
+                    COUNT(DISTINCT o.orderID) AS order_count,
+                    SUM(op.quantity * p.price) AS revenue
+                FROM orders o
+                JOIN order_product op ON o.orderID = op.orderID
+                JOIN product p ON op.productID = p.productID
+                JOIN customer c ON o.customerID = c.customerID
+                JOIN address a ON c.addressID = a.addressID
+                GROUP BY a.country WITH ROLLUP
+                ORDER BY revenue DESC
+            """)
+            context["country_trend"] = cursor.fetchall()
 
         elif page == "product":
             cursor.execute("""
@@ -434,6 +477,26 @@ def admin_stats(page: str):
             LIMIT 10
             """)
             context["inactive"] = cursor.fetchall()
+
+            cursor.execute("""
+                SELECT
+                    country, state,
+                    COUNT(DISTINCT supplier.supplierID) AS supplier_count,
+                    AVG(product.price * order_product.quantity) AS avg_earned,
+                    SUM(product.price * order_product.quantity) AS total_earned
+                FROM supplier
+                JOIN orders ON supplier.supplierID IN (
+                    SELECT supplierID FROM product WHERE productID IN (
+                        SELECT productID FROM order_product WHERE orderID = orders.orderID
+                    )
+                )
+                JOIN order_product ON orders.orderID = order_product.orderID
+                JOIN product ON order_product.productID = product.productID
+                JOIN address ON supplier.addressID = address.addressID
+                GROUP BY country, state WITH ROLLUP
+                ORDER BY country ASC, total_earned DESC
+            """)
+            context["demographics"] = cursor.fetchall()
 
         elif page == "deliveryagent":
             cursor.execute("""
