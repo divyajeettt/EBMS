@@ -580,6 +580,9 @@ def account():
             user = cursor.fetchone()
 
         return render_template('account/deliveryagent.html', user=user)
+    
+    elif session.get('user_type') == 'admin':
+        return redirect('/admin')
 
     else:
         return redirect('/login')
