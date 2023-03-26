@@ -56,7 +56,7 @@ def search():
     if search is None:
         query = """
             (
-                SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+                SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
                 FROM product p, product_review pr
                 WHERE p.productID = pr.productID
                 GROUP BY p.productID
@@ -70,7 +70,7 @@ def search():
     else:
         query = f"""
             (
-                SELECT p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+                SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
                 FROM product p, product_review pr
                 WHERE p.productID = pr.productID AND p.name LIKE '%{search}%'
                 GROUP BY p.productID
@@ -98,7 +98,7 @@ def login():
 
     if request.method == 'POST':
         if not request.form.get('username'):
-            return render_template('login.html', error='Please enter your username')
+            return render_template('login.html', error='Please enter your email')
         elif not request.form.get('password'):
             return render_template('login.html', error='Please enter your password')
 
@@ -107,6 +107,8 @@ def login():
                 cursor.execute("SELECT customerID, first_name, email, pwd FROM customer WHERE email = %s", (request.form.get('username'),))
             elif request.form['LoginRadio'] == 'supplier':
                 cursor.execute("SELECT supplierID, first_name, email, pwd FROM supplier WHERE email = %s", (request.form.get('username'),))
+            elif request.form['LoginRadio'] == 'delivery_agent':
+                cursor.execute("SELECT daID, first_name, email, pwd FROM delivery_agent WHERE email = %s", (request.form.get('username'),))
             user = cursor.fetchone()
 
         if user is None:
@@ -120,6 +122,9 @@ def login():
         elif request.form['LoginRadio'] == 'supplier':
             session['user_id'] = user['supplierID']
             session['user_type'] = 'supplier'
+        elif request.form['LoginRadio'] == 'delivery_agent':
+            session['user_id'] = user['daID']
+            session['user_type'] = 'delivery_agent'
         session['user_email'] = user['email']
         session['username'] = user['first_name']
         return redirect('/')
@@ -554,23 +559,35 @@ def logout():
     return redirect("/")
 
 
-@app.route('/account', methods=['GET'])
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
+    if request.method == 'POST':
+        if session.get('user_type') == 'delivery_agent':
+            # if delivered button is pressed, update order.delivery_date to curdate()
+            print("not delivering...", request.form.get('order_id'))
+            if request.form.get('order_id'):
+                print("Delivering...")
+                with cnx.cursor() as cursor:
+                    cursor.execute("UPDATE orders SET delivery_date = CURDATE() WHERE orderID = %s;", (request.form.get('order_id'),))
+                    cnx.commit()
+                return redirect('/account') # refresh page
+
+    """Show account page"""
     if session.get('user_type') == 'customer':
 
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM customer WHERE customerID = %s", (session.get('user_id'),))
+            cursor.execute("SELECT * FROM customer WHERE customerID = %s;", (session.get('user_id'),))
             user = cursor.fetchone()
-        return render_template('customer.html', user=user)
+        return render_template('account/customer.html', user=user)
 
     elif session.get('user_type') == 'supplier':
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM supplier WHERE supplierID = %s", (session.get('user_id'),))
+            cursor.execute("SELECT * FROM supplier WHERE supplierID = %s;", (session.get('user_id'),))
             user = cursor.fetchone()
 
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM product WHERE supplierID = %s", (session.get('user_id'),))
+            cursor.execute("SELECT * FROM product WHERE supplierID = %s;", (session.get('user_id'),))
             products = cursor.fetchall()
 
         with cnx.cursor(dictionary=True) as cursor:
@@ -589,11 +606,25 @@ def account():
 
     elif session.get('user_type') == 'delivery_agent':
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM delivery_agent WHERE daID = %s", (session.get('user_id'),))
+            cursor.execute("SELECT * FROM delivery_agent WHERE daID = %s;", (session.get('user_id'),))
             user = cursor.fetchone()
+        
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute(f"""
+            SELECT
+                orderID, customerID, daID, order_date,
+                DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
+            FROM orders
+            WHERE daID = {session.get('user_id')} AND delivery_date IS NULL;""")
 
-        return render_template('account/deliveryagent.html', user=user)
-
+            active_orders = cursor.fetchall()
+        
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM orders WHERE daID = %s AND delivery_date IS NOT NULL;", (session.get('user_id'),))
+            completed_orders = cursor.fetchall()
+        
+        return render_template('account/deliveryagent.html', user=user, active_orders=active_orders, completed_orders=completed_orders)
+    
     elif session.get('user_type') == 'admin':
         return redirect('/admin')
 
