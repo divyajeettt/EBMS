@@ -313,11 +313,158 @@ def admin_stats(page: str):
     if table is None:
         abort(404)
 
+    context = {}
     with cnx.cursor(dictionary=True) as cursor:
         cursor.execute(f"SELECT COUNT(*) AS n FROM {table}")
-        results = cursor.fetchone()["n"]
+        context["count"] = round(cursor.fetchone()["n"], -1)
 
-    return render_template(f"admin/{page}.html", count=round(results, -1))
+        if page == "customer":
+            cursor.execute("""
+                SELECT
+                    customer.customerID,
+                    CONCAT(customer.first_name, ' ', customer.middle_initial, ' ', customer.last_name) AS name,
+                    COUNT(orders.orderID) AS total_orders,
+                    SUM(product.price * order_product.quantity) AS total_spent,
+                    AVG(product.price * order_product.quantity) AS avg_spent
+                FROM customer
+                INNER JOIN orders ON customer.customerID = orders.customerID
+                INNER JOIN order_product ON orders.orderID = order_product.orderID
+                INNER JOIN product ON order_product.productID = product.productID
+                GROUP BY customer.customerID
+                ORDER BY total_spent DESC
+                LIMIT 10
+            """)
+            context["top_rated"] = cursor.fetchall()
+
+            cursor.execute("""
+                SELECT
+                    customer.customerID,
+                    CONCAT(customer.first_name, ' ', customer.middle_initial, ' ', customer.last_name) AS name,
+                    COUNT(orders.orderID) AS total_orders,
+                    SUM(product.price * order_product.quantity) AS total_spent
+                FROM customer
+                INNER JOIN orders ON customer.customerID = orders.customerID
+                INNER JOIN order_product ON orders.orderID = order_product.orderID
+                INNER JOIN product ON order_product.productID = product.productID
+                GROUP BY customer.customerID
+                HAVING total_orders <= 10
+                ORDER BY total_orders ASC
+                LIMIT 10
+            """)
+            context["inactive"] = cursor.fetchall()
+
+        elif page == "order":
+            cursor.execute("""
+                SELECT (delivery_date IS NULL) as status, COUNT(*) AS n
+                FROM orders
+                GROUP BY status
+            """)
+            context["order_status"] = cursor.fetchall()
+
+            cursor.execute("""
+                SELECT
+                    YEAR(order_date) AS year,
+                    QUARTER(order_date) AS quarter,
+                    MONTH(order_date) AS month,
+                    COUNT(orders.orderID) AS order_count,
+                    SUM(price * order_product.quantity) AS revenue
+                FROM
+                    orders
+                    JOIN order_product ON orders.orderID = order_product.orderID
+                    JOIN product ON order_product.productID = product.productID
+                WHERE orders.delivery_date IS NOT NULL
+                GROUP BY year, quarter, month
+                ORDER BY year DESC, month DESC
+            """)
+            context["order_trend"] = cursor.fetchall()
+            context["month"] = {
+                1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June",
+                7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"
+            }
+
+        elif page == "product":
+            cursor.execute("""
+                SELECT p.productID, p.name, p.price, SUM(op.quantity) AS quantity
+                FROM order_product op, product p
+                WHERE p.productID = op.productID
+                GROUP BY p.productID
+                ORDER BY quantity DESC
+                LIMIT 10
+            """)
+            context["best_sellers"] = cursor.fetchall()
+
+            cursor.execute("""
+                SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating
+                FROM product_review pr, product p
+                WHERE p.productID = pr.productID
+                GROUP BY p.productID
+                HAVING avg_rating >= 3.5
+                ORDER BY avg_rating DESC
+                LIMIT 10
+            """)
+            context["top_rated"] = cursor.fetchall()
+
+        elif page == "supplier":
+            cursor.execute("""
+                SELECT
+                    s.supplierID,
+                    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
+                    email,
+                    AVG(pr.rating) AS avg_rating
+                FROM supplier s, product_review pr, product prod
+                WHERE (
+                    SELECT AVG(pr.rating) FROM product_review pr, product p
+                    WHERE p.productID = pr.productID AND p.supplierID = s.supplierID
+                    GROUP BY p.supplierID
+                ) > 3
+                AND s.supplierID = prod.supplierID AND pr.productID = prod.productID
+                GROUP BY s.supplierID
+                ORDER BY avg_rating DESC
+                LIMIT 10
+            """)
+            context["top_rated"] = cursor.fetchall()
+
+            cursor.execute("""
+            SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name, email
+            FROM supplier s
+            WHERE NOT EXISTS (
+                SELECT * FROM product p
+                WHERE p.supplierID = s.supplierID
+            )
+            LIMIT 10
+            """)
+            context["inactive"] = cursor.fetchall()
+
+        elif page == "deliveryagent":
+            cursor.execute("""
+                SELECT
+                    da.daID,
+                    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+                    email,
+                    AVG(dr.rating) AS avg_rating
+                FROM da_review dr, delivery_agent da
+                WHERE da.daID = dr.daID
+                GROUP BY da.daID
+                ORDER BY avg_rating DESC
+                LIMIT 10
+            """)
+            context["top_rated"] = cursor.fetchall()
+
+            cursor.execute("""
+                SELECT
+                    da.daID,
+                    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+                    email,
+                    COUNT(o.orderID) AS total_orders
+                FROM delivery_agent da
+                LEFT JOIN orders o ON da.daID = o.daID
+                GROUP BY da.daID
+                ORDER BY total_orders DESC
+                LIMIT 10
+            """)
+            context["most_active"] = cursor.fetchall()
+
+    return render_template(f"admin/{page}.html", context=context)
 
 
 @app.route("/logout")
@@ -340,12 +487,12 @@ def account():
             cursor.execute("SELECT * FROM customer WHERE customerID = %s", (session.get('user_id'),))
             user = cursor.fetchone()
         return render_template('customer.html', user=user)
-    
+
     elif session.get('user_type') == 'supplier':
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT * FROM supplier WHERE supplierID = %s", (session.get('user_id'),))
             user = cursor.fetchone()
-        
+
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT * FROM product WHERE supplierID = %s", (session.get('user_id'),))
             products = cursor.fetchall()
@@ -361,16 +508,16 @@ def account():
                 GROUP BY product.name;""", (session.get('user_id'),)
             )
             sales = cursor.fetchall()
-            
-        return render_template('account_supplier.html', user=user, products=products, sales=sales)
-    
+
+        return render_template('account/supplier.html', user=user, products=products, sales=sales)
+
     elif session.get('user_type') == 'delivery_agent':
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute("SELECT * FROM delivery_agent WHERE daID = %s", (session.get('user_id'),))
             user = cursor.fetchone()
-        
-        return render_template('account_da.html', user=user)
-        
+
+        return render_template('account/deliveryagent.html', user=user)
+
     else:
         return redirect('/login')
 
@@ -389,7 +536,7 @@ def blog():
 def cart():
     if request.method == "POST":
         return redirect("/account/cart/checkout")
-    
+
     cursor = cnx.cursor(dictionary=True)
     cursor.execute("SELECT p.productID as i, p.name as n, c.quantity as q, p.price as pr FROM cart c JOIN product p on c.productID=p.productID WHERE c.customerID = %s", (session.get('user_id'),))
     cart = cursor.fetchall()
@@ -399,10 +546,11 @@ def cart():
     total = 0
     for item in cart:
         total += float(item["q"]) * float(item["pr"])
-    
-    
+
+
     print(url_for('product', product_id=1))
     return render_template("cart.html", cart=cart, total=round(total, 3))
+
 
 @app.route("/product/<int:product_id>", methods=["GET", "POST"])
 def product(product_id):

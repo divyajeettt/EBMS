@@ -8,7 +8,7 @@
     {% block main %}
 
     <div class="card" style="margin-right: 0px !important;">
-        <h1 style="font-size: 72px;"><b>{{ count }}+</b></h1>
+        <h1 style="font-size: 72px;"><b>{{ context['count'] }}+</b></h1>
         <h2><b>Products</b></h2>
         <p>have been sold through through <b>EBMS</b>.</p>
     </div>
@@ -28,6 +28,64 @@
             </div>
         </form>
     </div>
+
+    <br>
+    <hr>
+
+    <h1><b>Best Sellers</b></h1>
+
+    Here is a summary of ebms' best-selling products
+    <br>
+    <br>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>Number of Units Sold</th>
+            </tr>
+        </thead>
+
+        {% for row in context['best_sellers'] %}
+        <tr>
+            <td>{{ row['productID'] }}</td>
+            <td>{{ row['name'] }}</td>
+            <td>{{ row['price'] }}</td>
+            <td>{{ row['quantity'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <hr>
+
+    <h1><b>Top-Rated Products</b></h1>
+
+    Here is a summary of ebms' top-rated products
+    <br>
+    <br>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>Average Rating</th>
+            </tr>
+        </thead>
+
+        {% for row in context['top_rated'] %}
+        <tr>
+            <td>{{ row['productID'] }}</td>
+            <td>{{ row['name'] }}</td>
+            <td>{{ row['price'] }}</td>
+            <td>{{ row['avg_rating'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
     {% endblock %}
 </body>

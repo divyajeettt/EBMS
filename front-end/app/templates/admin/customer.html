@@ -8,7 +8,7 @@
     {% block main %}
 
     <div class="card" style="margin-right: 0px !important;">
-        <h1 style="font-size: 72px;"><b>{{ count }}+</b></h1>
+        <h1 style="font-size: 72px;"><b>{{ context['count'] }}+</b></h1>
         <h2><b>Customers</b></h2>
         <p>are using <b>EBMS</b> for their electronics needs.</p>
     </div>
@@ -28,6 +28,66 @@
             </div>
         </form>
     </div>
+
+    <br>
+    <hr>
+
+    <h1><b>Top Customers</b></h1>
+
+    Here is a summary of ebms' top customers based on their total spendings
+    <br>
+    <br>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+                <th>Number of Orders</th>
+                <th>Total Spending</th>
+                <th>Average Spending per Order</th>
+            </tr>
+        </thead>
+
+        {% for row in context['top_rated'] %}
+        <tr>
+            <td>{{ row['customerID'] }}</td>
+            <td>{{ row['name'] }}</td>
+            <td>{{ row['total_orders'] }}</td>
+            <td>{{ row['total_spent'] }}</td>
+            <td>{{ row['avg_spent'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <hr>
+
+    <h1><b>Inactive Customers</b></h1>
+
+    Here is a summary of inactive customers who have placed the least number of orders
+    <br>
+    <br>
+
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+                <th>Number of Orders</th>
+                <th>Total Spending</th>
+            </tr>
+        </thead>
+
+        {% for row in context['inactive'] %}
+        <tr>
+            <td>{{ row['customerID'] }}</td>
+            <td>{{ row['name'] }}</td>
+            <td>{{ row['total_orders'] }}</td>
+            <td>{{ row['total_spent'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
     {% endblock %}
 </body>
