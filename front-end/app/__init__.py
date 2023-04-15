@@ -552,7 +552,6 @@ def logout():
 def account():
     if request.method == 'POST':
         if session.get('user_type') == 'delivery_agent':
-            # if delivered button is pressed, update order.delivery_date to curdate()
             print("not delivering...", request.form.get('order_id'))
             if request.form.get('order_id'):
                 print("Delivering...")

@@ -12,13 +12,7 @@ $$
 DELIMITER ;
 
 -- Helper queries to test Trigger create_wallet
-
--- Create a new customer
-INSERT INTO customer (name, email, phone, address)
-VALUES ('test', 'test@example.com', '1234567890', 'test address');
-
--- Check if a wallet is created for the new customer
-SELECT * FROM wallet WHERE customerID = (SELECT MAX(customerID) FROM customer);
+-- CHECK USING THE FRONT-END
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,13 +53,28 @@ END;
 $$
 DELIMITER ;
 
--- Helper queries to test Trigger da_available
-
+-- Helper queries to test Trigger da_available (Can also be tested directly through the front-end)
+INSERT INTO orders (customerID, daID, order_date) VALUES (1, 201, '2020-12-12');
+INSERT INTO orders (customerID, daID, order_date) VALUES (2, 201, '2020-11-13');
+INSERT INTO orders (customerID, daID, order_date) VALUES (3, 201, '2020-10-14');
 -- Check the availability of a delivery agent who is assigned to an order
-SELECT daID, availability FROM delivery_agent WHERE daID = 1;
+SELECT * FROM delivery_agent WHERE daID = 201;
+SELECT * FROM orders WHERE daID = 201;
 
--- Complete the order [use the orderID from the previous Trigger]
-UPDATE orders SET order_date = '2020-12-12' WHERE orderID = 1;
+-- Complete one of the orders assigned to that delivery agent
+UPDATE orders SET delivery_date = CURDATE() WHERE orderID = 88;
+
+-- Complete all orders
+UPDATE orders SET delivery_date = CURDATE() WHERE daID=1;
 
 -- Check the availability of the delivery agent
 SELECT * FROM delivery_agent WHERE daID = 1;
+SELECT * FROM orders WHERE daID = 1;
+
+-- Revert the changes
+UPDATE orders SET delivery_date = NULL WHERE orderID = 88;
+UPDATE orders SET delivery_date = "2022-06-03" WHERE orderID = 311;
+UPDATE orders SET delivery_date = NULL WHERE orderID = 634;
+UPDATE orders SET delivery_date = NULL WHERE orderID = 741;
+-- since in the implementation, the delivery_date is never set back to NULL, we won't use the trigger to set the availability to FALSE
+UPDATE delivery_agent SET avalability = FALSE WHERE daID = 1;
