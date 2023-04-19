@@ -51,6 +51,7 @@
             <ul class="navbar-nav ml-auto mt-2">
                 <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
                 {% if session['user_id'] and session["user_type"] == 'customer' %}
+                <li class="nav-item"><a class="nav-link" href="/account/orders">Orders</a></li>
                 <li class="nav-item"><a class="nav-link" href="/account/cart">Cart</a></li>
                 {% endif %}
                 <li class="nav-item"><a class="nav-link" href="/blog">Blog&nbsp;</a></li>
