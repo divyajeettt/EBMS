@@ -144,3 +144,7 @@ table.dataTable thead .sorting_desc_disabled:before {
 .clickable-row :hover {
     cursor: pointer;
 }
+
+.add-margin {
+    margin-left: 320px;
+}

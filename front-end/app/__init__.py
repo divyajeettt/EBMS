@@ -297,23 +297,20 @@ def admin():
 
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
-        cursor.execute("SELECT COUNT(*) AS customer_count FROM customer")
+        cursor.execute("SELECT ROUND(COUNT(*), -1) AS customer_count FROM customer")
         context["customer_count"] = cursor.fetchone()["customer_count"]
 
-        cursor.execute("SELECT COUNT(*) AS supplier_count FROM supplier")
+        cursor.execute("SELECT ROUND(COUNT(*), -1) AS supplier_count FROM supplier")
         context["supplier_count"] = cursor.fetchone()["supplier_count"]
 
-        cursor.execute("SELECT COUNT(*) AS da_count FROM delivery_agent")
+        cursor.execute("SELECT ROUND(COUNT(*), -1) AS da_count FROM delivery_agent")
         context["da_count"] = cursor.fetchone()["da_count"]
 
-        cursor.execute("SELECT COUNT(*) AS order_count FROM orders")
+        cursor.execute("SELECT ROUND(COUNT(*), -1) AS order_count FROM orders")
         context["order_count"] = cursor.fetchone()["order_count"]
 
-        cursor.execute("SELECT COUNT(*) AS product_count FROM order_product")
+        cursor.execute("SELECT ROUND(COUNT(*), -1) AS product_count FROM order_product")
         context["product_count"] = cursor.fetchone()["product_count"]
-
-    for key in context:
-        context[key] = round(context[key], -1)
 
     return render_template("admin.html", context=context)
 
@@ -334,8 +331,8 @@ def admin_stats(page: str):
 
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
-        cursor.execute(f"SELECT COUNT(*) AS n FROM {table}")
-        context["count"] = round(cursor.fetchone()["n"], -1)
+        cursor.execute(f"SELECT ROUND(COUNT(*), -1) AS n FROM {table}")
+        context["count"] = cursor.fetchone()["n"]
 
         if page == "customer":
             cursor.execute("""
@@ -645,38 +642,62 @@ def cart():
     for item in cart:
         total += float(item["q"]) * float(item["pr"])
 
-
     print(url_for('product', product_id=1))
     return render_template("cart.html", cart=cart, total=round(total, 3))
 
 
 @app.route("/product/<int:product_id>", methods=["GET", "POST"])
 def product(product_id):
-    cursor = cnx.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM product WHERE productID = %s", (product_id,))
-    product = cursor.fetchone()
-    cursor.close()
+    context = {}
+
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute(f"SELECT * FROM product WHERE productID = {product_id}")
+        product = context["product"] = cursor.fetchone()
+
+        cursor.execute(f"""
+            SELECT CONCAT(first_name, ' ', last_name) as name, rating, content, DATE_FORMAT(review_date, '%M %d, %Y') as date
+            FROM customer
+            INNER JOIN product_review ON customer.customerID = product_review.customerID
+            WHERE productID = {product_id}
+            ORDER BY review_date DESC
+            LIMIT 6;
+        """)
+        context["reviews"] = cursor.fetchall()
+
+        cursor.execute(f"SELECT ROUND(AVG(rating), 2) as rating FROM product_review WHERE productID = {product_id}")
+        context["avg_rating"] = cursor.fetchone()["rating"]
+
+        cursor.execute(f"""
+            SELECT CONCAT(first_name, ' ', last_name) as name
+            FROM supplier
+            WHERE supplierID = {product["supplierID"]}
+        """)
+        context["supplier"] = cursor.fetchone()
+
+        cursor.execute(f"""
+            SELECT product.productID, name, product_description, price, ROUND(AVG(rating), 2) as rating
+            FROM product
+            LEFT JOIN product_review ON product.productID = product_review.productID
+            WHERE supplierID = {product["supplierID"]} AND product.productID != {product_id}
+            GROUP BY product.productID
+            ORDER BY RAND()
+            LIMIT 3
+        """)
+        context["more"] = cursor.fetchall()
 
     if request.method == "POST":
         if session.get('user_type') != 'customer':
             return redirect('/login')
 
-        cursor = cnx.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM cart WHERE customerID = %s AND productID = %s", (session.get('user_id'), product_id))
-        cart_item = cursor.fetchone()
-        cursor.close()
-
-        if cart_item is None:
-            cursor = cnx.cursor(dictionary=True)
-            cursor.execute("INSERT INTO cart (customerID, productID, quantity) VALUES (%s, %s, %s)", (session.get('user_id'), product_id, 1))
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute("SELECT * FROM cart WHERE customerID = %s AND productID = %s", (session.get('user_id'), product_id))
+            cart_item = cursor.fetchone()
+            if cart_item is None:
+                cursor.execute("INSERT INTO cart (customerID, productID, quantity) VALUES (%s, %s, %s)", (session.get('user_id'), product_id, 1))
+            else:
+                cursor.execute("UPDATE cart SET quantity = quantity + 1 WHERE customerID = %s AND productID = %s", (session.get('user_id'), product_id))
             cnx.commit()
-            cursor.close()
-        else:
-            cursor = cnx.cursor(dictionary=True)
-            cursor.execute("UPDATE cart SET quantity = quantity + 1 WHERE customerID = %s AND productID = %s", (session.get('user_id'), product_id))
-            cnx.commit()
-            cursor.close()
 
         return redirect('/account/cart')
 
-    return render_template("product.html", product=product)
+    return render_template("product.html", context=context)
