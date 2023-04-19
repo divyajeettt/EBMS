@@ -549,7 +549,6 @@ def logout():
 def account():
     if request.method == 'POST':
         if session.get('user_type') == 'delivery_agent':
-            # if delivered button is pressed, update order.delivery_date to curdate()
             print("not delivering...", request.form.get('order_id'))
             if request.form.get('order_id'):
                 print("Delivering...")
@@ -630,7 +629,26 @@ def blog():
 @login_required
 def cart():
     if request.method == "POST":
-        return redirect("/account/cart/checkout")
+        print(request.form.get("action"), request.form.get("action"), request.form.get("action"))
+        if request.form.get("action") == "remove":
+            with cnx.cursor() as cursor:
+                print(session.get('user_id'), request.form.get("pid"))
+                cursor.execute("DELETE FROM cart WHERE customerID = %s AND productID = %s;", (session.get('user_id'), request.form.get("pid")))
+                cnx.commit()
+            return redirect("/account/cart")
+
+        elif request.form.get("action") == "edit":
+            # TODO: add edit functionality
+            pass
+        elif request.form.get("action") == "checkout":
+            return redirect("/account/checkout")
+
+        elif request.form.get("action") == "clear":
+            with cnx.cursor() as cursor:
+                cursor.execute("DELETE FROM cart WHERE customerID = %s;", (session.get('user_id'),))
+                cnx.commit()
+            return redirect("/account/cart")
+
 
     cursor = cnx.cursor(dictionary=True)
     cursor.execute("SELECT p.productID as i, p.name as n, c.quantity as q, p.price as pr FROM cart c JOIN product p on c.productID=p.productID WHERE c.customerID = %s", (session.get('user_id'),))
@@ -644,6 +662,66 @@ def cart():
 
     print(url_for('product', product_id=1))
     return render_template("cart.html", cart=cart, total=round(total, 3))
+
+@app.route("/account/checkout", methods=["GET", "POST"])
+@login_required
+def checkout():
+    if request.method == "POST":
+        with cnx.cursor() as cursor:
+            cursor.execute("""(SELECT daID FROM delivery_agent
+                            WHERE avalability = 1 ORDER BY daID ASC LIMIT 1)""")
+            daID = cursor.fetchone()[0]
+            cursor.execute("""INSERT INTO orders (customerID, daID, order_date)
+                            VALUES (%s, %s, CURDATE());""", (session.get('user_id'), daID))
+            cnx.commit()
+            cursor.execute("SELECT LAST_INSERT_ID();")
+            order_id = cursor.fetchone()[0]
+            # cursor.execute("INSERT INTO order_product (orderID, productID, quantity) SELECT %s, productID, quantity FROM cart WHERE customerID = %s;", (order_id, session.get('user_id')))
+            cursor.execute("""INSERT INTO order_product (orderID, productID, quantity)
+                            SELECT %s, c.productID, c.quantity
+                            FROM orders o INNER JOIN cart c ON o.customerID = c.customerID
+                            WHERE o.customerID = %s
+                            GROUP BY c.productID;""", (order_id, session.get('user_id')))
+            cnx.commit()
+            # UPDATE THE DELIVERY AGENT AVAILABILITY -- no need
+            # cursor.execute("""UPDATE delivery_agent
+            #                 SET avalability = 0
+            #                 WHERE daID = (SELECT daID FROM orders WHERE orderID = %s);""", (order_id,))
+            cnx.commit()
+            # UPDATE PRODUCT QUANTITY
+            cursor.execute("""UPDATE product p INNER JOIN cart c ON p.productID = c.productID
+                            SET p.quantity = p.quantity - c.quantity
+                            WHERE c.customerID = %s;""", (session.get('user_id'),))
+
+            cursor.execute("DELETE FROM cart WHERE customerID = %s;", (session.get('user_id'),))
+            cnx.commit()
+        return redirect("/account/checkout")
+
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute("SELECT p.productID as i, p.name as n, c.quantity as q, p.price as pr FROM cart c JOIN product p on c.productID=p.productID WHERE c.customerID = %s", (session.get('user_id'),))
+    cart = cursor.fetchall()
+    cursor.close()
+
+    # find cart total
+    total = 0
+    for item in cart:
+        total += float(item["q"]) * float(item["pr"])
+
+    # get this users address
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute("SELECT * FROM address WHERE addressID = (SELECT addressID FROM customer WHERE customerID = %s);", (session.get('user_id'),))
+        address = cursor.fetchone()
+
+    user_info = {}
+    # add users name, address, city, state, zip
+    if address is not None:
+        user_info["name"] = session.get('username')
+        user_info["address"] = str(address["apt_number"]) + ", " + str(address["street_name"])
+        user_info["city"] = address["city"]
+        user_info["state"] = address["state"]
+        user_info["zip"] = address["zip"]
+
+    return render_template("checkout.html", cart=cart, total=round(total, 3), user_info=user_info)
 
 
 @app.route("/product/<int:product_id>", methods=["GET", "POST"])
@@ -701,3 +779,36 @@ def product(product_id):
         return redirect('/account/cart')
 
     return render_template("product.html", context=context)
+
+
+@app.route("/account/orders", methods=["GET", "POST"])
+@login_required
+def orders():
+    # if request.method == "POST":
+    #     if request.form.get("action") == "track":
+    #         return redirect("/account/track/" + request.form.get("oid"))
+
+
+    if session.get('user_type') == 'customer':
+        cursor = cnx.cursor(dictionary=True)
+        cursor.execute("SELECT o.orderID as i, o.order_date as o_d, o.delivery_date as d_d, o.daID as daID FROM orders o WHERE o.customerID = %s", (session.get('user_id'),))
+        orders = cursor.fetchall()
+        cursor.close()
+
+        return render_template("orders.html", orders=orders)
+    else:
+        return redirect('/login')
+
+
+# @app.route("/account/track/<int:order_id>", methods=["GET", "POST"])
+# @login_required
+# def track(order_id):
+#     if session.get('user_type') == 'customer':
+#         cursor = cnx.cursor(dictionary=True)
+#         cursor.execute("SELECT o.orderID as i, o.order_date as o_d, o.delivery_date as d_d, o.daID as daID FROM orders o WHERE o.customerID = %s AND o.orderID = %s", (session.get('user_id'), order_id))
+#         order = cursor.fetchone()
+#         cursor.close()
+
+#         return render_template("track.html", order=order)
+#     else:
+#         return redirect('/login')

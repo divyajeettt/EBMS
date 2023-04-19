@@ -51,13 +51,14 @@
             <ul class="navbar-nav ml-auto mt-2">
                 <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
                 {% if session['user_id'] and session["user_type"] == 'customer' %}
+                <li class="nav-item"><a class="nav-link" href="/account/orders">Orders</a></li>
                 <li class="nav-item"><a class="nav-link" href="/account/cart">Cart</a></li>
                 {% endif %}
-                <li class="nav-item"><a class="nav-link" href="/blog">Blog</a></li>
+                <li class="nav-item"><a class="nav-link" href="/blog">Blog&nbsp;</a></li>
                 {% if session['user_id'] %}
-                <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                <li class="nav-item"><button class='btn btn-sm' style="background-color: dodgerblue;"><a class="nav-link" href="/logout"><span style="color:white">Log Out</span></a></button></li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                <li class="nav-item"><button class='btn btn-sm' style="background-color: dodgerblue;"><a class="nav-link" href="/login"><span style="color:white">Log In</span></a></button></li>
                 {% endif %}
 
             </ul>
