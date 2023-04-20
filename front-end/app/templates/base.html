@@ -56,9 +56,9 @@
                 {% endif %}
                 <li class="nav-item"><a class="nav-link" href="/blog">Blog&nbsp;</a></li>
                 {% if session['user_id'] %}
-                <li class="nav-item"><button class='btn btn-sm' style="background-color: dodgerblue;"><a class="nav-link" href="/logout"><span style="color:white">Log Out</span></a></button></li>
+                <li class="nav-item"><a class="btn btn-outline-primary" href="/logout"><span style="font-size: large;">Log Out</span></a></li>
                 {% else %}
-                <li class="nav-item"><button class='btn btn-sm' style="background-color: dodgerblue;"><a class="nav-link" href="/login"><span style="color:white">Log In</span></a></button></li>
+                <li class="nav-item"><a class="btn btn-primary" href="/login"><span style="font-size: large;">Log In</span></a></li>
                 {% endif %}
 
             </ul>
