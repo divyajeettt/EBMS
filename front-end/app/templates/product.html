@@ -2,28 +2,86 @@
 
 <head>
     <title>
-        {% block title %}{{ product["name"] }}{% endblock %}
+        {% block title %}{{ context["product"]["name"] }}{% endblock %}
     </title>
 </head>
 
 <body>
     {% block main %}
-        <h3 style="text-align: left;">
-            <b>{{ product["name"] }}</b>
-        </h3>
+        <img style="border-radius: 10px;" align="left"
+        src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="  width="300">
 
+        <h1 class="add-margin" style="text-align: left; margin-bottom: 3px;"> <b>{{ context["product"]["name"] }}</b></h1>
+        <p class="add-margin" style="text-align: left; font-size: 15px;"><b>By {{ context["supplier"]["name"] }}</b></p>
+        <hr class="add-margin" style="text-align: left;">
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            {% if context["avg_rating"] == None %}
+              <p style="text-align: left; margin-left: 20px;"><b>No ratings yet</b></p>
+            {% else %}
+              <p style="text-align: left; margin-left: 20px;"><b>{{ context["avg_rating"] }} / 5</b></p>
+            {% endif %}
+            <p style="text-align: right; font-size: 20px;"><b>Availability:</b> {{ "In stock" if context["product"]["quantity"] > 0 else "Out of Stock" }}</p>
+        </div>
+
+        <p class="add-margin" style="text-align: left; margin-bottom: 2px;"><b>Price:</b> $ {{ context["product"]["price"] }}</p>
+        <p class="add-margin" style="text-align: left;">{{ (context["product"]["product_description"] + " ") * 2 }}</p>
+
+        <div class="add-margin" style="text-align: left;">
+            <label for="inputQty"><b>Quantity: </b></label>
+            <input type="number" class="form-control" id="inputQty" style="width: 300px;" name="qty" min="1">
+            <button class="btn btn-primary" style="height: 45px; margin-left: 230px;"><span>Add to cart</span></button>
+        </div>
         <br>
-        <p style="text-align: left;">
-            <b>Price:</b> ${{ product["price"] }}
-            <br>
-            <b>Quantity:</b> {{ product["quantity"] }}
-        </p>
 
-        <br>
+        {% if context["reviews"] != [] %}
+            <h2 style="text-align: left; margin-top: 15px;"><b>Reviews</b></h2> <!-- add code to sort reviews by date and rating (asc/desc both) -->
+            <hr>
+            {% for start, end in [[0, 2], [2, 4], [4, 6]] %}
+            <div class="card-group" style="width: 100%;">
+                {% for review in context["reviews"][start:end] %}
+                    <div class="card">
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                            <h4 style="text-align: left; font-size: 18px; margin-bottom: 2px;"><b>{{ review["name"] }}</b></h4>
+                            <p style="text-align: right; margin-bottom: 2px;"><b>{{ review["rating"] }} / 5</b></p> <!-- add code to display rating as stars -->
+                        </div>
+                        <p style="text-align: left; font-size: 12px; color: gray;">{{ review["date"] }}</p>
+                        {% if review["content"] != "" %}
+                            <p style="text-align: left; font-size: 15px;"> {{ review["content"][:250] }} ... </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        {% endif %}
 
-        <p style="text-align: left;">
-            <b>Description:</b> {{ product["product_description"] }}
-        </p>
+        {% if context["more"] != [] %}
+            <h2 style="text-align: left;"><b>More from {{ context["supplier"]["name"] }}</b></h2> <!-- add code to sort reviews by date and rating (asc/desc both) -->
+            <hr>
+
+            <div class="card-group" style="width: 100%;">
+                {% for product in context["more"] %}
+                    <div class="card">
+                        <a class="card-link" href="/product/{{ product['productID'] }}">
+                            <img style="border-radius: 10px;" align="left"
+                            src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" width="95">
+                            <div style="text-align: left; margin-left: 110px;">
+                                <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                                    <h4 style="text-align: left; font-size: 18px;"><b>{{ product["name"] }}</b></h4>
+                                    {% if product["rating"] == None %}
+                                        <p><b>No ratings yet</b></p>
+                                    {% else %}
+                                        <p><b>{{ product["rating"] }} / 5</b></p>
+                                    {% endif %}
+                                </div>
+                                <p style="font-size: 14px;"><b>Price:</b> $ {{ product["price"] }}</p>
+                                <p style="font-size: 15px;"> {{ product["product_description"][:250] }} ... </p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
     {% endblock %}
 </body>
