@@ -7,15 +7,17 @@
 <body>
     {% block main %}
         <h1 style="text-align: left;"><b>Confirm Checkout</b></h1>
+        <hr>
         <br>
-        <h2 style="text-align: left;">Order Summary</h2>
+
+        <h2 style="text-align: left;"><b>Order Summary</b></h2>
         <table class="table table-striped table-hover table-bordered" style="text-align: left;">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
-                    <th scope="col">Price</th>
+                    <th scope="col">Unit Price</th>
                     <th scope="col">Total</th>
                 </tr>
             </thead>
@@ -30,12 +32,11 @@
                 </tr>
                 {% endfor %}
             </tbody>
-
         </table>
 
         <br>
 
-        <h2 style="text-align: left;">Shipping Address</h2>
+        <h2 style="text-align: left;"><b>Shipping Details</b></h2>
         <table class="table table-striped table-hover table-bordered" style="text-align: left;">
             <thead class="thead-dark">
                 <tr>
@@ -69,7 +70,7 @@
             </thead>
             <tbody>
             </tbody>
-            
+
         </table> -->
 
         <br>
@@ -79,8 +80,6 @@
             <input type="hidden" name="action" value="confirm">
             <button type="submit" class="btn btn-success">Confirm</button>
         </form>
-
-
 
     {% endblock %}
 </body>
