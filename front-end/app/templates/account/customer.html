@@ -29,7 +29,7 @@
     <hr class="add-margin">
 
     <div class="add-margin">
-        <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" align="left" style="width: 4%; height: 4%;">
+        <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" align="left" style="width: 4%;">
         <p style="text-align: left; margin-left: 35px;">{{ user["phone"][0]["num"] }}</p>
     </div>
 
@@ -49,17 +49,63 @@
     {% if orders[0] == [] %}
         <p style="text-align: left;">No currently active orders. Your undelivered orders will be shown here.</p>
     {% else %}
-
+        {% for order in ([orders[0][0]] if orders[0]|length == 1 else [orders[0][0], orders[0][1]]) %}
+            <div class="card" style="margin-bottom: 15px;">
+                <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                    <h4 style="text-align: left; font-size: 20px; margin-bottom: 2px;"><b>Order Number: {{ order["orderID"] }}</b></h4>
+                    <p style="text-align: right; margin-bottom: 4px;"><i>{{ order["order_date"] }}</i></p>
+                </div>
+                <p style="text-align: left; font-size: 14px; color: gray; margin-bottom: 8px;">Delivery Partner: {{ order["da_name"] }}</p>
+                <p style="text-align: left; font-size: 14px;">
+                    This order was placed on {{ order["order_date"] }}. It is expected to be delivered by {{ order["ETA"] }}.
+                </p>
+                <div style="display: flex; text-align: left;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" style="width: 2.75%; height: 2.75%;">
+                    <p style="display: inline-block; margin-left: 10px;">
+                        <u style="color: blue;"><a href="mailto:{{ order['da_email'] }}">{{ order["da_email"] }}</u></a>
+                    </p>
+                    <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" style="width: 2.75%; height: 2.75%; margin-left: 25px;">
+                    <p style="text-align: left; margin-left: 10px;">{{ order["da_phone"] }}</p>
+                </div>
+            </div>
+        {% endfor %}
+        {% if orders[0] | length > 2 %}
+            <br>
+            <p style="text-align: right;">See all >></p>
+        {% endif %}
     {% endif %}
 
-    <br>
+    {% if orders[0] | length <= 2 %} <br> {% endif %}
     <h2 style="text-align: left;"><b>Your Order History</b></h1>
     <hr>
 
     {% if orders[1] == [] %}
         <p style="text-align: left;">No history to show. Your past orders will be shown here.</p>
     {% else %}
-
+        {% for order in ([orders[1][0]] if orders[1]|length == 1 else [orders[1][0], orders[1][1]]) %}
+            <div class="card" style="margin-bottom: 15px;">
+                <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                    <h4 style="text-align: left; font-size: 20px; margin-bottom: 2px;"><b>Order Number: {{ order["orderID"] }}</b></h4>
+                    <p style="text-align: right; margin-bottom: 4px;"><i>{{ order["order_date"] }}</i></p>
+                </div>
+                <p style="text-align: left; font-size: 14px; color: gray; margin-bottom: 8px;">Delivery Partner: {{ order["da_name"] }}</p>
+                <p style="text-align: left; font-size: 14px;">
+                    This order was placed on {{ order["order_date"] }}. It was delivered on {{ order["delivery_date"] }}.
+                </p>
+                <div style="display: flex; text-align: left;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" style="width: 2.75%; height: 2.75%;">
+                    <p style="display: inline-block; margin-left: 10px;">
+                        <u style="color: blue;"><a href="mailto:{{ order['da_email'] }}">{{ order["da_email"] }}</u></a>
+                    </p>
+                    <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" style="width: 2.75%; height: 2.75%; margin-left: 25px;">
+                    <p style="text-align: left; margin-left: 10px;">{{ order["da_phone"] }}</p>
+                </div>
+            </div>
+        {% endfor %}
+        {% if orders[0] | length > 2 %}
+            <br>
+            <p style="text-align: right;">See all >></p>
+        {% endif %}
     {% endif %}
 
     {% endblock %}

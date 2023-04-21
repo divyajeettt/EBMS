@@ -67,7 +67,7 @@
                                 <h4 style="text-align: left; font-size: 18px; margin-bottom: 2px;"><b>{{ review["name"] }}</b></h4>
                                 <p style="text-align: right; margin-bottom: 2px;"><b>{{ review["rating"] }} / 5</b></p> <!-- add code to display rating as stars -->
                             </div>
-                            <p style="text-align: left; font-size: 12px; color: gray;">{{ review["date"] }}</p>
+                            <p style="text-align: left; font-size: 12px; color: gray;">{{ review["review_date"] }}</p>
                             {% if review["content"] != "" %}
                                 <p style="text-align: left; font-size: 15px;"> {{ review["content"][:250] }} ... </p>
                             {% endif %}

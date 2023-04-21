@@ -569,19 +569,25 @@ def account():
 
             cursor.execute(f"""
                 SELECT
-                    orderID, order_date, CONCAT(first_name, ' ', last_name) AS name,
-                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%d %M') AS ETA,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
                 FROM orders
                 JOIN delivery_agent ON orders.daID = delivery_agent.daID
-                WHERE customerID = 3 AND delivery_date IS NULL
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NULL
                 ORDER BY order_date DESC
             """)
             active_orders = cursor.fetchall()
 
             cursor.execute(f"""
-                SELECT orderID, order_date, delivery_date, CONCAT(first_name, ' ', last_name) AS name
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(delivery_date, '%d %M') AS delivery_date,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
                 FROM orders
                 JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
                 WHERE customerID = {session.get("user_id")} AND delivery_date IS NOT NULL
                 ORDER BY order_date DESC
             """)
@@ -610,9 +616,9 @@ def account():
             """)
             sales = cursor.fetchall()
 
-        return render_template('account/supplier.html', user=user, products=products, sales=sales)
+        return render_template("account/supplier.html", user=user, products=products, sales=sales)
 
-    elif session.get('user_type') == 'delivery_agent':
+    elif session.get("user_type") == "delivery_agent":
         with cnx.cursor(dictionary=True) as cursor:
             cursor.execute(f"SELECT * FROM delivery_agent WHERE daID = {session.get('user_id')}")
             user = cursor.fetchone()
@@ -820,7 +826,7 @@ def product(product_id):
         product = context["product"] = cursor.fetchone()
 
         cursor.execute(f"""
-            SELECT CONCAT(first_name, ' ', last_name) as name, rating, content, DATE_FORMAT(review_date, '%M %d, %Y') as date
+            SELECT CONCAT(first_name, ' ', last_name) as name, rating, content, DATE_FORMAT(review_date, '%M %d, %Y') AS review_date
             FROM customer
             INNER JOIN product_review ON customer.customerID = product_review.customerID
             WHERE productID = {product_id}
@@ -857,7 +863,7 @@ def product(product_id):
             WHERE supplierID = {product["supplierID"]} AND product.productID != {product_id}
             GROUP BY product.productID
             ORDER BY RAND()
-            LIMIT 3
+            LIMIT 2
         """)
         context["more"] = cursor.fetchall()
 
