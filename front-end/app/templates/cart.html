@@ -20,7 +20,7 @@
             <h4 style="text-align: left; font-size: 15px;"> Total <b>{{ cart|length }} item(s)</b> in cart</h4>
             <br>
             {% for product in cart %}
-                <div class="card" style="margin-bottom: 10px;">
+                <div class="card" style="margin-bottom: 15px;">
                     <a class="card-link" href="/product/{{ product['productID'] }}">
                         <img style="border-radius: 10px; margin-bottom: 12px;" align="left"
                         src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" width="130">
@@ -55,7 +55,6 @@
             {% endfor %}
 
             <br>
-
             <h3 style="text-align: right; margin-right: 20px;"><b>Total: $ {{ total }}</b></h3>
             <br>
 

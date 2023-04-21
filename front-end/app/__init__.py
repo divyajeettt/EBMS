@@ -577,6 +577,7 @@ def account():
                 JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
                 WHERE customerID = {session.get("user_id")} AND delivery_date IS NULL
                 ORDER BY order_date DESC
+                LIMIT 3
             """)
             active_orders = cursor.fetchall()
 
@@ -590,10 +591,11 @@ def account():
                 JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
                 WHERE customerID = {session.get("user_id")} AND delivery_date IS NOT NULL
                 ORDER BY order_date DESC
+                LIMIT 3
             """)
             past_orders = cursor.fetchall()
 
-        return render_template("account/customer.html", user=user, orders=[active_orders, past_orders])
+        return render_template("account/customer/profile.html", user=user, orders=[active_orders, past_orders])
 
     elif session.get('user_type') == 'supplier':
         with cnx.cursor(dictionary=True) as cursor:
@@ -723,7 +725,8 @@ def checkout():
                 FROM orders o
                 INNER JOIN cart c ON o.customerID = c.customerID
                 WHERE o.customerID = {session.get("user_id")}
-                GROUP BY c.productID""")
+                GROUP BY c.productID
+            """)
             cnx.commit()
 
             # UPDATE THE DELIVERY AGENT AVAILABILITY -- no need
@@ -870,15 +873,112 @@ def product(product_id):
     return render_template("product.html", context=context, qty=qty, edit=edit, message=message)
 
 
+@app.route("/account/orders", methods=["GET"])
+def view_orders():
+    if session.get("user_type") != "customer":
+        return redirect("/login")
+
+    active = request.args.get("active")
+
+    with cnx.cursor(dictionary=True) as cursor:
+        if active == "1":
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%d %M') AS ETA,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NULL
+                ORDER BY order_date DESC
+            """)
+        else:
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(delivery_date, '%M %d, %Y') AS delivery_date,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NOT NULL
+                ORDER BY order_date DESC
+            """)
+        orders = cursor.fetchall()
+
+    return render_template("/account/customer/orders.html", orders=orders, active=active)
+
+
+@app.route("/account/orders/<int:order_id>", methods=["GET"])
+def order_details(order_id):
+    if session.get("user_type") != "customer":
+        return redirect("/login")
+
+    active = request.args.get("active")
+    context = {}
+    with cnx.cursor(dictionary=True) as cursor:
+        if active == "1":
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 2 DAY), '%M %d, %Y') AS dispatch_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%M %d, %Y') AS ETA,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NULL AND orderID = {order_id}
+                ORDER BY order_date DESC
+            """)
+        else:
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(delivery_date, '%M %d, %Y') AS delivery_date,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NOT NULL AND orderID = {order_id}
+                ORDER BY order_date DESC
+            """)
+        context["order"] = cursor.fetchone()
+
+        cursor.execute(f"""
+            SELECT
+                product.productID, product.name, product_description, order_product.quantity,
+                ROUND(price * order_product.quantity, 2) AS total,
+                CONCAT(first_name, ' ', last_name) AS sname,
+                ROUND(AVG(rating), 2) AS rating, COUNT(*) AS reviews
+            FROM product
+            JOIN order_product ON product.productID = order_product.productID
+            JOIN supplier ON product.supplierID = supplier.supplierID
+            LEFT JOIN product_review ON product.productID = product_review.productID
+            WHERE orderID = {order_id}
+            GROUP BY product.productID
+            ORDER BY sname ASC, product.name ASC, total DESC
+        """)
+        context["products"] = cursor.fetchall()
+
+        cursor.execute(f"""
+            SELECT ROUND(SUM(price * order_product.quantity), 2) AS total
+            FROM order_product
+            JOIN product ON order_product.productID = product.productID
+            WHERE orderID = {order_id}
+        """)
+        context["total"] = cursor.fetchone()["total"]
+
+    return render_template("/account/customer/order_details.html", order_id=order_id, active=active, context=context)
+
+
 # @app.route("/account/track/<int:order_id>", methods=["GET", "POST"])
 # @login_required
 # def track(order_id):
 #     if session.get('user_type') == 'customer':
-#         cursor = cnx.cursor(dictionary=True)
-#         cursor.execute("SELECT o.orderID as i, o.order_date as o_d, o.delivery_date as d_d, o.daID as daID FROM orders o WHERE o.customerID = %s AND o.orderID = %s", (session.get('user_id'), order_id))
-#         order = cursor.fetchone()
-#         cursor.close()
-
+#         with cnx.cursor(dictionary=True) as cursor:
+#             cursor.execute("SELECT o.orderID as i, o.order_date as o_d, o.delivery_date as d_d, o.daID as daID FROM orders o WHERE o.customerID = %s AND o.orderID = %s", (session.get('user_id'), order_id))
+#             order = cursor.fetchone()
 #         return render_template("track.html", order=order)
 #     else:
 #         return redirect('/login')
