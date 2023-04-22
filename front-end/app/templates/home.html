@@ -9,30 +9,83 @@
 <body>
     {% block main %}
 
-    <table style="border: none; width: fit-content;">
-        <tr>
-            <td width="25%"><a href="catalogue?q=tv">
-                <img src="https://5.imimg.com/data5/KG/OR/OJ/SELLER-47616313/55-inch-smart-4k-led-tv-500x500.jpeg" alt="TVs">
-            </a></td>
-            <td width="25%"><a href="catalogue?q=smartphone">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/3/2022/05/Untitled-design-38-cccd4b7.png" alt="Smartphones">
-            </a></td>
-            <td width="25%"><a href="catalogue?q=laptop">
-                <img src="https://economictimes.indiatimes.com/thumb/msid-93723806,width-1024,height-683,resizemode-4,imgsize-13660/thumbnail-.jpg?from=mdr" alt="Laptops">
-            </a></td>
-            <td width="25%"><a href="catalogue?q=camera">
-                <img src="https://m.media-amazon.com/images/I/81vje3VMvuL._AC_SX466_.jpg" alt="Cameras">
-            </a></td>
-        </tr>
-        <tr>
-            <td style="text-align: center;"><a href="catalogue?q=tv"><b>TVs</b></a>
-            <td style="text-align: center;"><a href="catalogue?q=smartphone"><b>Smartphones</b></a>
-            <td style="text-align: center;"><a href="catalogue?q=laptop"><b>Laptops</b></a>
-            <td style="text-align: center;"><a href="catalogue?q=camera"><b>Cameras</b></a>
-        </tr>
-    </table>
+    <h1 style="text-align: center;"><b>Our Best-Sellers</b></h1>
+    <hr>
+    <p>Don't miss out on these best-sellers at EBMS!</p>
+
+    <div class="card-group" style="width: 100%;">
+        {% for product in best_sellers %}
+            <div class="card">
+                <a class="card-link" href="/product/{{ product['productID'] }}">
+                    <img style="border-radius: 10px;" width="285"
+                    src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=">
+                    <br><br>
+                    <div style="text-align: left; margin-left: 7px; margin-right: 7px;">
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                            <h4 style="text-align: left; font-size: 18px; margin-bottom: 0px;"><b>{{ product["name"] }}</b></h4>
+                            <p style="margin-bottom: 0px;"><b>{{ product["avg_rating"] }} / 5</b></p>
+                        </div>
+                        <p style="font-size: 14px; color: gray;"><i>By {{ product["sname"] }}</i></p>
+                        <p style="font-size: 14px; margin-bottom: 3px;"><b>Price:</b> $ {{ product["price"] }}</p>
+                        <p style="font-size: 15px; margin-bottom: 5px;"> {{ product["product_description"][:65] }} ... </p>
+                        <p style="font-size: 12px; text-align: right; color: gray;"><i>*{{ product["units_sold"] }} units sold!</i></p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 
     <br>
+    <h1 style="text-align: center;"><b>Our Top-Products</b></h1>
+    <hr>
+    <p>Some of the top-rated products of all time at EBMS!</p>
+
+    <div class="card-group" style="width: 100%;">
+        {% for product in top_products %}
+            <div class="card">
+                <a class="card-link" href="/product/{{ product['productID'] }}">
+                    <img style="border-radius: 10px;" width="285"
+                    src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=">
+                    <br><br>
+                    <div style="text-align: left; margin-left: 7px; margin-right: 7px;">
+                        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                            <h4 style="text-align: left; font-size: 18px; margin-bottom: 0px;"><b>{{ product["name"] }}</b></h4>
+                            <p style="margin-bottom: 0px;"><b>{{ product["avg_rating"] }} / 5</b></p>
+                        </div>
+                        <p style="font-size: 14px; color: gray;"><i>By {{ product["sname"] }}</i></p>
+                        <p style="font-size: 14px; margin-bottom: 3px;"><b>Price:</b> $ {{ product["price"] }}</p>
+                        <p style="font-size: 15px; margin-bottom: 5px;"> {{ product["product_description"][:65] }} ... </p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <br>
+    <h1 style="text-align: center;"><b>Our Best-Selling Suppliers</b></h1>
+    <hr>
+    <p>Some of the top-selling products of all time at EBMS!</p>
+
+    <div class="card-group" style="width: 100%;">
+        {% for supplier in top_suppliers %}
+            <div class="card">
+                <a class="card-link" href="/catalogue?supplier={{ supplier['supplierID'] }}">
+                    <img style="border-radius: 10px;" width="285"
+                    src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=">
+                    <br><br>
+                    <h4 style="font-size: 18px; margin-bottom: 10px;"><b>{{ supplier["name"] }}</b></h4>
+                    <p style="font-size: 15px; text-align: left; margin-left: 10px;"><i>
+                        {{ supplier["name"].split()[0][0] }}. has maintaned an average rating of <b>{{ supplier["avg_rating"] }} / 5</b> on all their products.
+                    </i></p>
+                    <div style="display: inline; text-align: left; margin-bottom: 10px;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" style="width: 8%;">
+                        <u style="color: blue;"><a href="mailto:helpline@ebms.ac.in" style="font-size: 14px; margin-left: 2px;">{{ supplier["email"] }}</u></a>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
     <br>
     <p style="font-size: smaller; color:grey">Browse our entire product catalogue <a href="catalogue">here</a>.</p>
     <hr>
@@ -49,7 +102,6 @@
         <br>
         We believe that shopping for electronics should be fun, which is why we offer a range of exclusive deals and competitive prices to help you get the best value for your money.
     </p>
-    <br>
     <hr>
     <h3 style="text-align: left;"><b>Contact us</b></h3>
     <div style="display: flex; text-align: center;">

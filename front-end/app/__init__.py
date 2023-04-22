@@ -50,31 +50,40 @@ def index():
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
         cursor.execute("""
-            SELECT p.productID, p.name, p.price, SUM(op.quantity) AS units_sold
-            FROM order_product op, product p
-            WHERE p.productID = op.productID
+            SELECT
+                p.productID, p.name, p.price, p.product_description,
+                CONCAT(s.first_name, ' ', s.last_name) AS sname,
+                SUM(op.quantity) AS units_sold, ROUND(AVG(pr.rating), 2) AS avg_rating
+            FROM order_product op
+            INNER JOIN product p ON op.productID = p.productID
+            INNER JOIN supplier s ON p.supplierID = s.supplierID
+            LEFT JOIN product_review pr ON p.productID = pr.productID
             GROUP BY p.productID
             ORDER BY units_sold DESC
-            LIMIT 6
+            LIMIT 3
         """)
-        context["best_selling"] = cursor.fetchall()
+        context["best_sellers"] = cursor.fetchall()
 
         cursor.execute("""
-            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating
-            FROM product_review pr, product p
+            SELECT
+                p.productID, p.name, p.price, p.product_description,
+                CONCAT(s.first_name, ' ', s.last_name) AS sname,
+                ROUND(AVG(pr.rating), 2) AS avg_rating
+            FROM product p
+            INNER JOIN supplier s ON p.supplierID = s.supplierID
+            LEFT JOIN product_review pr ON p.productID = pr.productID
             WHERE p.productID = pr.productID
             GROUP BY p.productID
             ORDER BY avg_rating DESC
-            LIMIT 6
+            LIMIT 3
         """)
         context["top_products"] = cursor.fetchall()
 
         cursor.execute("""
             SELECT
-                s.supplierID,
+                s.supplierID, email,
                 CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
-                email,
-                AVG(pr.rating) AS avg_rating
+                ROUND(AVG(pr.rating), 2) AS avg_rating
             FROM supplier s, product_review pr, product prod
             WHERE (
                 SELECT AVG(pr.rating) FROM product_review pr, product p
@@ -82,9 +91,10 @@ def index():
                 GROUP BY p.supplierID
             ) > 3
             AND s.supplierID = prod.supplierID AND pr.productID = prod.productID
+            AND (SELECT COUNT(*) FROM product p WHERE p.supplierID = s.supplierID) >= 3
             GROUP BY s.supplierID
             ORDER BY avg_rating DESC
-            LIMIT 6
+            LIMIT 3
         """)
         context["top_suppliers"] = cursor.fetchall()
 
@@ -94,6 +104,8 @@ def index():
 @app.route("/catalogue")
 def search():
     search = request.args.get("q")
+    supplier = request.args.get("supplier")
+    if all([search, supplier]): supplier = None
 
     with cnx.cursor(dictionary=True) as cursor:
         cursor.execute(f"""
@@ -101,6 +113,7 @@ def search():
             FROM product p
             LEFT JOIN product_review pr ON p.productID = pr.productID
             {"" if search is None else f"WHERE p.name LIKE '%{search}%'"}
+            {"" if supplier is None else f"WHERE p.supplierID = {supplier}"}
             GROUP BY p.productID
             ORDER BY p.name ASC
         """)
