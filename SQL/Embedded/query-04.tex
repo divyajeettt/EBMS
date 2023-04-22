@@ -4,7 +4,7 @@
 \begin{lstlisting}
 SELECT
     customer.customerID,
-    CONCAT(customer.first_name, ' ', customer.middle_initial, ' ', customer.last_name) AS name,
+    CONCAT(customer.first_name, ' ', customer.last_name) AS name,
     COUNT(orders.orderID) AS total_orders,
     SUM(product.price * order_product.quantity) AS total_spent,
     AVG(product.price * order_product.quantity) AS avg_spent

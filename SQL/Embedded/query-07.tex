@@ -2,10 +2,10 @@
 \textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
 
 \begin{lstlisting}
-SELECT p.productID, p.name, p.price, SUM(op.quantity) AS quantity
+SELECT p.productID, p.name, p.price, SUM(op.quantity) AS units_sold
 FROM order_product op, product p
 WHERE p.productID = op.productID
 GROUP BY p.productID
-ORDER BY quantity DESC
+ORDER BY units_sold DESC
 LIMIT 10;
 \end{lstlisting}
