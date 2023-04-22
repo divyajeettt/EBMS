@@ -2,7 +2,7 @@
 
 <head>
     <title>
-        {% block title %}{{ context["product"]["name"] }}{% endblock %}
+        {% block title %}{{ product["name"] }}{% endblock %}
     </title>
 </head>
 
@@ -15,26 +15,26 @@
         <img style="border-radius: 10px;" align="left"
         src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="  width="300">
 
-        <h1 class="add-margin" style="text-align: left; margin-bottom: 3px;"> <b>{{ context["product"]["name"] }}</b></h1>
-        <p class="add-margin" style="text-align: left; font-size: 15px;"><b>By {{ context["supplier"]["name"] }}</b></p>
+        <h1 class="add-margin" style="text-align: left; margin-bottom: 3px;"> <b>{{ product["name"] }}</b></h1>
+        <p class="add-margin" style="text-align: left; font-size: 15px;"><b>By {{ supplier["name"] }}</b></p>
         <hr class="add-margin" style="text-align: left;">
 
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            {% if context["rating"]["stars"] == None %}
+            {% if rating["stars"] == None %}
               <p style="text-align: left; margin-left: 20px;"><b>No reviews yet</b></p>
             {% else %}
               <p style="text-align: left; margin-left: 20px;">
-                <b>{{ context["rating"]["stars"] }} / 5  &nbsp;&nbsp; ({{ context["rating"]["reviews"] }} Review(s))</b>
+                <b>{{ rating["stars"] }} / 5  &nbsp;&nbsp; ({{ rating["reviews"] }} Review(s))</b>
             </p>
             {% endif %}
-            <p style="text-align: right; font-size: 20px;"><b>Availability:</b> {{ "In stock" if context["product"]["quantity"] > 0 else "Out of Stock" }}</p>
+            <p style="text-align: right; font-size: 20px;"><b>Availability:</b> {{ "In stock" if product["quantity"] > 0 else "Out of Stock" }}</p>
         </div>
 
-        <p class="add-margin" style="text-align: left; margin-bottom: 2px;"><b>Price:</b> $ {{ context["product"]["price"] }}</p>
-        <p class="add-margin" style="text-align: left;">{{ (context["product"]["product_description"] + " ") * 2 }}</p>
+        <p class="add-margin" style="text-align: left; margin-bottom: 2px;"><b>Price:</b> $ {{ product["price"] }}</p>
+        <p class="add-margin" style="text-align: left;">{{ (product["product_description"] + " ") * 2 }}</p>
 
         {% if session.get("user_type") == "customer" %}
-            <p class="add-margin" style="text-align: left; margin-bottom: 0px;"><b>In Cart:</b> {{ context["in_cart"] }}</p>
+            <p class="add-margin" style="text-align: left; margin-bottom: 0px;"><b>In Cart:</b> {{ in_cart }}</p>
         {% endif %}
 
         <div class="add-margin" style="text-align: left;">
@@ -45,7 +45,7 @@
                     <button class="btn btn-primary" style="height: 45px; margin-left: 150px;" onclick="submitForm()">
                         {% if edit != None %}
                             <span>Set new quantity</span>
-                        {% elif context["in_cart"] > 0 %}
+                        {% elif in_cart > 0 %}
                             <span>Add more to cart</span>
                         {% else %}
                             <span>Add to cart</span>
@@ -56,12 +56,12 @@
         </div>
         <br>
 
-        {% if context["reviews"] != [] %}
+        {% if reviews != [] %}
             <h2 style="text-align: left; margin-top: 15px;"><b>Reviews</b></h2> <!-- add code to sort reviews by date and rating (asc/desc both) -->
             <hr>
             {% for start, end in [[0, 2], [2, 4], [4, 6]] %}
                 <div class="card-group" style="width: 100%;">
-                    {% for review in context["reviews"][start:end] %}
+                    {% for review in reviews[start:end] %}
                         <div class="card">
                             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
                                 <h4 style="text-align: left; font-size: 18px; margin-bottom: 2px;"><b>{{ review["name"] }}</b></h4>
@@ -77,12 +77,12 @@
             {% endfor %}
         {% endif %}
 
-        {% if context["more"] != [] %}
-            <h2 style="text-align: left;"><b>More from {{ context["supplier"]["name"] }}</b></h2> <!-- add code to sort reviews by date and rating (asc/desc both) -->
+        {% if more != [] %}
+            <h2 style="text-align: left;"><b>More from {{ supplier["name"] }}</b></h2> <!-- add code to sort reviews by date and rating (asc/desc both) -->
             <hr>
 
             <div class="card-group" style="width: 100%;">
-                {% for product in context["more"] %}
+                {% for product in more %}
                     <div class="card">
                         <a class="card-link" href="/product/{{ product['productID'] }}">
                             <img style="border-radius: 10px;" align="left"
@@ -108,7 +108,7 @@
     <script>
         function submitForm() {
             var qty = document.getElementById("inputQty").value;
-            var formAction = "/product/{{ context['product']['productID'] }}?edit={{ edit if edit else '' }}&qty=" + qty;
+            var formAction = "/product/{{ product['productID'] }}?edit={{ edit if edit else '' }}&qty=" + qty;
             document.forms[0].action = formAction;
             document.forms[0].submit();
         }

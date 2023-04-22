@@ -8,7 +8,7 @@
     {% block main %}
 
     <div class="card" style="margin-right: 0px !important;">
-        <h1 style="font-size: 72px;"><b>{{ context['count'] }}+</b></h1>
+        <h1 style="font-size: 72px;"><b>{{ count }}+</b></h1>
         <h2><b>Delivery Agents</b></h2>
         <p>are helping <b>EBMS</b> deliver Products to Customers.</p>
     </div>
@@ -48,7 +48,7 @@
             </tr>
         </thead>
 
-        {% for row in context['top_rated'] %}
+        {% for row in top_rated %}
         <tr>
             <td>{{ row['daID'] }}</td>
             <td>{{ row['name'] }}</td>
@@ -77,7 +77,7 @@
             </tr>
         </thead>
 
-        {% for row in context['most_active'] %}
+        {% for row in most_active %}
         <tr>
             <td>{{ row['daID'] }}</td>
             <td>{{ row['name'] }}</td>

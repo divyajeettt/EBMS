@@ -8,7 +8,7 @@
     {% block main %}
 
     <div class="card" style="margin-right: 0px !important;">
-        <h1 style="font-size: 72px;"><b>{{ context['count'] }}+</b></h1>
+        <h1 style="font-size: 72px;"><b>{{ count }}+</b></h1>
         <h2><b>Suppliers</b></h2>
         <p>are supplying products to the <b>EBMS</b> warehouse.</p>
     </div>
@@ -48,7 +48,7 @@
             </tr>
         </thead>
 
-        {% for row in context['top_rated'] %}
+        {% for row in top_rated %}
         <tr>
             <td>{{ row['supplierID'] }}</td>
             <td>{{ row['name'] }}</td>
@@ -76,7 +76,7 @@
             </tr>
         </thead>
 
-        {% for row in context['inactive'] %}
+        {% for row in inactive %}
         <tr>
             <td>{{ row['supplierID'] }}</td>
             <td>{{ row['name'] }}</td>
@@ -105,7 +105,7 @@
             </tr>
         </thead>
 
-        {% for row in context['demographics'] %}
+        {% for row in demographics %}
         {% if row['country'] != None and row['state'] != None %}
         <tr>
             <td>{{ row['country'] }}</td>
@@ -128,7 +128,7 @@
             </tr>
         </thead>
 
-        {% for row in context['demographics'] %}
+        {% for row in demographics %}
         {% if row['country'] != None and row['state'] == None %}
         <tr>
             <td>{{ row['country'] }}</td>
@@ -149,7 +149,7 @@
             </tr>
         </thead>
 
-        {% for row in context['demographics'] %}
+        {% for row in demographics %}
         {% if row['country'] == None and row['state'] == None %}
         <tr>
             <td>{{ row['supplier_count'] }}</td>

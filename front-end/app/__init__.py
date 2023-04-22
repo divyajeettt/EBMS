@@ -47,36 +47,66 @@ def after_request(response):
 
 @app.route("/")
 def index():
-    return render_template("home.html")
+    context = {}
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute("""
+            SELECT p.productID, p.name, p.price, SUM(op.quantity) AS units_sold
+            FROM order_product op, product p
+            WHERE p.productID = op.productID
+            GROUP BY p.productID
+            ORDER BY units_sold DESC
+            LIMIT 6
+        """)
+        context["best_selling"] = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating
+            FROM product_review pr, product p
+            WHERE p.productID = pr.productID
+            GROUP BY p.productID
+            ORDER BY avg_rating DESC
+            LIMIT 6
+        """)
+        context["top_products"] = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT
+                s.supplierID,
+                CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
+                email,
+                AVG(pr.rating) AS avg_rating
+            FROM supplier s, product_review pr, product prod
+            WHERE (
+                SELECT AVG(pr.rating) FROM product_review pr, product p
+                WHERE p.productID = pr.productID AND p.supplierID = s.supplierID
+                GROUP BY p.supplierID
+            ) > 3
+            AND s.supplierID = prod.supplierID AND pr.productID = prod.productID
+            GROUP BY s.supplierID
+            ORDER BY avg_rating DESC
+            LIMIT 6
+        """)
+        context["top_suppliers"] = cursor.fetchall()
+
+    return render_template("home.html", **context)
 
 
 @app.route("/catalogue")
 def search():
     search = request.args.get("q")
-    if search is None:
-        query = """
-            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-            FROM product p
-            LEFT JOIN product_review pr ON p.productID = pr.productID
-            GROUP BY p.productID
-            ORDER BY p.name ASC
-        """
-    else:
-        query = f"""
-            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-            FROM product p
-            LEFT JOIN product_review pr ON p.productID = pr.productID
-            WHERE p.name LIKE '%{search}%'
-            GROUP BY p.productID
-            ORDER BY p.name ASC
-        """
 
     with cnx.cursor(dictionary=True) as cursor:
-        cursor.execute(query)
-        results = list(cursor.fetchall())
+        cursor.execute(f"""
+            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            FROM product p
+            LEFT JOIN product_review pr ON p.productID = pr.productID
+            {"" if search is None else f"WHERE p.name LIKE '%{search}%'"}
+            GROUP BY p.productID
+            ORDER BY p.name ASC
+        """)
+        results = cursor.fetchall()
 
     return render_template("catalogue.html", rows=results)
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -288,11 +318,11 @@ def adminlogin():
         return render_template('adminlogin.html')
 
 
-@app.route('/admin', methods=['GET'])
+@app.route("/admin", methods=["GET"])
 @admin_login_required
 def admin():
-    if session.get('user_type') != 'admin':
-        return redirect('/adminlogin')
+    if session.get("user_type") != "admin":
+        return redirect("/adminlogin")
 
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
@@ -311,7 +341,7 @@ def admin():
         cursor.execute("SELECT ROUND(COUNT(*), -1) AS product_count FROM order_product")
         context["product_count"] = cursor.fetchone()["product_count"]
 
-    return render_template("admin.html", context=context)
+    return render_template("admin.html", **context)
 
 
 @app.route("/admin/<string:page>", methods=["GET"])
@@ -525,7 +555,7 @@ def admin_stats(page: str):
             """)
             context["most_active"] = cursor.fetchall()
 
-    return render_template(f"admin/{page}.html", context=context)
+    return render_template(f"admin/{page}.html", **context)
 
 
 @app.route("/logout")
@@ -870,7 +900,7 @@ def product(product_id):
         """)
         context["more"] = cursor.fetchall()
 
-    return render_template("product.html", context=context, qty=qty, edit=edit, message=message)
+    return render_template("product.html", qty=qty, edit=edit, message=message, **context)
 
 
 @app.route("/account/orders", methods=["GET"])
@@ -969,7 +999,7 @@ def order_details(order_id):
         """)
         context["total"] = cursor.fetchone()["total"]
 
-    return render_template("/account/customer/order_details.html", order_id=order_id, active=active, context=context)
+    return render_template("/account/customer/order_details.html", order_id=order_id, active=active, **context)
 
 
 # @app.route("/account/track/<int:order_id>", methods=["GET", "POST"])

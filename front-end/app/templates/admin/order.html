@@ -8,7 +8,7 @@
     {% block main %}
 
     <div class="card" style="margin-right: 0px !important;">
-        <h1 style="font-size: 72px;"><b>{{ context['count'] }}+</b></h1>
+        <h1 style="font-size: 72px;"><b>{{ count }}+</b></h1>
         <h2><b>Orders</b></h2>
         <p>have been placed through through <b>EBMS</b>.</p>
     </div>
@@ -47,9 +47,9 @@
             </tr>
         </thead>
         <tr>
-            <td>{{ context['order_status'][1]['n'] }}</td>
-            <td>{{ context['order_status'][0]['n'] }}</td>
-            <td>{{ context['order_status'][0]['n'] + context['order_status'][1]['n'] }}</td>
+            <td>{{ order_status[1]['n'] }}</td>
+            <td>{{ order_status[0]['n'] }}</td>
+            <td>{{ order_status[0]['n'] + order_status[1]['n'] }}</td>
         </tr>
     </table>
 
@@ -72,7 +72,7 @@
             </tr>
         </thead>
 
-        {% for row in context['order_trend'] %}
+        {% for row in order_trend %}
         {% if row['date_year'] != None and row['date_quarter'] != None and row['date_month'] != None %}
         <tr>
             <td>{{ row['date_year'] }}</td>
@@ -95,7 +95,7 @@
             </tr>
         </thead>
 
-        {% for row in context['order_trend'] %}
+        {% for row in order_trend %}
         {% if row['date_year'] != None and row['date_quarter'] != None and row['date_month'] == None %}
         <tr>
             <td>{{ row['date_year'] }}</td>
@@ -116,7 +116,7 @@
             </tr>
         </thead>
 
-        {% for row in context['order_trend'] %}
+        {% for row in order_trend %}
         {% if row['date_year'] != None and row['date_quarter'] == None and row['date_month'] == None %}
         <tr>
             <td>{{ row['date_year'] }}</td>
@@ -135,7 +135,7 @@
             </tr>
         </thead>
 
-        {% for row in context['order_trend'] %}
+        {% for row in order_trend %}
         {% if row['date_year'] == None and row['date_quarter'] == None and row['date_month'] == None %}
         <tr>
             <td>{{ row['order_count'] }}</td>
@@ -163,7 +163,7 @@
             </tr>
         </thead>
 
-        {% for row in context['country_trend'] %}
+        {% for row in country_trend %}
         {% if row['country'] != None %}
         <tr>
             <td>{{ row['country'] }}</td>
@@ -182,7 +182,7 @@
             </tr>
         </thead>
 
-        {% for row in context['country_trend'] %}
+        {% for row in country_trend %}
         {% if row['country'] == None %}
         <tr>
             <td>{{ row['order_count'] }}</td>
