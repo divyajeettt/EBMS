@@ -90,7 +90,8 @@
         The database managers (\textbf{admins}) get assisted in monitoring the transactions and managing the inventory.
         Based on their requirements, they can add deals or combos on the available products or remove categories from their store.
         \item
-        EBMS provides a platform for \textbf{delivery agents} to keep track of all orders that have been assigned to them. They can set their activity/inactivity status and view the feedback given to them.
+        EBMS provides a platform for \textbf{delivery agents} to keep track of all orders that have been assigned to them.
+        They can set their activity/inactivity status and view the feedback given to them.
     \end{itemize}
     The primary focus of the project is to design an efficient backend.
     We aim to create a system that is smooth and easy to use for the customers and easy to manage for the suppliers.
@@ -150,7 +151,8 @@
             A customer can only post a review on a delivery agent they have received an order from.
             \item \textbf{Wallet:}
             A wallet is a belonging of a customer that stores attributes like the current balance of the customer, their UPI-ID etc.
-            Users' wallets are hidden from the admin's view. Wallets are weak entities since several people can be using the same UPI-ID, and we require the customerID to uniquely identify a wallet.
+            Users' wallets are hidden from the admin's view. Wallets are weak entities since several people can be using the same UPI-ID,
+            and we require the customerID to uniquely identify a wallet.
             \item \textbf{Description:}
             The description weak entity is used to store the description of different products.
             This is used to avoid redundancy of data storage (in the case where multiple suppliers are selling the same products with the same descriptions).
@@ -162,7 +164,8 @@
         \item \textbf{\textit{Cart}:}
         Cart is a relationship between \textbf{Customer} and \textbf{Product}.
         One customer can add multiple products to the cart (and choose a specific supplier).
-        The same products may be added to more than one cart. When a customer checks out, the cart is used to generate an order entity, and a delivery agent is assigned to it.
+        The same products may be added to more than one cart. When a customer checks out, the cart is used to generate an order entity,
+        and a delivery agent is assigned to it.
         \item \textbf{\textit{Sells}:}
         \textbf{Supplier} \textit{sells} \textbf{Product}.
         This many-to-many relationship is used to keep track of what products one supplier sells.
@@ -200,11 +203,13 @@
             \item \textbf{Order - Customer:} An order cannot exist without a customer.
             \item \textbf{Order - Delivery Agent:} An order cannot exist without a delivery agent.
             \item \textbf{Product Review - Customer \textit{has purchased} Product:} To ensure that a customer can review only the products they have purchased.
-            \item \textbf{Delivery Agent Review - Delivery Agent \textit{delivered to} Customer:} to ensure that a customer can review only the delivery agents they have received orders from.
+            \item \textbf{Delivery Agent Review - Delivery Agent \textit{delivered to} Customer:} to ensure that a customer can review only
+            the delivery agents they have received orders from.
         \end{enumerate}
         \item \textbf{One-to-One:}
         \textbf{Delivery Agent - Order:} One delivery agent can be assigned at most one order at a time.
-        We may remove this constraint later and implement an algorithm to find the best agent to assign an order to, based on the current delivery addresses, with a cap on the number of orders per agent.
+        We may remove this constraint later and implement an algorithm to find the best agent to assign an order to, based on the current delivery addresses,
+        with a cap on the number of orders per agent.
         \item \textbf{One-to-Many:}
         \textbf{Customer - Phone Number} One customer can have multiple phone numbers.
         It will be implemented as a multi-valued attribute of Customer.
@@ -353,7 +358,8 @@
         \item
         Added field \textbf{quantity} to table \textbf{product}.
         \item
-        Removed fields \textbf{reviewID} from the \textbf{product\_review} and \textbf{da\_review} tables, so as to decompose the ternary relationships \textbf{delivered} and \textbf{purchased}.
+        Removed fields \textbf{reviewID} from the \textbf{product\_review} and \textbf{da\_review} tables,
+        so as to decompose the ternary relationships \textbf{delivered} and \textbf{purchased}.
         \item
         Added \textbf{order\_date} and \textbf{delivery\_date} to the \textbf{order} table.
     \end{enumerate}
@@ -374,7 +380,8 @@
     \subsection*{Multi-Valued Attributes:}
     \begin{enumerate}
         \item
-        Since \textbf{phone\_number} is a multivalued attribute, we store it in a separate table, with the \textbf{phoneID} attribute from this table being stored in the \textbf{delivery\_agent} and \textbf{customer} tables.
+        Since \textbf{phone\_number} is a multivalued attribute, we store it in a separate table, with the \textbf{phoneID} attribute
+        from this table being stored in the \textbf{delivery\_agent} and \textbf{customer} tables.
         This table does not have a primary key since each \textbf{phoneID} associates to one or more \textbf{num}'s (phone numbers).
     \end{enumerate}
 
@@ -398,19 +405,24 @@
         Since \textbf{phone numbers} are implemented as multi-valued attributes, we assume that phone numbers are not unique to a customer.
         This means that multiple users may have the same phone number.
         \item
-        All primary keys are defined with the \texttt{AUTO\_INCREMENT} constraints so that we do not need to insert ID values ourselves, and duplicity errors on primary keys are avoided.
+        All primary keys are defined with the \texttt{AUTO\_INCREMENT} constraints so that we do not need to insert ID values ourselves,
+        and duplicity errors on primary keys are avoided.
         \item
-        \textbf{Product descriptions} and \textbf{review contents} are being stored using \texttt{TEXT} datatype in MySQL, which is not stored in the server memory and does not hamper query times.
+        \textbf{Product descriptions} and \textbf{review contents} are being stored using \texttt{TEXT} datatype in MySQL, which is not stored
+        in the server memory and does not hamper query times.
         \item
-        All attributes that can not have null values have been specified as \texttt{NOT NULL}. Attributes like \textbf{last\_name}, \textbf{middle\_initial}, \textbf{content} in the \textbf{review} tables, and \textbf{delivery\_date} in the \textbf{orders} table can have null values.
+        All attributes that can not have null values have been specified as \texttt{NOT NULL}. Attributes like \textbf{last\_name}, \textbf{middle\_initial},
+        \textbf{content} in the \textbf{review} tables, and \textbf{delivery\_date} in the \textbf{orders} table can have null values.
         \item
-        \textbf{Availability} of a delivery agent has been given a \texttt{DEFAULT} value of true, ie, when a delivery agent is added to the database, he is available to deliver an order by default.
+        \textbf{Availability} of a delivery agent has been given a \texttt{DEFAULT} value of true, ie, when a delivery agent is added to the database,
+        they are available to deliver an order by default.
         \item
         \textbf{Balance} in a customer wallet, on account creation, has been given a \texttt{DEFAULT} value of 0.
         \item
         \textbf{pwd}'s in all tables are stored as SHA1 hashes.
         \item
-        Some other integrity constrains have also been added, for example, \textbf{rating} must be between 0 and 5, and \textbf{quantity} and \textbf{price} must be positive.
+        Some other integrity constrains have also been added, for example, \textbf{rating} must be between 0 and 5, and \textbf{quantity}
+        and \textbf{price} must be positive.
         \item
         Based on a rough idea of the types of queries we plan to use, some indices have also been added on the fields of the tables.
         These may be updated in the future.
@@ -493,8 +505,9 @@
     \vspace*{10pt}
 
     As of now, the only SQL queries which have been embedded in the Python code are those for which the frontend interaces have been developed.
-    In the future, these will be refactored into small \texttt{.sql} files and imported into the Python code for security and readability purposes.
-    \footnote{The embedded SQL Queries are currently not protected against SQL Injection Attacks.}
+    In the future, these will be refactored into small \texttt{.sql} files and imported into the Python code for security\footnote{
+        The embedded SQL Queries are currently not protected against SQL Injection Attacks.
+    } and readability purposes.
     \vspace*{10pt} \\
     The following is a (non-exhaustive) list of already embedded SQL queries:
 
