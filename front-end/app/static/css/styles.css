@@ -15,6 +15,42 @@ nav .navbar-brand .green, .green {
     color: #2e944b;
 }
 
+nav .border {
+    border: 1px solid #537fbe;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+}
+
+ul {
+    padding-bottom: 0.5em;
+}
+
+.nav-item {
+    font-size: large;
+    /* align nav items to the center vertically */
+    display: flex;
+    align-items: center;
+}
+
+
+.btn-outline-primary {
+    color: #017BFE !important;
+    border-color: #017BFE !important;
+    /* add a thicker border */
+    border-width: 2px !important;
+    /* add text color */
+    background-color: #FFFFFF !important;
+}
+
+.btn-outline-primary:hover {
+    color: #FFFFFF !important;
+    background-color: #017BFE !important;
+    border-color: #017BFE !important;
+    /* change text color to white */
+    background-color: #017BFE !important;
+}
+
 main .form-control {
     display: inline-block;
     width: auto;
@@ -97,6 +133,10 @@ footer {
 .button:hover span:after {
     opacity: 1;
     right: 0;
+}
+.button:hover {
+    /* background-color: #d4571d; */
+    color: #FFFFFF;
 }
 
 
