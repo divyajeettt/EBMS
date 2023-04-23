@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}
+        Order {{ order_id }}
+    {% endblock %}
+</title>
+
+<body>
+    {% block main %}
+        <h1 style="text-align: left;"><b>Order Number: {{ order_id }}</b></h1>
+        <hr>
+        <br>
+
+        <h2 style="text-align: left;"><b>Timeline</b></h2>
+        <hr>
+
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+            <h4 style="text-align: left; font-size: 20px; margin-bottom: 2px;"><b>Order Placed on:</b></h4>
+            <p style="text-align: right; margin-bottom: 4px;"><i>{{ order["order_date"] }}</i></p>
+        </div>
+
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+            {% if active == "1" %}
+                <h4 style="text-align: left; font-size: 20px; margin-bottom: 2px;"><b>Order Dispatched on:</b></h4>
+                <p style="text-align: right; margin-bottom: 4px;"><i>{{ order["dispatch_date"] }}</i></p>
+            {% else %}
+                <h4 style="text-align: left; font-size: 20px; margin-bottom: 2px;"><b>Order Received on:</b></h4>
+                <p style="text-align: right; margin-bottom: 4px;"><i>{{ order["delivery_date"] }}</i></p>
+            {% endif %}
+        </div>
+
+        {% if active == "1" %}
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                <h4 style="text-align: left; font-size: 20px; margin-bottom: 2px;"><b>Expected Time of Arrival:</b></h4>
+                <p style="text-align: right; margin-bottom: 4px;"><i>{{ order["ETA"] }}</i></p>
+            </div>
+        {% endif %}
+
+        <br>
+        <h2 style="text-align: left; margin-top: 10px;"><b>Your Delivery Partner</b></h2>
+        <hr>
+
+        <img style="border-radius: 10px;" align="left"
+        src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="  width="300">
+
+        <br>
+        <h3 class="add-margin" style="text-align: left; margin-top: 10px;"><b>{{ order["da_name"] }}</b></h3>
+        <p class="add-margin" style="text-align: left; margin-top: 20px;">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nunc ut
+            tincidunt luctus, nunc nisl aliquam nisl, eget aliquam nisl nisl sit amet
+            sapien. Sed euismod, nunc ut tincidunt luctus, nunc nisl aliquam nisl, eget
+            aliquam nisl nisl sit amet sapien.
+        </p>
+
+        <div class="add-margin" style="text-align: left; margin-bottom: 15px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" style="width: 5%;">
+            <p style="display: inline; margin-left: 10px;">
+                <u style="color: blue;"><a href="mailto:{{ order['da_email'] }}">{{ order["da_email"] }}</u></a>
+            </p>
+        </div>
+
+        <div class="add-margin" style="text-align: left;">
+            <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" style="width: 5%;">
+            <p style="display: inline; margin-left: 10px;">{{ order["da_phone"] }}</p>
+        </div>
+
+        <br><br>
+        <h2 style="text-align: left; margin-top: 20px;"><b>Order Details</b></h2>
+        <hr>
+
+        <h4 style="text-align: left; font-size: 15px;"> Total <b>{{ products|length }} item(s)</b> in order</h4>
+        <br>
+
+        {% for product in products %}
+            <div class="card" style="margin-bottom: 15px;">
+                <a class="card-link" href="/product/{{ product['productID'] }}">
+                    <img style="border-radius: 10px; margin-bottom: 12px;" align="left"
+                    src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" width="130">
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <div style="text-align: left; margin-left: 20px;">
+                            <h4 style="font-size: 25px; margin-bottom: 0px;"><b>{{ product["name"] }}</b></h4>
+                            <p style="font-size: 14px; color: gray;"><i>By {{ product["sname"] }}</i></p>
+                            <p style="font-size: 14px; width: 70%;">{{ product["product_description"][:150] }} ...</p>
+                        </div>
+
+                        <div style="text-align: right; margin-right: 5px;">
+                            <p style="font-size: 16px; margin-bottom: 0px;"><b>Quantity: </b>{{ product["quantity"] }}</p>
+                            <p style="font-size: 16px;"><b>Total:</b> $ {{ product["total"] }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+
+        <br>
+
+        <h2 style="text-align: left;"><b>Order Summary</b></h2>
+        <hr style="width: 60%; text-align: left; margin-left: 0px;">
+        <p style="text-align: left;">Here is a summary of your order.</p>
+
+        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in products %}
+                <tr>
+                    <td>{{ item["productID"] }}</td>
+                    <td>{{ item["name"] }}</td>
+                    <td>{{ item["quantity"] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3 style="text-align: right; margin-right: 20px;"><b>Total: $ {{ total }}</b></h3>
+
+        <br>
+        <div style="text-align: left; margin-top: 10px;">
+            <a href="/account/orders?active={{ active }}"><p class="btn btn-primary" style="width: 15%; font-size: 20px;">Back</p></a>
+        </div>
+    {% endblock %}
+</body>

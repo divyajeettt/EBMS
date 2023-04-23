@@ -9,11 +9,10 @@ GROUP BY p.productID
 ORDER BY p.name ASC;
 \end{lstlisting}
 
-A variation of the same query (which uses pattern matching in SQL) is also used to search through the product catalogue.
-\footnote{
+A variation\footnote{
     In this variant, \texttt{search} is the key entered by the user for searching.
     It is substituted into the query using Python f-strings.
-}
+}  of the same query (which uses pattern matching in SQL) is also used to search through the product catalogue.
 
 \begin{lstlisting}
 SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity

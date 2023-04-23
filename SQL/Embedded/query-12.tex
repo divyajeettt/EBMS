@@ -1,10 +1,10 @@
-\textbf{Feature:} This query is used to display the top-10 highest rated delivery agents. \\
+\textbf{Feature:} This query is used to display the top-10 most active delivery agents. \\
 \textbf{Location:} In function \texttt{search()} in \texttt{front-end/\_\_init\_\_.py}
 
 \begin{lstlisting}
 SELECT
     da.daID,
-    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+    CONCAT(da.first_name, ' ', da.last_name) AS name,
     email,
     COUNT(o.orderID) AS total_orders
 FROM delivery_agent da

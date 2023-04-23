@@ -4,7 +4,7 @@
 \begin{lstlisting}
 SELECT
     da.daID,
-    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+    CONCAT(da.first_name, ' ', da.last_name) AS name,
     email,
     AVG(dr.rating) AS avg_rating
 FROM da_review dr, delivery_agent da

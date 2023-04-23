@@ -7,99 +7,69 @@
 <body>
     {% block main %}
         <h1 style="text-align: left;"><b>Your Cart</b></h1>
-        <br>
+        <hr>
 
         {% if cart|length == 0 %}
-            <h4 style="text-align: left;">Your cart is empty.</h4>
-        {% else %}
-            <h4 style="text-align: left;">You have {{cart|length}} item(s) in your cart.</h4>
-        
+            <h4 style="text-align: left; font-size: 20px;">Your cart is empty.</h4>
             <br>
-            <!-- code to list items in cart as a table -->
-            <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="cartTable">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Item</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Total</th>
-                        <th scope="col" style="width: 20%">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart %}
-                    <tr class="clickable-row">
-                        <td>{{item['i']}}</td>
-                        <td>{{item['n']}}</td>
-                        <td>{{item['q']}}</td>
-                        <td>{{item['pr']}}</td>
-                        <td>{{ item['q']*item['pr'] }}</td>
-                        <td style="text-align: center;">
-                            <div style="align-content: center">
-                                <div style="display: inline-flex; align-items: center;">
+            <div>
+                <form action="/catalogue" method="GET">
+                <button type="submit" class="button" style="width: 50%;"><span>Add Items</span></button>
+            </div>
+        {% else %}
+            <h4 style="text-align: left; font-size: 15px;"> Total <b>{{ cart|length }} item(s)</b> in cart</h4>
+            <br>
+            {% for product in cart %}
+                <div class="card" style="margin-bottom: 15px;">
+                    <a class="card-link" href="/product/{{ product['productID'] }}">
+                        <img style="border-radius: 10px; margin-bottom: 12px;" align="left"
+                        src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=" width="130">
+
+                        <div style="display: flex; justify-content: flex-end;">
+                            <div style="text-align: left; margin-left: 20px;">
+                                <h4 style="font-size: 25px; margin-bottom: 0px;"><b>{{ product["pname"] }}</b></h4>
+                                <p style="font-size: 14px; color: gray;"><i>By {{ product["sname"] }}</i></p>
+                                <p style="font-size: 14px; width: 70%;">{{ product["product_description"][:150] }} ...</p>
+                            </div>
+
+                            <div style="text-align: right; margin-right: 5px;">
+                                <p style="font-size: 16px; margin-bottom: 0px;"><b>Quantity: </b>{{ product["quantity"] }}</p>
+                                <p style="font-size: 16px;"><b>Total:</b> $ {{ product["total"] }}</p>
+
+                                <div style="display: flex; align-items: flex-end; margin-top: 40px;">
                                     <form action="/account/cart" method="POST">
-                                        <input type="hidden" name="pid" value="{{item['i']}}">
+                                        <input type="hidden" name="pid" value="{{ product['productID'] }}">
                                         <input type="hidden" name="action" value="remove">
-                                        <button type="submit" class="btn btn-danger" style="width: 85px">Remove</button>
+                                        <button type="submit" class="btn btn-danger">Remove Item</button>
                                     </form>
-                                </div>
-                                <div style="display: inline-flex">
-                                    <form action="/account/cart" method="POST" style="text-align: right;">
-                                        <input type="hidden" name="pid" value="{{item['i']}}">
-                                        <input type="hidden" name="action" value="edit">
-                                        <button type="submit" class="btn btn-success" style="width: 85px">Edit</button>
+                                    <form action="/product/{{ product['productID'] }}" method="GET" style="margin-left: 10px;">
+                                        <input type="hidden" name="edit" value="true">
+                                        <input type="hidden" name="qty" value="{{ product['quantity'] }}">
+                                        <button type="submit" class="btn btn-primary">Edit Quantity</button>
                                     </form>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-        
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
 
             <br>
+            <h3 style="text-align: right; margin-right: 20px;"><b>Total: $ {{ total }}</b></h3>
+            <br>
 
-            <div>
-                <div style="text-align: left; display: inline-flex; width: 50%; align-items: center;">
-                    <form action="/account/cart" method="POST">
-                        <input type="hidden" name="action" value="clear">
-                        <button type="submit" class="btn btn-danger">Clear Cart</button>
-                    </form>
+            <div style="display: inline-flex; width: 100%;">
+                <form action="/account/cart" method="POST" style="width: 50%; margin-right: 20px; margin-left: 20px;">
+                    <input type="hidden" name="action" value="clear">
+                    <button type="submit" class="btn btn-danger" style="height: 125%; width: 100%; font-size: 21px;"><b>Clear Cart</b></button>
+                </form>
 
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    
-                    <form action="/account/cart" method="POST">
-                        <input type="hidden" name="action" value="checkout">
-                        <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
-                    </form>
-                </div>
-                <div style="text-align: right; display: inline-flex; width: fit-content;">
-                    <h3>Total: ${{"%.2f" % total}}</h3>
-                </div>
+                <form action="/account/cart" method="POST" style="width: 50%; margin-right: 20px; margin-left: 20px;">
+                    <input type="hidden" name="action" value="checkout">
+                    <button type="submit" class="btn btn-success" style="height: 125%; width: 100%; font-size: 21px;"><b>Proceed to Checkout</b></button>
+                </form>
             </div>
 
         {% endif %}
-
-        
-
-        <script>
-            const pid = 0;
-            const table = document.getElementById("cartTable");
-            table.addEventListener("click", function(event) {
-                const clickedElement = event.target;
-                if (clickedElement.tagName === "TD") {
-                const row = clickedElement.parentNode;
-                const firstCell = row.querySelector("td:first-child");
-                const pid = firstCell.textContent;
-                console.log("Clicked row value: " + pid);
-                window.location = "/product/".concat(pid.toString());
-                }
-            });
-
-        </script>
-
     {% endblock %}
 </body>

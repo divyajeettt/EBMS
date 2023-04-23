@@ -4,83 +4,85 @@
     {% block title %}Checkout{% endblock %}
 </title>
 
-<body>
+<body
     {% block main %}
         <h1 style="text-align: left;"><b>Confirm Checkout</b></h1>
+        <hr>
         <br>
-        <h2 style="text-align: left;">Order Summary</h2>
+
+        <h2 style="text-align: left;"><b>Order Summary</b></h2>
+        <hr style="width: 60%; text-align: left; margin-left: 0px;">
+        <p style="text-align: left;">Here is a summary of your order.</p>
+
         <table class="table table-striped table-hover table-bordered" style="text-align: left;">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Item</th>
                     <th scope="col">Quantity</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Total</th>
+                    <th scope="col">Unit Price (In $)</th>
+                    <th scope="col">Total (In $)</th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in cart %}
                 <tr>
-                    <td>{{item['i']}}</td>
-                    <td>{{item['n']}}</td>
-                    <td>{{item['q']}}</td>
-                    <td>{{item['pr']}}</td>
-                    <td>{{ item['q']*item['pr'] }}</td>
+                    <td>{{ item["productID"] }}</td>
+                    <td>{{ item["name"] }}</td>
+                    <td>{{ item["quantity"] }}</td>
+                    <td>{{ item["price"] }}</td>
+                    <td>{{ item["total"] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
-
         </table>
 
+        <h3 style="text-align: right;"><b>Total: $ {{ total }}</b></h3>
         <br>
 
-        <h2 style="text-align: left;">Shipping Address</h2>
-        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">City</th>
-                    <th scope="col">State</th>
-                    <th scope="col">Zip</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{user_info['name']}}</td>
-                    <td>{{user_info['address']}}</td>
-                    <td>{{user_info['city']}}</td>
-                    <td>{{user_info['state']}}</td>
-                    <td>{{user_info['zip']}}</td>
-                </tr>
-            </tbody>
+        <h2 style="text-align: left;"><b>Shipping Details</b></h2>
+        <hr style="width: 60%; text-align: left; margin-left: 0px;">
 
-        </table>
+        <img src="https://s.hdnux.com/photos/01/22/35/43/21616848/4/rawImage.jpg" align="left"
+        style="border-radius: 10px; width: 40%; height: 45%;">
 
-        <!-- <h2>Payment Information</h2>
-        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Card Number</th>
-                    <th scope="col">Expiration Date</th>
-                    <th scope="col">CVV</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-            
-        </table> -->
-
-        <br>
+        <h3 style="text-align: left; margin-left: 440px;"><b>{{ user["name"] }}</b></h3>
         <br>
 
-        <form action="/account/checkout" method="POST">
-            <input type="hidden" name="action" value="confirm">
-            <button type="submit" class="btn btn-success">Confirm</button>
-        </form>
+        <p style="text-align: left; margin-left: 440px;">
+            <b>Ship to:</b> <br>
+            {{ user["hno"] }}<br>
+            {{ user["location"] }}<br>
+            {{ user["state"]}}, {{ user["country"] }}<br>
+        </p>
 
+        <br>
+        <div style="margin-left: 400px; margin-bottom: 0px;">
+            <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" align="left"
+            style="margin-left: 20px; width: 4%; height: 4%;">
+            <p style="text-align: left; margin-left: 70px; margin-bottom: 10px;"><b>{{ user["phone"] }}</b></p>
+        </div>
+        <div style="margin-left: 400px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" align="left"
+            style="margin-left: 20px; width: 4%; height: 4%;">
+            <p style="text-align: left; margin-left: 70px;">
+                <u style="color: blue;"><a href="mailto:{{ user['email'] }}">{{ user["email"] }}</u></a>
+            </p>
+        </div>
 
+        <br><br><br>
+
+        <div style="display: inline-flex; width: 100%;">
+            <form action="/account/cart" method="GET" style="width: 50%; margin-right: 20px; margin-left: 20px;">
+                <input type="hidden" name="action">
+                <button type="submit" class="btn btn-primary" style="height: 125%; width: 100%; font-size: 21px;"><b>Go Back</b></button>
+            </form>
+
+            <form action="/account/cart" method="POST" style="width: 50%; margin-right: 20px; margin-left: 20px;">
+                <input type="hidden" name="action" value="checkout">
+                <button type="submit" class="btn btn-success" style="height: 125%; width: 100%; font-size: 21px;"><b>Confirm Order & Proceed to Pay</b></button>
+            </form>
+        </div>
 
     {% endblock %}
 </body>

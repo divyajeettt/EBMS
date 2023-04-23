@@ -38,7 +38,9 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light border">
-        <a class="navbar-brand" href="/"><span class="blue">&nbsp;e</span><span class="red">b</span><span class="yellow">m</span><span class="green">s</span><span class="red">.</span></a>
+        <a class="navbar-brand" href="/" style="font-weight: 700;">
+            <span class="blue">&nbsp;e</span><span class="red">b</span><span class="yellow">m</span><span class="green">s</span>
+        </a>
         <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -53,7 +55,6 @@
             <ul class="navbar-nav ml-auto mt-2">
                 <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
                 {% if session['user_id'] and session["user_type"] == 'customer' %}
-                <li class="nav-item"><a class="nav-link" href="/account/orders">Orders</a></li>
                 <li class="nav-item"><a class="nav-link" href="/account/cart">Cart</a></li>
                 {% endif %}
                 <li class="nav-item"><a class="nav-link" href="/blog">Blog&nbsp;</a></li>

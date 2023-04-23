@@ -5,10 +5,9 @@
 SELECT customerID, first_name, email, pwd FROM customer WHERE email = %s;
 \end{lstlisting}
 
-A variation of the same query is also used for supplier login.
-\footnote{
+A variation\footnote{
     \ \texttt{\%s} denotes a placeholder in Python, which will be substituted by the value entered by the user in the login form.
-}
+} of the same query is also used for supplier login.
 
 \begin{lstlisting}
 SELECT supplierID, first_name, email, pwd FROM supplier WHERE email = %s;

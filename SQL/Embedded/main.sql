@@ -49,7 +49,7 @@ SELECT COUNT(*) AS product_count FROM order_product;
 -- Query-04: Get the top-10 customers who have spent the most money on their orders
 SELECT
     customer.customerID,
-    CONCAT(customer.first_name, ' ', customer.middle_initial, ' ', customer.last_name) AS name,
+    CONCAT(customer.first_name, ' ', customer.last_name) AS name,
     COUNT(orders.orderID) AS total_orders,
     SUM(product.price * order_product.quantity) AS total_spent,
     AVG(product.price * order_product.quantity) AS avg_spent
@@ -71,7 +71,7 @@ SELECT (delivery_date IS NULL) as status, COUNT(*) AS n FROM orders GROUP BY sta
 -- Query-06: Get the top-10 inactive customers who have the least number of orders
 SELECT
     customer.customerID,
-    CONCAT(customer.first_name, ' ', customer.middle_initial, ' ', customer.last_name) AS name,
+    CONCAT(customer.first_name, ' ', customer.last_name) AS name,
     COUNT(orders.orderID) AS total_orders,
     SUM(product.price * order_product.quantity) AS total_spent
 FROM customer
@@ -100,19 +100,17 @@ SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating
 FROM product_review pr, product p
 WHERE p.productID = pr.productID
 GROUP BY p.productID
-HAVING avg_rating >= 3.5
 ORDER BY avg_rating DESC
 LIMIT 10;
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
 -- Query-09: Get the first 10 inactive suppliers, i.e. those who have not supplied any products
-SELECT
-    s.supplierID,
-    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
-    email
+SELECT s.supplierID, CONCAT(s.first_name, ' ', s.last_name) AS name, email
 FROM supplier s
-WHERE NOT EXISTS (SELECT * FROM product p WHERE p.supplierID = s.supplierID)
+WHERE NOT EXISTS (
+    SELECT * FROM product p WHERE p.supplierID = s.supplierID
+)
 LIMIT 10;
 
 ---------------------------------------------------------------------------------------------------------------------------------
@@ -120,12 +118,13 @@ LIMIT 10;
 -- Query-10: Get the top-10 suppliers with the highest average rating
 SELECT
     s.supplierID,
-    CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
+    CONCAT(s.first_name, ' ', s.last_name) AS name,
     email,
     AVG(pr.rating) AS avg_rating
 FROM supplier s, product_review pr, product prod
 WHERE (
-    SELECT AVG(pr.rating) FROM product_review pr, product p
+    SELECT AVG(pr.rating)
+    FROM product_review pr, product p
     WHERE p.productID = pr.productID AND p.supplierID = s.supplierID
     GROUP BY p.supplierID
 ) > 3
@@ -139,7 +138,7 @@ LIMIT 10;
 -- Query-11: Get the top-10 delivery agents with the highest average rating
 SELECT
     da.daID,
-    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+    CONCAT(da.first_name, ' ', da.last_name) AS name,
     email,
     AVG(dr.rating) AS avg_rating
 FROM da_review dr, delivery_agent da
@@ -153,7 +152,7 @@ LIMIT 10;
 -- Query-12: Get the first 10 most active delivery agents, i.e. those who delivered the most number of orders
 SELECT
     da.daID,
-    CONCAT(da.first_name, ' ', da.middle_initial, ' ', da.last_name) AS name,
+    CONCAT(da.first_name, ' ', da.last_name) AS name,
     email,
     COUNT(o.orderID) AS total_orders
 FROM delivery_agent da

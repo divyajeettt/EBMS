@@ -188,3 +188,8 @@ table.dataTable thead .sorting_desc_disabled:before {
 .add-margin {
     margin-left: 320px;
 }
+
+.hover-button:hover {
+    transition: 0.3s;
+    transform: scale(1.45);
+}

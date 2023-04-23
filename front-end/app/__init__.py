@@ -47,36 +47,79 @@ def after_request(response):
 
 @app.route("/")
 def index():
-    return render_template("home.html")
+    context = {}
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute("""
+            SELECT
+                p.productID, p.name, p.price, p.product_description,
+                CONCAT(s.first_name, ' ', s.last_name) AS sname,
+                SUM(op.quantity) AS units_sold, ROUND(AVG(pr.rating), 2) AS avg_rating
+            FROM order_product op
+            INNER JOIN product p ON op.productID = p.productID
+            INNER JOIN supplier s ON p.supplierID = s.supplierID
+            LEFT JOIN product_review pr ON p.productID = pr.productID
+            GROUP BY p.productID
+            ORDER BY units_sold DESC
+            LIMIT 3
+        """)
+        context["best_sellers"] = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT
+                p.productID, p.name, p.price, p.product_description,
+                CONCAT(s.first_name, ' ', s.last_name) AS sname,
+                ROUND(AVG(pr.rating), 2) AS avg_rating
+            FROM product p
+            INNER JOIN supplier s ON p.supplierID = s.supplierID
+            LEFT JOIN product_review pr ON p.productID = pr.productID
+            WHERE p.productID = pr.productID
+            GROUP BY p.productID
+            ORDER BY avg_rating DESC
+            LIMIT 3
+        """)
+        context["top_products"] = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT
+                s.supplierID, email,
+                CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name,
+                ROUND(AVG(pr.rating), 2) AS avg_rating
+            FROM supplier s, product_review pr, product prod
+            WHERE (
+                SELECT AVG(pr.rating) FROM product_review pr, product p
+                WHERE p.productID = pr.productID AND p.supplierID = s.supplierID
+                GROUP BY p.supplierID
+            ) > 3
+            AND s.supplierID = prod.supplierID AND pr.productID = prod.productID
+            AND (SELECT COUNT(*) FROM product p WHERE p.supplierID = s.supplierID) >= 3
+            GROUP BY s.supplierID
+            ORDER BY avg_rating DESC
+            LIMIT 3
+        """)
+        context["top_suppliers"] = cursor.fetchall()
+
+    return render_template("home.html", **context)
 
 
 @app.route("/catalogue")
 def search():
     search = request.args.get("q")
-    if search is None:
-        query = """
-            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-            FROM product p
-            LEFT JOIN product_review pr ON p.productID = pr.productID
-            GROUP BY p.productID
-            ORDER BY p.name ASC
-        """
-    else:
-        query = f"""
-            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
-            FROM product p
-            LEFT JOIN product_review pr ON p.productID = pr.productID
-            WHERE p.name LIKE '%{search}%'
-            GROUP BY p.productID
-            ORDER BY p.name ASC
-        """
+    supplier = request.args.get("supplier")
+    if all([search, supplier]): supplier = None
 
     with cnx.cursor(dictionary=True) as cursor:
-        cursor.execute(query)
-        results = list(cursor.fetchall())
+        cursor.execute(f"""
+            SELECT p.productID, p.name, p.price, AVG(pr.rating) AS avg_rating, p.quantity
+            FROM product p
+            LEFT JOIN product_review pr ON p.productID = pr.productID
+            {"" if search is None else f"WHERE p.name LIKE '%{search}%'"}
+            {"" if supplier is None else f"WHERE p.supplierID = {supplier}"}
+            GROUP BY p.productID
+            ORDER BY p.name ASC
+        """)
+        results = cursor.fetchall()
 
     return render_template("catalogue.html", rows=results)
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -288,12 +331,11 @@ def adminlogin():
         return render_template('adminlogin.html')
 
 
-@app.route('/admin', methods=['GET'])
+@app.route("/admin", methods=["GET"])
 @admin_login_required
 def admin():
-    print(session)
-    if session.get('user_type') != 'admin':
-        return redirect('/adminlogin')
+    if session.get("user_type") != "admin":
+        return redirect("/adminlogin")
 
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
@@ -312,7 +354,7 @@ def admin():
         cursor.execute("SELECT ROUND(COUNT(*), -1) AS product_count FROM order_product")
         context["product_count"] = cursor.fetchone()["product_count"]
 
-    return render_template("admin.html", context=context)
+    return render_template("admin.html", **context)
 
 
 @app.route("/admin/<string:page>", methods=["GET"])
@@ -397,7 +439,7 @@ def admin_stats(page: str):
                 SELECT
                     YEAR(order_date) AS date_year,
                     QUARTER(order_date) AS date_quarter,
-                    MONTH(order_date) AS date_month,
+                    DATE_FORMAT(order_date, '%M') AS date_month,
                     COUNT(orders.orderID) AS order_count,
                     SUM(price * order_product.quantity) AS revenue
                 FROM
@@ -408,10 +450,6 @@ def admin_stats(page: str):
                 ORDER BY date_year DESC, date_month DESC
             """)
             context["order_trend"] = cursor.fetchall()
-            context["month"] = {
-                1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June",
-                7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December"
-            }
 
             cursor.execute("""
                 SELECT
@@ -471,13 +509,13 @@ def admin_stats(page: str):
             context["top_rated"] = cursor.fetchall()
 
             cursor.execute("""
-            SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name, email
-            FROM supplier s
-            WHERE NOT EXISTS (
-                SELECT * FROM product p
-                WHERE p.supplierID = s.supplierID
-            )
-            LIMIT 10
+                SELECT s.supplierID, CONCAT(s.first_name, ' ', s.middle_initial, ' ', s.last_name) AS name, email
+                FROM supplier s
+                WHERE NOT EXISTS (
+                    SELECT * FROM product p
+                    WHERE p.supplierID = s.supplierID
+                )
+                LIMIT 10
             """)
             context["inactive"] = cursor.fetchall()
 
@@ -530,90 +568,125 @@ def admin_stats(page: str):
             """)
             context["most_active"] = cursor.fetchall()
 
-    return render_template(f"admin/{page}.html", context=context)
+    return render_template(f"admin/{page}.html", **context)
 
 
 @app.route("/logout")
 def logout():
     """Log user out"""
-
-    # Forget any user_id
     session.clear()
-
-    # Redirect user to login form
     return redirect("/")
 
 
-@app.route('/account', methods=['GET', 'POST'])
+@app.route("/account", methods=["GET", "POST"])
 @login_required
 def account():
-    if request.method == 'POST':
-        if session.get('user_type') == 'delivery_agent':
-            print("not delivering...", request.form.get('order_id'))
-            if request.form.get('order_id'):
+    if request.method == "POST":
+        if session.get("user_type") == "delivery_agent":
+            print("not delivering...", request.form.get("order_id"))
+            if request.form.get("order_id"):
                 print("Delivering...")
                 with cnx.cursor() as cursor:
                     cursor.execute("UPDATE orders SET delivery_date = CURDATE() WHERE orderID = %s;", (request.form.get('order_id'),))
                     cnx.commit()
-                return redirect('/account') # refresh page
+                return redirect("/account")
 
-    """Show account page"""
-    if session.get('user_type') == 'customer':
-
+    if session.get("user_type") == "customer":
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM customer WHERE customerID = %s;", (session.get('user_id'),))
+            cursor.execute(f"""
+                SELECT
+                    CONCAT(first_name, ' ', last_name) AS name,
+                    age, email,
+                    CONCAT(apt_number, ', ', street_name) AS hno, CONCAT(city, ' - ', zip) AS location,
+                    state, country
+                FROM customer, address
+                WHERE customer.addressID = address.addressID AND customer.customerID = {session.get("user_id")}
+            """)
             user = cursor.fetchone()
-        return render_template('account/customer.html', user=user)
+
+            cursor.execute(f"""
+                SELECT num FROM phone_number
+                WHERE phoneID = (SELECT phoneID FROM customer WHERE customerID = {session.get("user_id")})
+            """)
+            user["phone"] = cursor.fetchall()
+
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%d %M') AS ETA,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NULL
+                ORDER BY order_date DESC
+                LIMIT 3
+            """)
+            active_orders = cursor.fetchall()
+
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(delivery_date, '%d %M') AS delivery_date,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NOT NULL
+                ORDER BY order_date DESC
+                LIMIT 3
+            """)
+            past_orders = cursor.fetchall()
+
+        return render_template("account/customer/profile.html", user=user, orders=[active_orders, past_orders])
 
     elif session.get('user_type') == 'supplier':
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM supplier WHERE supplierID = %s;", (session.get('user_id'),))
+            cursor.execute(f"SELECT * FROM supplier WHERE supplierID = {session.get('user_id')}")
             user = cursor.fetchone()
 
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM product WHERE supplierID = %s;", (session.get('user_id'),))
+            cursor.execute(f"SELECT * FROM product WHERE supplierID = {session.get('user_id')}")
             products = cursor.fetchall()
 
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("""SELECT
+            cursor.execute(f"""SELECT
                 product.name as product_name, SUM(order_product.quantity) AS total_quantity_sold,
                 SUM(order_product.quantity * product.price) AS total_revenue
                 FROM product
                 INNER JOIN order_product ON product.productID = order_product.productID
                 INNER JOIN orders ON order_product.orderID = orders.orderID
-                WHERE product.supplierID = %s
-                GROUP BY product.name;""", (session.get('user_id'),)
-            )
+                WHERE product.supplierID = {session.get("user_id")}
+                GROUP BY product.name
+            """)
             sales = cursor.fetchall()
 
-        return render_template('account/supplier.html', user=user, products=products, sales=sales)
+        return render_template("account/supplier.html", user=user, products=products, sales=sales)
 
-    elif session.get('user_type') == 'delivery_agent':
+    elif session.get("user_type") == "delivery_agent":
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM delivery_agent WHERE daID = %s;", (session.get('user_id'),))
+            cursor.execute(f"SELECT * FROM delivery_agent WHERE daID = {session.get('user_id')}")
             user = cursor.fetchone()
 
-        with cnx.cursor(dictionary=True) as cursor:
             cursor.execute(f"""
-            SELECT
-                orderID, customerID, daID, order_date,
-                DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
-            FROM orders
-            WHERE daID = {session.get('user_id')} AND delivery_date IS NULL;""")
-
+                SELECT
+                    orderID, customerID, daID, order_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%Y-%m-%d') AS ETA
+                FROM orders
+                WHERE daID = {session.get('user_id')} AND delivery_date IS NULL
+            """)
             active_orders = cursor.fetchall()
 
-        with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM orders WHERE daID = %s AND delivery_date IS NOT NULL;", (session.get('user_id'),))
+            cursor.execute(f"SELECT * FROM orders WHERE daID = {session.get('user_id')} AND delivery_date IS NOT NULL")
             completed_orders = cursor.fetchall()
 
-        return render_template('account/deliveryagent.html', user=user, active_orders=active_orders, completed_orders=completed_orders)
+        return render_template("account/deliveryagent.html", user=user, active_orders=active_orders, completed_orders=completed_orders)
 
-    elif session.get('user_type') == 'admin':
-        return redirect('/admin')
+    elif session.get("user_type") == "admin":
+        return redirect("/admin")
 
     else:
-        return redirect('/login')
+        return redirect("/login")
 
 
 @app.route("/blog", methods=["GET", "POST"])
@@ -629,111 +702,177 @@ def blog():
 @login_required
 def cart():
     if request.method == "POST":
-        print(request.form.get("action"), request.form.get("action"), request.form.get("action"))
         if request.form.get("action") == "remove":
             with cnx.cursor() as cursor:
-                print(session.get('user_id'), request.form.get("pid"))
-                cursor.execute("DELETE FROM cart WHERE customerID = %s AND productID = %s;", (session.get('user_id'), request.form.get("pid")))
+                cursor.execute(f"DELETE FROM cart WHERE customerID = {session.get('user_id')} AND productID = {request.form.get('pid')}")
                 cnx.commit()
             return redirect("/account/cart")
 
-        elif request.form.get("action") == "edit":
-            # TODO: add edit functionality
-            pass
         elif request.form.get("action") == "checkout":
             return redirect("/account/checkout")
 
         elif request.form.get("action") == "clear":
             with cnx.cursor() as cursor:
-                cursor.execute("DELETE FROM cart WHERE customerID = %s;", (session.get('user_id'),))
+                cursor.execute(f"DELETE FROM cart WHERE customerID = {session.get('user_id')}")
                 cnx.commit()
             return redirect("/account/cart")
 
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute(f"""
+            SELECT
+                p.productID, p.name AS pname, CONCAT(s.first_name, ' ', s.last_name) AS sname,
+                p.product_description, c.quantity, ROUND((p.price * c.quantity), 2) AS total
+            FROM cart c
+            JOIN product p ON c.productID = p.productID
+            JOIN supplier s ON p.supplierID = s.supplierID
+            WHERE c.customerID = {session.get("user_id")}
+            ORDER BY sname ASC, p.name ASC, total DESC
+        """)
+        cart = cursor.fetchall()
 
-    cursor = cnx.cursor(dictionary=True)
-    cursor.execute("SELECT p.productID as i, p.name as n, c.quantity as q, p.price as pr FROM cart c JOIN product p on c.productID=p.productID WHERE c.customerID = %s", (session.get('user_id'),))
-    cart = cursor.fetchall()
-    cursor.close()
+        cursor.execute(f"""
+            SELECT ROUND(SUM(c.quantity * p.price), 2) AS total
+            FROM cart c
+            JOIN product p on c.productID = p.productID
+            WHERE c.customerID = {session.get("user_id")}
+        """)
+        total = cursor.fetchone()["total"]
 
-    # find cart total
-    total = 0
-    for item in cart:
-        total += float(item["q"]) * float(item["pr"])
+    return render_template("cart.html", cart=cart, total=total)
 
-    print(url_for('product', product_id=1))
-    return render_template("cart.html", cart=cart, total=round(total, 3))
 
 @app.route("/account/checkout", methods=["GET", "POST"])
 @login_required
 def checkout():
     if request.method == "POST":
         with cnx.cursor() as cursor:
-            cursor.execute("""(SELECT daID FROM delivery_agent
-                            WHERE avalability = 1 ORDER BY daID ASC LIMIT 1)""")
+            cursor.execute("""
+                SELECT daID FROM delivery_agent
+                WHERE avalability = 1
+                ORDER BY daID ASC LIMIT 1
+            """)
             daID = cursor.fetchone()[0]
-            cursor.execute("""INSERT INTO orders (customerID, daID, order_date)
-                            VALUES (%s, %s, CURDATE());""", (session.get('user_id'), daID))
+
+            cursor.execute(f"""
+                INSERT INTO orders (customerID, daID, order_date)
+                VALUES ({session.get("user_id")}, {daID}, CURDATE())
+            """)
             cnx.commit()
+
             cursor.execute("SELECT LAST_INSERT_ID();")
             order_id = cursor.fetchone()[0]
-            # cursor.execute("INSERT INTO order_product (orderID, productID, quantity) SELECT %s, productID, quantity FROM cart WHERE customerID = %s;", (order_id, session.get('user_id')))
-            cursor.execute("""INSERT INTO order_product (orderID, productID, quantity)
-                            SELECT %s, c.productID, c.quantity
-                            FROM orders o INNER JOIN cart c ON o.customerID = c.customerID
-                            WHERE o.customerID = %s
-                            GROUP BY c.productID;""", (order_id, session.get('user_id')))
+
+            cursor.execute(f"""
+                INSERT INTO order_product (orderID, productID, quantity)
+                SELECT {order_id}, c.productID, c.quantity
+                FROM orders o
+                INNER JOIN cart c ON o.customerID = c.customerID
+                WHERE o.customerID = {session.get("user_id")}
+                GROUP BY c.productID
+            """)
             cnx.commit()
+
             # UPDATE THE DELIVERY AGENT AVAILABILITY -- no need
             # cursor.execute("""UPDATE delivery_agent
             #                 SET avalability = 0
             #                 WHERE daID = (SELECT daID FROM orders WHERE orderID = %s);""", (order_id,))
             cnx.commit()
-            # UPDATE PRODUCT QUANTITY
-            cursor.execute("""UPDATE product p INNER JOIN cart c ON p.productID = c.productID
-                            SET p.quantity = p.quantity - c.quantity
-                            WHERE c.customerID = %s;""", (session.get('user_id'),))
 
-            cursor.execute("DELETE FROM cart WHERE customerID = %s;", (session.get('user_id'),))
+            # UPDATE PRODUCT QUANTITY
+            cursor.execute(f"""
+                UPDATE product p
+                INNER JOIN cart c ON p.productID = c.productID
+                SET p.quantity = p.quantity - c.quantity
+                WHERE c.customerID = {session.get("user_id")}
+            """)
+
+            cursor.execute(f"DELETE FROM cart WHERE customerID = {session.get('user_id')}")
             cnx.commit()
+
         return redirect("/account/checkout")
 
-    cursor = cnx.cursor(dictionary=True)
-    cursor.execute("SELECT p.productID as i, p.name as n, c.quantity as q, p.price as pr FROM cart c JOIN product p on c.productID=p.productID WHERE c.customerID = %s", (session.get('user_id'),))
-    cart = cursor.fetchall()
-    cursor.close()
-
-    # find cart total
-    total = 0
-    for item in cart:
-        total += float(item["q"]) * float(item["pr"])
-
-    # get this users address
     with cnx.cursor(dictionary=True) as cursor:
-        cursor.execute("SELECT * FROM address WHERE addressID = (SELECT addressID FROM customer WHERE customerID = %s);", (session.get('user_id'),))
-        address = cursor.fetchone()
+        cursor.execute(f"""
+            SELECT p.productID, p.name, c.quantity, p.price, ROUND((p.price * c.quantity), 2) AS total
+            FROM cart c
+            JOIN product p on c.productID = p.productID
+            WHERE c.customerID = {session.get("user_id")}
+        """)
+        cart = cursor.fetchall()
 
-    user_info = {}
-    # add users name, address, city, state, zip
-    if address is not None:
-        user_info["name"] = session.get('username')
-        user_info["address"] = str(address["apt_number"]) + ", " + str(address["street_name"])
-        user_info["city"] = address["city"]
-        user_info["state"] = address["state"]
-        user_info["zip"] = address["zip"]
+        cursor.execute(f"""
+            SELECT ROUND(SUM(c.quantity * p.price), 2) AS total
+            FROM cart c
+            JOIN product p on c.productID = p.productID
+            WHERE c.customerID = {session.get("user_id")}
+        """)
+        total = cursor.fetchone()["total"]
 
-    return render_template("checkout.html", cart=cart, total=round(total, 3), user_info=user_info)
+        cursor.execute(f"""
+            SELECT
+                CONCAT(first_name, ' ', last_name) AS name,
+                age, ph.num as phone, email,
+                CONCAT(apt_number, ', ', street_name) AS hno, CONCAT(city, ' - ', zip) AS location,
+                state, country
+            FROM customer, address, (
+                SELECT num FROM phone_number, customer
+                WHERE phone_number.phoneID = customer.phoneID
+                AND customerID = {session.get("user_id")}
+                LIMIT 1
+            ) AS ph
+            WHERE customer.addressID = address.addressID AND customer.customerID = {session.get("user_id")}
+        """)
+        user = cursor.fetchone()
+
+    return render_template("checkout.html", cart=cart, total=total, user=user)
 
 
 @app.route("/product/<int:product_id>", methods=["GET", "POST"])
 def product(product_id):
-    context = {}
+    qty = request.args.get("qty")
+    edit = request.args.get("edit")
+    message = request.args.get("message")
 
+    if request.method == "POST":
+        if session.get("user_type") != "customer":
+            return redirect("/login")
+
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute(f"""
+                SELECT * FROM cart
+                WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+            """)
+            cart_item = cursor.fetchone()
+
+            if cart_item is None:
+                cursor.execute(f"INSERT INTO cart VALUES ({session.get('user_id')}, {product_id}, {qty})")
+                dest = f"/product/{product_id}?message=Item+added+to+cart"
+
+            elif edit:
+                cursor.execute(f"""
+                    UPDATE cart SET quantity = {qty}
+                    WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+                """)
+                dest = "/account/cart"
+
+            else:
+                cursor.execute(f"""
+                    UPDATE cart SET quantity = quantity + {qty}
+                    WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+                """)
+                dest = f"/product/{product_id}?message=More+items+added+to+cart"
+
+            cnx.commit()
+
+        return redirect(dest)
+
+    context = {}
     with cnx.cursor(dictionary=True) as cursor:
         cursor.execute(f"SELECT * FROM product WHERE productID = {product_id}")
         product = context["product"] = cursor.fetchone()
 
         cursor.execute(f"""
-            SELECT CONCAT(first_name, ' ', last_name) as name, rating, content, DATE_FORMAT(review_date, '%M %d, %Y') as date
+            SELECT CONCAT(first_name, ' ', last_name) as name, rating, content, DATE_FORMAT(review_date, '%M %d, %Y') AS review_date
             FROM customer
             INNER JOIN product_review ON customer.customerID = product_review.customerID
             WHERE productID = {product_id}
@@ -742,8 +881,12 @@ def product(product_id):
         """)
         context["reviews"] = cursor.fetchall()
 
-        cursor.execute(f"SELECT ROUND(AVG(rating), 2) as rating FROM product_review WHERE productID = {product_id}")
-        context["avg_rating"] = cursor.fetchone()["rating"]
+        cursor.execute(f"""
+            SELECT COUNT(*) AS reviews, ROUND(AVG(rating), 2) AS stars
+            FROM product_review
+            WHERE productID = {product_id}
+        """)
+        context["rating"] = cursor.fetchone()
 
         cursor.execute(f"""
             SELECT CONCAT(first_name, ' ', last_name) as name
@@ -752,6 +895,13 @@ def product(product_id):
         """)
         context["supplier"] = cursor.fetchone()
 
+        if session.get("user_type") == "customer":
+            cursor.execute(f"SELECT quantity FROM cart WHERE customerID = {session.get('user_id')} AND productID = {product_id}")
+            in_cart = cursor.fetchone()
+            context["in_cart"] = in_cart["quantity"] if in_cart is not None else 0
+        else:
+            context["in_cart"] = 0
+
         cursor.execute(f"""
             SELECT product.productID, name, product_description, price, ROUND(AVG(rating), 2) as rating
             FROM product
@@ -759,56 +909,119 @@ def product(product_id):
             WHERE supplierID = {product["supplierID"]} AND product.productID != {product_id}
             GROUP BY product.productID
             ORDER BY RAND()
-            LIMIT 3
+            LIMIT 2
         """)
         context["more"] = cursor.fetchall()
 
-    if request.method == "POST":
-        if session.get('user_type') != 'customer':
-            return redirect('/login')
-
-        with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute("SELECT * FROM cart WHERE customerID = %s AND productID = %s", (session.get('user_id'), product_id))
-            cart_item = cursor.fetchone()
-            if cart_item is None:
-                cursor.execute("INSERT INTO cart (customerID, productID, quantity) VALUES (%s, %s, %s)", (session.get('user_id'), product_id, 1))
-            else:
-                cursor.execute("UPDATE cart SET quantity = quantity + 1 WHERE customerID = %s AND productID = %s", (session.get('user_id'), product_id))
-            cnx.commit()
-
-        return redirect('/account/cart')
-
-    return render_template("product.html", context=context)
+    return render_template("product.html", qty=qty, edit=edit, message=message, **context)
 
 
-@app.route("/account/orders", methods=["GET", "POST"])
-@login_required
-def orders():
-    # if request.method == "POST":
-    #     if request.form.get("action") == "track":
-    #         return redirect("/account/track/" + request.form.get("oid"))
+@app.route("/account/orders", methods=["GET"])
+def view_orders():
+    if session.get("user_type") != "customer":
+        return redirect("/login")
 
+    active = request.args.get("active")
 
-    if session.get('user_type') == 'customer':
-        cursor = cnx.cursor(dictionary=True)
-        cursor.execute("SELECT o.orderID as i, o.order_date as o_d, o.delivery_date as d_d, o.daID as daID FROM orders o WHERE o.customerID = %s", (session.get('user_id'),))
+    with cnx.cursor(dictionary=True) as cursor:
+        if active == "1":
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%d %M') AS ETA,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NULL
+                ORDER BY order_date DESC
+            """)
+        else:
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(delivery_date, '%M %d, %Y') AS delivery_date,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NOT NULL
+                ORDER BY order_date DESC
+            """)
         orders = cursor.fetchall()
-        cursor.close()
 
-        return render_template("orders.html", orders=orders)
-    else:
-        return redirect('/login')
+    return render_template("/account/customer/orders.html", orders=orders, active=active)
+
+
+@app.route("/account/orders/<int:order_id>", methods=["GET"])
+def order_details(order_id):
+    if session.get("user_type") != "customer":
+        return redirect("/login")
+
+    active = request.args.get("active")
+    context = {}
+    with cnx.cursor(dictionary=True) as cursor:
+        if active == "1":
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 2 DAY), '%M %d, %Y') AS dispatch_date,
+                    DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%M %d, %Y') AS ETA,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NULL AND orderID = {order_id}
+                ORDER BY order_date DESC
+            """)
+        else:
+            cursor.execute(f"""
+                SELECT
+                    orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
+                    DATE_FORMAT(delivery_date, '%M %d, %Y') AS delivery_date,
+                    CONCAT(first_name, ' ', last_name) AS da_name, email AS da_email, num AS da_phone
+                FROM orders
+                JOIN delivery_agent ON orders.daID = delivery_agent.daID
+                JOIN phone_number ON delivery_agent.phoneID = phone_number.phoneID
+                WHERE customerID = {session.get("user_id")} AND delivery_date IS NOT NULL AND orderID = {order_id}
+                ORDER BY order_date DESC
+            """)
+        context["order"] = cursor.fetchone()
+
+        cursor.execute(f"""
+            SELECT
+                product.productID, product.name, product_description, order_product.quantity,
+                ROUND(price * order_product.quantity, 2) AS total,
+                CONCAT(first_name, ' ', last_name) AS sname,
+                ROUND(AVG(rating), 2) AS rating, COUNT(*) AS reviews
+            FROM product
+            JOIN order_product ON product.productID = order_product.productID
+            JOIN supplier ON product.supplierID = supplier.supplierID
+            LEFT JOIN product_review ON product.productID = product_review.productID
+            WHERE orderID = {order_id}
+            GROUP BY product.productID
+            ORDER BY sname ASC, product.name ASC, total DESC
+        """)
+        context["products"] = cursor.fetchall()
+
+        cursor.execute(f"""
+            SELECT ROUND(SUM(price * order_product.quantity), 2) AS total
+            FROM order_product
+            JOIN product ON order_product.productID = product.productID
+            WHERE orderID = {order_id}
+        """)
+        context["total"] = cursor.fetchone()["total"]
+
+    return render_template("/account/customer/order_details.html", order_id=order_id, active=active, **context)
 
 
 # @app.route("/account/track/<int:order_id>", methods=["GET", "POST"])
 # @login_required
 # def track(order_id):
 #     if session.get('user_type') == 'customer':
-#         cursor = cnx.cursor(dictionary=True)
-#         cursor.execute("SELECT o.orderID as i, o.order_date as o_d, o.delivery_date as d_d, o.daID as daID FROM orders o WHERE o.customerID = %s AND o.orderID = %s", (session.get('user_id'), order_id))
-#         order = cursor.fetchone()
-#         cursor.close()
-
+#         with cnx.cursor(dictionary=True) as cursor:
+#             cursor.execute("SELECT o.orderID as i, o.order_date as o_d, o.delivery_date as d_d, o.daID as daID FROM orders o WHERE o.customerID = %s AND o.orderID = %s", (session.get('user_id'), order_id))
+#             order = cursor.fetchone()
 #         return render_template("track.html", order=order)
 #     else:
 #         return redirect('/login')

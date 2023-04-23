@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+<title>
+    {% block title %}
+        {% if active == "1" %} Active Orders {% else %} Past Orders {% endif %}
+    {% endblock %}
+</title>
+
+<body>
+    {% block main %}
+        {% if active == "1" %}
+            <h1 style="text-align: left;"><b>Your Active Orders</b></h1>
+            <hr>
+            <h4 style="text-align: left; font-size: 15px;"> Total <b>{{ orders|length }} active</b> orders</h4>
+            <br>
+        {% else %}
+            <h1 style="text-align: left;"><b>Your Order History</b></h1>
+            <hr>
+            <h4 style="text-align: left; font-size: 15px;"> Total <b>{{ orders|length }} past</b> orders</h4>
+            <br>
+        {% endif %}
+
+        {% for order in orders %}
+            <div class="card" style="margin-bottom: 15px;">
+                <a class="card-link" href="/account/orders/{{ order['orderID'] }}?active={{ active }}">
+                    <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                        <h4 style="text-align: left; font-size: 20px; margin-bottom: 2px;"><b>Order Number: {{ order["orderID"] }}</b></h4>
+                        <p style="text-align: right; margin-bottom: 4px;"><i>{{ order["order_date"] }}</i></p>
+                    </div>
+                    <p style="text-align: left; font-size: 14px; color: gray; margin-bottom: 8px;">Delivery Partner: {{ order["da_name"] }}</p>
+                    <p style="text-align: left; font-size: 14px;">
+                        This order was placed on {{ order["order_date"] }}.
+                        {% if active == "1" %}
+                            It is expected to be delivered by {{ order["ETA"] }}.
+                        {% else %}
+                            It was delivered on {{ order["delivery_date"] }}.
+                        {% endif %}
+                    </p>
+                    <div style="text-align: left; margin-bottom: 10px;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" style="width: 2.75%;">
+                        <p style="display: inline; margin-left: 10px;">
+                            <u style="color: blue;"><a href="mailto:{{ order['da_email'] }}">{{ order["da_email"] }}</u></a>
+                        </p>
+                        <img src="https://cdn2.iconfinder.com/data/icons/font-awesome/1792/phone-512.png" style="width: 2.75%; margin-left: 25px;">
+                        <p style="display: inline; margin-left: 10px;">{{ order["da_phone"] }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+
+        <br>
+        <div style="text-align: left; margin-top: 10px;">
+            <a href="/account"><p class="btn btn-primary" style="width: 15%; font-size: 20px;">Back</p></a>
+        </div>
+    {% endblock %}
+</body>
