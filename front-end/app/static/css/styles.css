@@ -26,7 +26,7 @@ ul {
 }
 
 .nav-item {
-    font-size: large;
+    /* font-size: large; */
     /* align nav items to the center vertically */
     display: flex;
     align-items: center;
