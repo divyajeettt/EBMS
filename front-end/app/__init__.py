@@ -657,14 +657,19 @@ def account():
 
     elif session.get('user_type') == 'supplier':
         with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute(f"SELECT * FROM supplier WHERE supplierID = {session.get('user_id')}")
+            cursor.execute(f"""
+                SELECT
+                    CONCAT(first_name, ' ', middle_initial, ' ', last_name) AS name, email,
+                    CONCAT(apt_number, ', ', street_name) AS hno, CONCAT(city, ' - ', zip) AS location,
+                    state, country
+                FROM supplier, address
+                WHERE supplier.addressID = address.addressID AND supplier.supplierID = {session.get("user_id")}
+            """)
             user = cursor.fetchone()
 
-        with cnx.cursor(dictionary=True) as cursor:
             cursor.execute(f"SELECT * FROM product WHERE supplierID = {session.get('user_id')}")
             products = cursor.fetchall()
 
-        with cnx.cursor(dictionary=True) as cursor:
             cursor.execute(f"""SELECT
                 product.name as product_name, SUM(order_product.quantity) AS total_quantity_sold,
                 SUM(order_product.quantity * product.price) AS total_revenue
@@ -923,42 +928,62 @@ def payment():
 
 @app.route("/product/<int:product_id>", methods=["GET", "POST"])
 def product(product_id):
+    price = request.args.get("price")
     qty = request.args.get("qty")
     edit = request.args.get("edit")
     message = request.args.get("message")
 
     if request.method == "POST":
-        if session.get("user_type") != "customer":
-            return redirect("/login")
-
-        with cnx.cursor(dictionary=True) as cursor:
-            cursor.execute(f"""
-                SELECT * FROM cart
-                WHERE customerID = {session.get("user_id")} AND productID = {product_id}
-            """)
-            cart_item = cursor.fetchone()
-
-            if cart_item is None:
-                cursor.execute(f"INSERT INTO cart VALUES ({session.get('user_id')}, {product_id}, {qty})")
-                dest = f"/product/{product_id}?message=Item+added+to+cart"
-
-            elif edit:
+        if session.get("user_type") == "customer":
+            
+            with cnx.cursor(dictionary=True) as cursor:
                 cursor.execute(f"""
-                    UPDATE cart SET quantity = {qty}
+                    SELECT * FROM cart
                     WHERE customerID = {session.get("user_id")} AND productID = {product_id}
                 """)
-                dest = "/account/cart"
+                cart_item = cursor.fetchone()
 
-            else:
-                cursor.execute(f"""
-                    UPDATE cart SET quantity = quantity + {qty}
-                    WHERE customerID = {session.get("user_id")} AND productID = {product_id}
-                """)
-                dest = f"/product/{product_id}?message=More+items+added+to+cart"
+                if cart_item is None:
+                    cursor.execute(f"INSERT INTO cart VALUES ({session.get('user_id')}, {product_id}, {qty})")
+                    dest = f"/product/{product_id}?message=Item+added+to+cart"
 
-            cnx.commit()
+                elif edit:
+                    cursor.execute(f"""
+                        UPDATE cart SET quantity = {qty}
+                        WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+                    """)
+                    dest = "/account/cart"
 
-        return redirect(dest)
+                else:
+                    cursor.execute(f"""
+                        UPDATE cart SET quantity = quantity + {qty}
+                        WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+                    """)
+                    dest = f"/product/{product_id}?message=More+items+added+to+cart"
+
+                cnx.commit()
+
+            return redirect(dest)
+        
+        elif session.get("user_type") == "supplier":
+            with cnx.cursor(dictionary=True) as cursor:
+                # update quantity
+                if qty != "" and qty is not None:
+                    cursor.execute(f"""
+                        UPDATE product SET quantity = quantity + {qty}
+                        WHERE productID = {product_id}
+                    """)
+                    cnx.commit()
+
+                # update price
+                if price != "" and price is not None:
+                    cursor.execute(f"""
+                        UPDATE product SET price = {price}
+                        WHERE productID = {product_id}
+                    """)
+                    cnx.commit()
+            
+            return redirect(f"/product/{product_id}?message=Product+updated")
 
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
@@ -1011,6 +1036,7 @@ def product(product_id):
 
 
 @app.route("/account/orders", methods=["GET"])
+@login_required
 def view_orders():
     if session.get("user_type") != "customer":
         return redirect("/login")
@@ -1046,8 +1072,32 @@ def view_orders():
 
     return render_template("/account/customer/orders.html", orders=orders, active=active)
 
+@app.route("/product/add", methods=["GET", "POST"])
+@login_required
+def add_product():
+    if session.get("user_type") != "supplier":
+        return redirect("/login")
+
+    if request.method == "POST":
+        name = request.form.get("product_name")
+        description = request.form.get("product_description")
+        price = request.form.get("product_price")
+        qty = request.form.get("product_quantity")
+
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute(f"""
+                INSERT INTO product (supplierID, name, product_description, price, quantity)
+                VALUES ({session.get("user_id")}, '{name}', '{description}', {price}, {qty})
+            """)
+            cnx.commit()
+
+        return redirect("/account")
+
+    return render_template("/account/supplier/add_product.html")
+
 
 @app.route("/account/orders/<int:order_id>", methods=["GET"])
+@login_required
 def order_details(order_id):
     if session.get("user_type") != "customer":
         return redirect("/login")

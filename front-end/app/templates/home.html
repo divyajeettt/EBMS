@@ -9,7 +9,7 @@
 <body>
     {% block main %}
 
-    {% if session.get("user_id") != None %}
+    {% if session.get("user_id") != None and session.get("user_type")=='customer' %}
         <h1 style="text-align: center;"><b>Hot-Picks for You</b></h1>
         <hr>
         <p>Check out these latest suggestions from EBMS!</p>

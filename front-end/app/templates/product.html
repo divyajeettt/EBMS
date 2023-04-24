@@ -27,7 +27,13 @@
                 <b>{{ rating["stars"] }} / 5  &nbsp;&nbsp; ({{ rating["reviews"] }} Review(s))</b>
             </p>
             {% endif %}
-            {% if session.get("user_type") == "admin" %}
+
+            {% if session.get("user_type") == "customer" %}
+            <p style="text-align: right; font-size: 20px;"><b>Availability:</b> {{ "In stock" if product["quantity"] > 0 else "Out of Stock" }}</p>
+            {% elif session.get("user_type") == "supplier" and session.get("user_id") == product["supplierID"] %}
+            <!-- show available stock -->
+            <p style="text-align: right; font-size: 20px;"><b>In Stock:</b> {{ product["quantity"] }}</p>
+            {% elif session.get("user_type") == "admin" %}
                 <p style="text-align: right; font-size: 20px;"><b>In Stock:</b> {{ product["quantity"] }}</p>
             {% else %}
                 <p style="text-align: right; font-size: 20px;"><b>Availability:</b> {{ "In stock" if product["quantity"] > 0 else "Out of Stock" }}</p>
@@ -61,8 +67,37 @@
                     </form>
                 </div>
             </div>
+        {% elif session.get("user_type") == "supplier" and session.get("user_id") == product["supplierID"] %}
+        
+        <hr class="add-margin" style="text-align: left;">
+    
+        <form method="POST" style="margin-left: 1em">
+            <div class="form-row" >
+                <div class="form-group col-md-4" style="text-align: left; margin-left:1em">
+                    <label for="inputQty"><b>Additional Stock: </b></label><br>
+                    <input type="number" class="form-control" id="inputQty" value="{{ qty if qty else 0 }}" name="q" min="0">
+                </div>
+                
+        
+                <div class="form-group col-md-4" style="text-align: left; margin-right: 2em">
+                    <label for="inputPrice"><b>Price: </b></label><br>
+                    <input type="number" class="form-control" id="inputPrice" value="{{ price if price else product['price'] }}" name="p" min="1">
+                </div>
+
+                <div class="form-group col-md-3" style="text-align: left;">
+                    <br>
+                    <button class="btn btn-primary" style="height: 45px; width:9em" onclick="submitForm()">
+                        <span>Update Product</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <br>
         {% else %}
-            <br>
+        <br>
+        <br>
+        <br>
         {% endif %}
         {% if reviews != [] %}
             <h2 style="text-align: left; margin-top: 15px;"><b>Reviews</b></h2> <!-- add code to sort reviews by date and rating (asc/desc both) -->
@@ -116,7 +151,8 @@
     <script>
         function submitForm() {
             var qty = document.getElementById("inputQty").value;
-            var formAction = "/product/{{ product['productID'] }}?edit={{ edit if edit else '' }}&qty=" + qty;
+            var price = document.getElementById("inputPrice").value;
+            var formAction = "/product/{{ product['productID'] }}?edit={{ edit if edit else '' }}&qty=" + qty + "&price=" + price;
             document.forms[0].action = formAction;
             document.forms[0].submit();
         }

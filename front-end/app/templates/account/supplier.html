@@ -6,52 +6,128 @@
 
 <body>
     {% block main %}
-        <h1>Welcome to ebms, {{session['username']}}!</h1>
-        <br>
-        
-        <h3 style="text-align: left;"><b>Your Products</b></h3>
-        <br>
-        <!-- code to list a supplier's products as a table -->
-        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Item</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in products %}
-                <tr>
-                    <td>{{item['name']}}</td>
-                    <td>{{item['price']}}</td>
-                    <td>{{item['quantity']}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <br>
+    <!-- <h1><b>Welcome to <span style="color: #537fbe;">e</span><span style="color: #ea433b;">b</span><span style="color: #f5b82e;">m</span><span style="color: #2e944b;">s</span>, {{session['username']}}!</b></h1>
+    <br> -->
 
-        <h3 style="text-align: left;"><b>Sales Statistics</b></h3>
-        <br>
-        <!-- code to list a supplier's sales statistics as a table -->
-        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Item</th>
-                    <th scope="col">Quantity Sold</th>
-                    <th scope="col">Revenue</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in sales %}
-                <tr>
-                    <td>{{item['product_name']}}</td>
-                    <td>{{item['total_quantity_sold']}}</td>
-                    <td>{{item['total_revenue']}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <img style="border-radius: 10px;" align="left"
+    src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="  width="300">
+
+    <div class="add-margin" style="display: flex; margin-bottom: 0px;">
+        <h1 style="text-align: left; white-space: nowrap; margin-bottom: 0px;"><b>{{ user["name"] }}</b></h1>
+        <div style="margin-top: 8px; text-align: right; margin-bottom: 0px; border-radius: 100%;">
+            <a href="/account/edit"><img class="hover-button" src="https://cdn-icons-png.flaticon.com/512/181/181540.png" style="width: 10%;"></a>
+        </div>
+    </div>
+
+    <hr class="add-margin">
+
+    <div class="add-margin" style="display: flex; margin-bottom: 0px;">
+        <div style="text-align: left;">
+          <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" style="width: 4%;">
+          <p style="display: inline-block; margin-left: 10px; margin-bottom: 0px;">{{ user["email"] }}</p>
+        </div>
+    </div>
+
+    <hr class="add-margin">
+
+    <div class="add-margin" style="display: flex; justify-content: space-between; margin-bottom: 0px;">
+        <div style="text-align: left;">
+            <p style="text-align: left;">
+                <b>Warehouse Address:</b> <br>
+                {{ user["hno"] }}<br>
+                {{ user["location"] }}<br>
+                {{ user["state"]}}, {{ user["country"] }}<br>
+            </p>
+        </div>
+        <div style="text-align: right;">
+            <!-- add a product -->
+            <a href="/product/add">
+                <input type="hidden" class="action" value="add">
+                <button class="btn btn-success" style="margin-top: 10px; margin-bottom: 10px; margin-right: 10px; width:12em">Add Product</button>
+            </a>
+            <br>
+            <!-- restock a product -->
+
+        </div>
+
+    </div>
+
+    <!-- <hr class="add-margin"> -->
+
+    <!-- <tick> ebms verified supplier -->
+    <div class="add-margin" style="display: flex; margin-bottom: 0px;">
+        <div style="text-align: left;">
+            <!-- VERIFIED TICK -->
+            <img src="{{ url_for('static', filename='img/verify.png') }}" style="width: 8%; color:#537fbe;">
+            <p style="display: inline-block; margin-left: 10px; margin-bottom: 0px; color:#537fbe;">EBMS verified supplier</p>
+        </div>
+    </div>
+
+    <!-- <hr class="add-margin"> -->
+    <br>
+    <br>
+    <br>
+        
+    <h3 style="text-align: left;"><b>Your Products</b></h3>
+    <br>
+    
+    <!-- code to list a supplier's products as a table -->
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Item</th>
+                <th scope="col">Price</th>
+                <th scope="col">Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in products %}
+            <tr>
+                <td>{{item['productID']}}</td>
+                <td>{{item['name']}}</td>
+                <td>{{item['price']}}</td>
+                <td>{{item['quantity']}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+
+    <h3 style="text-align: left;"><b>Sales Statistics</b></h3>
+    <br>
+    <!-- code to list a supplier's sales statistics as a table -->
+    <table class="table table-striped table-hover table-bordered" style="text-align: left;">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Quantity Sold</th>
+                <th scope="col">Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in sales %}
+            <tr>
+                <td>{{item['product_name']}}</td>
+                <td>{{item['total_quantity_sold']}}</td>
+                <td>{{item['total_revenue']}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const pid = 0;
+        const table = document.getElementById("searchTable");
+        table.addEventListener("click", function(event) {
+            const clickedElement = event.target;
+            if (clickedElement.tagName === "TD") {
+            const row = clickedElement.parentNode;
+            const firstCell = row.querySelector("td:first-child");
+            const pid = firstCell.textContent;
+            console.log("Clicked row value: " + pid);
+            window.location = "/product/".concat(pid.toString());
+        }});
+    </script>
     {% endblock %}
 </body>
