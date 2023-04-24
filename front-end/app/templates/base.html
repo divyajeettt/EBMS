@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon" type="image/x-icon">
+    <link href="{{ url_for('static', filename='img/ebms-favi.png') }}" rel="icon" type="image/x-icon">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -59,9 +59,9 @@
                 {% endif %}
                 <li class="nav-item"><a class="nav-link" href="/blog">Blog&nbsp;</a></li>
                 {% if session['user_id'] %}
-                <li class="nav-item"><a class="btn btn-outline-primary" href="/logout"><span style="font-size: large;">Log Out</span></a></li>
+                <li class="nav-item"><a class="btn btn-outline-primary" href="/logout"><span style="font-size:;">Log Out</span></a></li>
                 {% else %}
-                <li class="nav-item"><a class="btn btn-primary" href="/login"><span style="font-size: large;">Log In</span></a></li>
+                <li class="nav-item"><a class="btn btn-primary" href="/login"><span style="font-size:;">Log In</span></a></li>
                 {% endif %}
 
             </ul>

@@ -745,51 +745,11 @@ def cart():
 @login_required
 def checkout():
     if request.method == "POST":
-        with cnx.cursor() as cursor:
-            cursor.execute("""
-                SELECT daID FROM delivery_agent
-                WHERE avalability = 1
-                ORDER BY daID ASC LIMIT 1
-            """)
-            daID = cursor.fetchone()[0]
-
-            cursor.execute(f"""
-                INSERT INTO orders (customerID, daID, order_date)
-                VALUES ({session.get("user_id")}, {daID}, CURDATE())
-            """)
-            cnx.commit()
-
-            cursor.execute("SELECT LAST_INSERT_ID();")
-            order_id = cursor.fetchone()[0]
-
-            cursor.execute(f"""
-                INSERT INTO order_product (orderID, productID, quantity)
-                SELECT {order_id}, c.productID, c.quantity
-                FROM orders o
-                INNER JOIN cart c ON o.customerID = c.customerID
-                WHERE o.customerID = {session.get("user_id")}
-                GROUP BY c.productID
-            """)
-            cnx.commit()
-
-            # UPDATE THE DELIVERY AGENT AVAILABILITY -- no need
-            # cursor.execute("""UPDATE delivery_agent
-            #                 SET avalability = 0
-            #                 WHERE daID = (SELECT daID FROM orders WHERE orderID = %s);""", (order_id,))
-            cnx.commit()
-
-            # UPDATE PRODUCT QUANTITY
-            cursor.execute(f"""
-                UPDATE product p
-                INNER JOIN cart c ON p.productID = c.productID
-                SET p.quantity = p.quantity - c.quantity
-                WHERE c.customerID = {session.get("user_id")}
-            """)
-
-            cursor.execute(f"DELETE FROM cart WHERE customerID = {session.get('user_id')}")
-            cnx.commit()
-
-        return redirect("/account/checkout")
+        if request.form.get("action") == "cancel":
+            return redirect("/account/cart")
+        
+        elif request.form.get("action") == "confirm":
+            return redirect("/account/payment")
 
     with cnx.cursor(dictionary=True) as cursor:
         cursor.execute(f"""
@@ -825,6 +785,125 @@ def checkout():
         user = cursor.fetchone()
 
     return render_template("checkout.html", cart=cart, total=total, user=user)
+
+@app.route("/account/payment", methods=["GET", "POST"])
+@login_required
+def payment():
+    if request.method == "POST":
+        if request.form.get("action") == "cancel":
+            return redirect("/account/cart")
+        
+        elif request.form.get("action") == "pay":
+            with cnx.cursor() as cursor:
+                cursor.execute("""
+                    SELECT daID FROM delivery_agent
+                    WHERE avalability = 1
+                    ORDER BY daID ASC LIMIT 1
+                """)
+                daID = cursor.fetchone()[0]
+
+                cursor.execute(f"""
+                    INSERT INTO orders (customerID, daID, order_date)
+                    VALUES ({session.get("user_id")}, {daID}, CURDATE())
+                """)
+                cnx.commit()
+
+                cursor.execute("SELECT LAST_INSERT_ID();")
+                order_id = cursor.fetchone()[0]
+
+                cursor.execute(f"""
+                    INSERT INTO order_product (orderID, productID, quantity)
+                    SELECT {order_id}, c.productID, c.quantity
+                    FROM orders o
+                    INNER JOIN cart c ON o.customerID = c.customerID
+                    WHERE o.customerID = {session.get("user_id")}
+                    GROUP BY c.productID
+                """)
+                cnx.commit()
+
+                # UPDATE THE DELIVERY AGENT AVAILABILITY -- no need
+                # cursor.execute("""UPDATE delivery_agent
+                #                 SET avalability = 0
+                #                 WHERE daID = (SELECT daID FROM orders WHERE orderID = %s);""", (order_id,))
+                cnx.commit()
+
+                # UPDATE PRODUCT QUANTITY
+                cursor.execute(f"""
+                    UPDATE product p
+                    INNER JOIN cart c ON p.productID = c.productID
+                    SET p.quantity = p.quantity - c.quantity
+                    WHERE c.customerID = {session.get("user_id")}
+                """)
+                cnx.commit()
+
+                # GET ORDER TOTAL
+                cursor.execute(f"""
+                    SELECT ROUND(SUM(c.quantity * p.price), 2) AS total
+                    FROM cart c
+                    JOIN product p on c.productID = p.productID
+                    WHERE c.customerID = {session.get("user_id")}
+                """)
+                total = float(cursor.fetchone()[0])
+
+
+
+                    # UPDATE WALLET BALANCE
+                try:
+                    cursor.execute(f"""
+                        UPDATE wallet
+                        SET balance = balance - {total}
+                        WHERE customerID = {session.get("user_id")}
+                    """)
+                    cnx.commit()
+                except:
+                    render_template('payments.html', error='Insufficient Balance')
+
+
+                cursor.execute(f"DELETE FROM cart WHERE customerID = {session.get('user_id')}")
+                cnx.commit()
+
+            return redirect("/account")
+
+    with cnx.cursor(dictionary=True) as cursor:
+        # get amount to be paid
+        cursor.execute(f"""
+            SELECT ROUND(SUM(c.quantity * p.price), 2) AS total
+            FROM cart c
+            JOIN product p on c.productID = p.productID
+            WHERE c.customerID = {session.get("user_id")}
+        """)
+        subtotal = float(cursor.fetchone()["total"])
+
+        # get upiID
+        cursor.execute(f"""
+            SELECT balance, upiID FROM wallet
+            WHERE customerID = {session.get("user_id")}
+        """)
+        balance, upiID = cursor.fetchone().values()
+
+        delivery_charge = 0 if subtotal > 1000 else 50
+        tax = round(subtotal * 0.18, 2)
+        total = round(subtotal + tax + delivery_charge, 2)
+
+        # get products in cart
+        cursor.execute(f"""
+            SELECT p.productID, p.name as name, c.quantity as quantity, p.price as price, ROUND((p.price * c.quantity), 2) AS total
+            FROM cart c
+            JOIN product p on c.productID = p.productID
+            WHERE c.customerID = {session.get("user_id")}
+        """)
+        products = cursor.fetchall()
+
+        # get orderID to be passed to order page
+
+    return render_template("payment.html",
+                           total=total,
+                           upiID=upiID,
+                           subtotal=subtotal,
+                           tax=tax,
+                           delivery_charge=delivery_charge, 
+                           balance=balance, 
+                           products=products)
 
 
 @app.route("/product/<int:product_id>", methods=["GET", "POST"])

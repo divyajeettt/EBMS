@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}
+Payment Gateway
+{% endblock %}
+
+{% block main %}
+
+    <style>
+        /* Custom radio button style */
+        .form-check-input[type="radio"] {
+            width: 1rem;
+            height: 1rem;
+            margin-top: 5px;
+        }
+
+        hr.vertical {
+            height:120px; /* you might need some positioning for this to work, see other questions about 100% height */
+            width:0px;
+            border:1px solid black;
+        }
+    </style>
+    
+
+
+    <br>
+
+    <!-- show options with radio
+        <div style="display: auto; justify-self: left; margin-left: 40%; margin-right: 40%;">
+        <div class="form-check" style="font-weight: bold;">
+            <input class="form-check-input" type="radio" name="LoginRadio" id="flexRadioDefault1" value="customer" checked>
+            <label class="form-check-label" for="flexRadioDefault1">
+                UPI
+            </label>
+        </div>
+        <br>
+        <div class="form-check" style="font-weight: bold;">
+            <input class="form-check-input" type="radio" name="LoginRadio" id="flexRadioDefault2" value="supplier">
+            <label class="form-check-label" for="flexRadioDefault2">
+                Credit Card
+            </label>
+        </div>
+        <br>
+        <div class="form-check" style="font-weight: bold;">
+            <input class="form-check-input" type="radio" name="LoginRadio" id="flexRadioDefault3" value="delivery_agent" >
+            <label class="form-check-label" for="flexRadioDefault3">
+                Debit Card
+            </label>
+        </div>
+        <br>
+        <div class="form-check" style="font-weight: bold;">
+            <input class="form-check-input" type="radio" name="LoginRadio" id="flexRadioDefault3" value="delivery_agent" >
+            <label class="form-check-label" for="flexRadioDefault3">
+                Net Banking
+            </label>
+        </div>
+    </div> -->
+
+    <!-- show options in a div, with the div being center aligned and the options using radios being left aligned -->
+
+    <!-- create a boundary around the container -->
+    
+    <div class="col-6" style="padding: 2em; height:100%; width:48%; border-radius: 7px; background-color: #F2F2F2; float: left; text-align: left;">
+        <div class="col-12" style="float: left; text-align: left;">
+            <h2><b>Order Summary</b></h2>
+            <br>
+            <table style="width: 100%">
+                <tbody>
+                {% for product in products %}
+                    <tr style="display:flex; justify-content: space-between; align-items: center;">
+                        <td style="font-size: large;">{{ product.name }}</td>
+                        <td>{{ product.price }} x {{product.quantity}} = {{product.total}}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+            <hr>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h7>Subtotal</h7>
+                <h7>${{subtotal}}</h7>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h7>Shipping</h7>
+                <h7>${{delivery_charge}}</h7>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h7>Tax <span style="color:gray">(18%)</span></h7>
+                <h7>${{tax}}</h7>
+            </div>
+            <hr>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4>Total</h4>
+                <h4>${{total}}</h4>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-6" style="padding: 2em; height:90%; width:48%; border-radius: 7px; background-color: #F2F2F2;float: right;">
+
+        <!-- <hr class="vertical"> -->
+
+        <div class="col-12" style="float: right;">
+            <h2><b>Choose Payment Method</b></h2>
+            <form>
+                <ul style="list-style-type: none; padding: 1em; text-align: left;">
+                    <li>
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input" type="radio" name="paymentOption" id="option3" value="option3" style="vertical-align: center;">
+                            <label class="form-check-label" style="width: 100%" for="option3">
+                                <!-- <div style="display: flex; justify-content: space-between; width: 100%;"> -->
+                                    <!-- <div style="text-align: left; margin-right: 5px;"> -->
+                                        &nbsp; <img src="{{ url_for('static', filename='img/ebms-logo-removebg.png') }}" alt="Logo" height="50">
+                                        <!-- <p>something</p> -->
+                                        &nbsp;
+                                        <span style="color:gray;">Balance: ${{balance}}</span>
+                                    <!-- </div> -->
+                                    <!-- <div style="float: right; margin-right: 5px;">
+                                        <p style="color:gray;">Balance: ${{balance}}</p>
+                                    </div> -->
+                                <!-- </div> -->
+                            </label>
+                        </div>
+                    </li>
+                    <br>
+                    <br>
+                    <li>
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input" type="radio" name="paymentOption" id="option1" value="option1">
+                            <label class="form-check-label" for="option1" >
+                                &nbsp; <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/926px-UPI-Logo-vector.svg.png?20200901100648" alt="UPI Logo" height="40">
+                                    <!-- <p>something</p> -->
+                                    &nbsp;
+                                    {% if upiID == None %}
+                                        <span style="color:gray;"> (No UPI ID linked) </span>
+                                    {% else %}
+                                        <span style="color:gray;"> ({{upiID}}) </span>
+                                    {% endif %}
+                                    <!-- <span style="color:gray;"> ({{upiID}}) </span> -->
+                                <!-- </div> -->
+                                <!-- <div style="float: right; margin-right: 5px;">
+                                    <p style="color:gray;">Balance: ${{balance}}</p>
+                                </div> -->
+                            <!-- </div> -->
+                            </label>
+                        </div>
+                    </li>
+                    <br>
+                    <br>
+                    <li>
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input" type="radio" name="paymentOption" id="option2" value="option2">
+                            <label class="form-check-label" for="option2">
+                                &nbsp; <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal logo" height="50">
+                            </label>
+                        </div>
+                    </li>
+                    <br>
+                    <br>
+                    <li>
+                        <div class="form-check d-flex align-items-center">
+                            <input class="form-check-input" type="radio" name="paymentOption" id="option4" value="option4">
+                            <label class="form-check-label" for="option4">
+                                &nbsp; <img src="{{ url_for('static', filename='img/cc_logo.png') }}" alt="PayPal logo" height="48">
+                            </label>
+                        </div>
+                    </li>
+                    
+                </ul>
+            </form>
+
+            <!-- display balance and upiID -->
+            <!-- <div class="col-3" style="float: right; text-align: right;">
+                <br>
+                <span style="color:gray">Balance: ${{balance}}</span>
+                <br>
+                <br>
+                <br>
+                UPI ID: {{upiID}}
+            </div> -->
+        <!-- </div> -->
+        </div>
+    </div>
+
+        <!-- order summary -->
+        
+
+
+
+    <!-- show total amount -->
+
+
+    <div style="display: inline-flex; width: 100%;">
+        <form action="/account/payment" method="POST" style="width: 50%; margin-right: 20px; margin-top: 3%;">
+            <input type="hidden" name="action" value="cancel">
+            <button type="submit" class="btn btn-danger" style="height: 125%; width: 100%; font-size: 21px;"><b>Cancel</b></button>
+        </form>
+
+        <form action="/account/payment" method="POST" style="width: 50%; margin-left: 20px; margin-top: 3%;">
+            <input type="hidden" name="action" value="pay">
+            <button type="submit" class="btn btn-success" style="height: 125%; width: 100%; font-size: 21px;"><b>Pay</b></button>
+        </form>
+    </div>
+
+
+        
+        
+{% endblock %}
