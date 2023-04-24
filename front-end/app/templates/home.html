@@ -9,6 +9,34 @@
 <body>
     {% block main %}
 
+    {% if session.get("user_id") != None %}
+        <h1 style="text-align: center;"><b>Hot-Picks for You</b></h1>
+        <hr>
+        <p>Check out these latest suggestions from EBMS!</p>
+
+        <div class="card-group" style="width: 100%;">
+            {% for product in hot_picks %}
+                <div class="card">
+                    <a class="card-link" href="/product/{{ product['productID'] }}">
+                        <img style="border-radius: 10px;" width="285"
+                        src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=">
+                        <br><br>
+                        <div style="text-align: left; margin-left: 7px; margin-right: 7px;">
+                            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 0px;">
+                                <h4 style="text-align: left; font-size: 18px; margin-bottom: 0px;"><b>{{ product["name"] }}</b></h4>
+                                <p style="margin-bottom: 0px;"><b>{{ product["avg_rating"] }} / 5</b></p>
+                            </div>
+                            <p style="font-size: 14px; color: gray;"><i>By {{ product["sname"] }}</i></p>
+                            <p style="font-size: 14px; margin-bottom: 3px;"><b>Price:</b> $ {{ product["price"] }}</p>
+                            <p style="font-size: 15px; margin-bottom: 5px;"> {{ product["product_description"][:65] }} ... </p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+    {% endif %}
+
     <h1 style="text-align: center;"><b>Our Best-Sellers</b></h1>
     <hr>
     <p>Don't miss out on these best-sellers at EBMS!</p>

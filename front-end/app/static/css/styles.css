@@ -1,7 +1,6 @@
 nav .navbar-brand {
     font-size: xx-large;
 }
-
 nav .navbar-brand .blue, .blue {
     color: #537fbe;
 }
@@ -32,7 +31,6 @@ ul {
     display: flex;
     align-items: center;
 }
-
 
 .btn-outline-primary {
     color: #017BFE !important;
@@ -67,13 +65,11 @@ main img {
 }
 
 main .register {
-
     /* properties for registration form */
     display: inline-block;
     text-align: left;
     width: 100%;
 }
-
 
 .image-clear {
     opacity: 0;
@@ -138,7 +134,6 @@ footer {
     /* background-color: #d4571d; */
     color: #FFFFFF;
 }
-
 
 table.dataTable thead .sorting:after,
 table.dataTable thead .sorting:before,

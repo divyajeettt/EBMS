@@ -49,6 +49,21 @@ def after_request(response):
 def index():
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
+        if session.get("user_id") is not None:
+            cursor.execute("""
+                SELECT
+                    p.productID, p.name, p.price, p.product_description,
+                    CONCAT(s.first_name, ' ', s.last_name) AS sname,
+                    ROUND(AVG(pr.rating), 2) AS avg_rating
+                FROM product p
+                INNER JOIN supplier s ON p.supplierID = s.supplierID
+                INNER JOIN product_review pr ON p.productID = pr.productID
+                GROUP BY p.productID
+                ORDER BY RAND()
+                LIMIT 3
+            """)
+            context["hot_picks"] = cursor.fetchall()
+
         cursor.execute("""
             SELECT
                 p.productID, p.name, p.price, p.product_description,
