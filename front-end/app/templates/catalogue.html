@@ -46,11 +46,17 @@
 
         {% for product in rows %}
         <tr class="clickable-row">
-            <td>{{ product['productID'] }}</td>
-            <td>{{ product['name'] }}</td>
-            <td>{{ product['price'] }}</td>
-            <td>{{ "No Reviews" if product['avg_rating'] == None else product['avg_rating'] }}</td>
-            <td>{{ "No" if product['quantity'] == 0 else "Yes" }}</td>
+            <td>{{ product["productID"] }}</td>
+            <td>{{ product["name"] }}</td>
+            <td>{{ product["price"] }}</td>
+            <td>{{ "No Reviews" if product["avg_rating"] == None else product["avg_rating"] }}</td>
+            <td>
+                {% if session.get("user_type") == "admin" %}
+                    {{ product["quantity"] }}
+                {% else %}
+                    {{ "No" if product["quantity"] == 0 else "Yes" }}
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>
