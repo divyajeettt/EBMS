@@ -1,11 +1,15 @@
 \documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
+\usepackage{adjustbox}
 \usepackage{geometry}
 \usepackage{hyperref}
 \usepackage{multicol}
+\usepackage{multirow}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{tabularx}
 \usepackage{xcolor}
+\usepackage{array}
 \usepackage{color}
 
 \geometry{bottom=30mm, top=30mm, left=30mm, right=30mm}
@@ -468,24 +472,24 @@
     The following is a list of SQL Queries and their use cases:
 
     \begin{enumerate}
-    \item \input{./../SQL/Simple/query-01.tex}
-    \item \input{./../SQL/Simple/query-02.tex}
-    \item \input{./../SQL/Simple/query-03.tex}
-    \item \input{./../SQL/Simple/query-04.tex}
-    \item \input{./../SQL/Simple/query-05.tex}
-    \item \input{./../SQL/Simple/query-06.tex}
-    \item \input{./../SQL/Simple/query-07.tex}
-    \item \input{./../SQL/Simple/query-08.tex}
-    \item \input{./../SQL/Simple/query-09.tex}
-    \item \input{./../SQL/Simple/query-10.tex}
-    \item \input{./../SQL/Simple/query-11.tex}
-    \item \input{./../SQL/Simple/query-12.tex}
-    \item \input{./../SQL/Simple/query-13.tex}
-    \item \input{./../SQL/Simple/query-14.tex}
-    \item \input{./../SQL/Simple/query-15.tex}
-    \item \input{./../SQL/Simple/query-16.tex}
-    \item \input{./../SQL/Simple/query-17.tex}
-    \item \input{./../SQL/Simple/query-18.tex}
+        \item \input{./../SQL/Simple/query-01.tex}
+        \item \input{./../SQL/Simple/query-02.tex}
+        \item \input{./../SQL/Simple/query-03.tex}
+        \item \input{./../SQL/Simple/query-04.tex}
+        \item \input{./../SQL/Simple/query-05.tex}
+        \item \input{./../SQL/Simple/query-06.tex}
+        \item \input{./../SQL/Simple/query-07.tex}
+        \item \input{./../SQL/Simple/query-08.tex}
+        \item \input{./../SQL/Simple/query-09.tex}
+        \item \input{./../SQL/Simple/query-10.tex}
+        \item \input{./../SQL/Simple/query-11.tex}
+        \item \input{./../SQL/Simple/query-12.tex}
+        \item \input{./../SQL/Simple/query-13.tex}
+        \item \input{./../SQL/Simple/query-14.tex}
+        \item \input{./../SQL/Simple/query-15.tex}
+        \item \input{./../SQL/Simple/query-16.tex}
+        \item \input{./../SQL/Simple/query-17.tex}
+        \item \input{./../SQL/Simple/query-18.tex}
     \end{enumerate}
 
     \pagebreak
@@ -553,6 +557,413 @@
     \end{enumerate}
 
     \vfill \pagebreak
+
+    \deadline{6}{Conflicting and Non-Conflicting Database Transactions}{April 24, 2023}
+
+    \section*{\Huge Concurrent Database Transactions}
+    \vspace*{10pt}
+    Assuming the application is hosted on a public server, multiple users can access and use it simultaneously.
+    Hence, there may arise cases where multiple users access the database (through transactions) in a way that creates conflicts and inconsistency.
+
+    \subsection*{Transaction Pair 1}
+    Consider the case of two customers buying the same product simultaneously.
+    The following table of transactions sums up the reads and writes to the database needed to complete the required actions. \\
+    Here, $Q$ represents the quantity (in stock) of Product 1. Similarly, $B_{1}$ and $B_{2}$ represent the balance of
+    customers 1 and 2, whereas their orders are represented by $O_{1}$ and $O_{2}$, respectively.
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            \textsc{Read(product 1 quantity)} & \textsc{Read(product 1 quantity)} \\
+            $Q := Q - q_{1}$ & $Q := Q - q_{2}$ \\
+            \textsc{Write(product 1 quantity)} & \textsc{Write(product 1 quantity)} \\
+            \textsc{Read(balance user 1)} & \textsc{Read(balance user 2)} \\
+            \textsc{Write(new balance user 1)} & \textsc{Write(new balance user 2)} \\
+            \textsc{Commit} & \textsc{Commit} \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+    \vspace*{2.5pt}
+
+    \subsection*{Conflict-Serializable Schedule}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            & \textsc{Read($Q$)} \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Write($B_{2}'$)} \\
+            \textsc{Read($Q$)} & \\
+            \textsc{$Q := Q - q_{1}$} & \\
+            \textsc{Write($Q$)} & \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            \textsc{Read($B_{1}$)} & \\
+            \textsc{Check($B_{1}$)} & \\
+            \textsc{Write($B_{1}'$)} & \\
+            \textsc{Write(Order $O_{1}$)} & \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+    \vspace*{10pt}
+    First, the quantity bought by $B_{2}$ is deducted from the stock quantity $Q$. $B_{2}$'s balance is also updated.
+    Then we switch to $T_{1}$ and deduct the quantity bought by $B_{1}$ from $Q$. Now, we switch back to $T_{2}$ and write the order details.
+    Finally, we switch back to $T_{1}$ and execute the remaining commands and commit the transactions.
+    \vspace*{10pt} \\
+    This schedule is conflict serializable since we can repeatedly switch the last command in $T_{2}$ up, such that both the transactions
+    get executed serially ($T_{1}$ after $T_{2}$).
+
+    \subsection*{Conflict-Serializable Schedule with Locks}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            & \textsc{Lock-X($Q$)} \\
+            & \textsc{Read($Q$)} \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            & \textsc{Unlock($Q$)} \\
+            & \textsc{Lock-X($B_{2}$)} \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Write($B_{2}'$)} \\
+            & \textsc{Unlock($B_{2}$)} \\
+            \textsc{Lock-X($Q$)} & \\
+            \textsc{Read($Q$)} & \\
+            \textsc{$Q := Q - q_{1}$} & \\
+            \textsc{Write($Q$)} & \\
+            \textsc{Unlock($Q$)} & \\
+            & \textsc{Lock-X(Order $O_{2}$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            & \textsc{Unlock(Order $O_{2}$)} \\
+            \textsc{Lock-X($B_{1}$)} & \\
+            \textsc{Read($B_{1}$)} & \\
+            \textsc{Check($B_{1}$)} & \\
+            \textsc{Write($B_{1}'$)} & \\
+            \textsc{Unlock($B_{1}$)} & \\
+            \textsc{Lock-X(Order $O_{1}$)} & \\
+            \textsc{Write(Order $O_{1}$)} & \\
+            \textsc{unlock(Order $O_{1}$)} & \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+    \vspace*{10pt}
+    We add locks before each read, and unlock after each write.
+    This ensures that no two transactions are accessing/altering the same data point at the same time,
+    which could lead to conflicts.
+
+    \pagebreak
+    \subsection*{Non-Conflict-Serializable Schedule}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            \textsc{Read($Q$)} & \\
+            & \textsc{Read($Q$)} \\
+            \textsc{$Q := Q - q_{2}$} & \\
+            \textsc{Write($Q$)} & \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Write($B_{2}'$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            \textsc{Read($B_{1}$)} & \\
+            \textsc{Check($B_{1}$)} & \\
+            \textsc{Write($B_{1}'$)} & \\
+            \textsc{Write(Order $O_{1}$)} & \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+    \vspace*{10pt}
+    The above schedule is non-conflict-serializable as there does not exist any sequence of non-conflicting switches
+    to make the schedule serial. This is because $T_{1}$ writes to $Q$ before and after a read and write,
+    respectively, which are executed by $T_{2}$.
+
+    \pagebreak
+    \subsection*{Non-Conflict-Serializable Schedule with Locks}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            \textsc{Lock-S($Q$)} & \\
+            \textsc{Read($Q$)} & \\
+            \textsc{Unlock($Q$)} & \\
+            & \textsc{Lock-S($Q$)} \\
+            & \textsc{Read($Q$)} \\
+            & \textsc{Unlock($Q$)} \\
+            \textsc{Lock-X($Q$)} & \\
+            \textsc{$Q := Q - q_{2}$} & \\
+            \textsc{Write($Q$)} & \\
+            \textsc{Unlock($Q$)} & \\
+            & \textsc{Lock-X($Q$)} \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            & \textsc{Unlock($Q$)} \\
+            & \textsc{Lock-X($B_{2}$)} \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Check($B_{2}$)} \\
+            & \textsc{Write($B_{2}'$)} \\
+            & \textsc{Unlock($B_{2}$)} \\
+            & \textsc{Lock-X(Order $O_{2}$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            & \textsc{Unlock(Order $O_{2}$)} \\
+            \textsc{Lock-X($B_{1}$)} & \\
+            \textsc{Read($B_{1}$)} & \\
+            \textsc{Check($B_{1}$)} & \\
+            \textsc{Write($B_{1}'$)} & \\
+            \textsc{Unlock($B_{1}$)} & \\
+            \textsc{Lock-X(Order $O_{1}$)} & \\
+            \textsc{Write(Order $O_{1}$)} & \\
+            \textsc{Unlock(Order $O_{1}$)} & \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+    \vspace*{10pt}
+    We add shared locks before and after each solitary read, and exclusive locks around a read-write pair.
+    This makes sure that no two transactions are accessing/altering the same data point at the same time,
+    which could lead to conflicts.
+
+    \pagebreak
+
+    \subsection*{Transaction Pair 2}
+    Consider the case where a supplier adds products to stock (i.e., increases the quantity), and
+    simultaneously, a customer buys the same product (i.e. decreases the quantity). \\
+    Here, $Q$ represents the quantity (in stock) of Product 1. $B_{2}$ represents the balance of the customer in
+    $T_{2}$, while $O_{2}$ represents their order.
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            \textsc{Read($Q$)} & \textsc{Read($Q$)} \\
+            \textsc{$Q := Q + q_{1}$} & \textsc{$Q := Q - q_{2}$} \\
+            \textsc{Write($Q$)} & \textsc{Write($Q$)} \\
+            \textsc{Commit} & \textsc{Read($B_{2}$)} \\
+            & \textsc{Write($B_{2}$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            & \textsc{Commit} \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+    \vspace*{5pt}
+
+    \subsection*{Conflict-Serializable Schedule}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            & \textsc{Read($Q_{1}$)} \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            \textsc{Read($Q$)} & \\
+            \textsc{$Q := Q + q_{1}$} & \\
+            \textsc{Write($Q$)} & \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Check($B_{2}$)} \\
+            & \textsc{Write($B_{2}$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+
+    \pagebreak
+    \subsection*{Conflict-Serializable Schedule with Locks}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            & \textsc{Lock-X($Q$)} \\
+            & \textsc{Read($Q$)} \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            & \textsc{Unlock($Q$)} \\
+            \textsc{Lock-X($Q$)} & \\
+            \textsc{Read($Q$)} & \\
+            \textsc{$Q := Q + q_{1}$} & \\
+            \textsc{Write($Q$)} & \\
+            \textsc{Unlock($Q$)} & \\
+            & \textsc{Lock-X($B_{2}$)} \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Check($B_{2}$)} \\
+            & \textsc{Write($B_{2}$)} \\
+            & \textsc{unlock($B_{2}$)} \\
+            & \textsc{Lock-X(Order $O_{2}$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            & \textsc{Unlock(Order $O_{2}$)} \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+
+    \subsection*{Non-Conflict-Serializable Schedule}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            & \textsc{Read($Q_{1}$)} \\
+            \textsc{Read($Q$)} & \\
+            \textsc{$Q := Q + q_{1}$} & \\
+            \textsc{Write($Q$)} & \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Check($B_{2}$)} \\
+            & \textsc{Write($B_{2}$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+    \pagebreak
+
+    \subsection*{Non-Conflict-Serializable Schedule with Locks}
+
+    \begin{center}
+        \begin{adjustbox}{width=\textwidth}
+            \begin{tabularx}{\textwidth}{|X|X|}
+            \hline
+            \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+            & \\ \hline
+            & \textsc{Lock-S($Q$)} \\
+            & \textsc{Read($Q$)} \\
+            & \textsc{unlock($Q$)} \\
+            \textsc{Lock-X($Q$)} & \\
+            \textsc{Read($Q$)} & \\
+            \textsc{$Q := Q + q_{1}$} & \\
+            \textsc{Write($Q$)} & \\
+            \textsc{Unlock($Q$)} & \\
+            & \textsc{Lock-X($Q$)} \\
+            & \textsc{$Q := Q - q_{2}$} \\
+            & \textsc{Write($Q$)} \\
+            & \textsc{Unlock($Q$)} \\
+            & \textsc{Lock-X($B_{2}$)} \\
+            & \textsc{Read($B_{2}$)} \\
+            & \textsc{Check($B_{2}$)} \\
+            & \textsc{Write($B_{2}$)} \\
+            & \textsc{unlock($B_{2}$)} \\
+            & \textsc{Lock-X(Order $O_{2}$)} \\
+            & \textsc{Write(Order $O_{2}$)} \\
+            & \textsc{Unlock(Order $O_{2}$)} \\
+            \hline
+            \end{tabularx}
+        \end{adjustbox}
+    \end{center}
+
+    \vfill \pagebreak
+    \hspace{0pt}
+    \vfill
+    \begin{center}
+        \Huge \textbf{User Guide} \\
+        \vspace*{5pt}
+        \Large \textit{How to use ElectroBase Management System}
+    \end{center}
+    \vfill
+    \pagebreak
+
+    \section*{\Huge Frontend Development}
+    \vspace*{10pt}
+
+    The frontend development of the application has been completed within the timeframe of Deadline-6, the final deadline for the project.
+    The website is currently only hosted on a developmental server, while the database is hosted on a local machine.
+
+    \section*{\Huge Navigation through the application}
+    \vspace*{10pt}
+
+    The frontend of the application is designed to be as intuitive as possible.
+    Although there remain some minor bugs and unimplemented features, the application is fully functional and can be used by all stakeholders.
+    The UI is very simple and easy to understand, and any user can navigate through the application with ease.
+
+    \subsection*{Usage as Customers}
+    \subsubsection*{Without creating an account}
+    The application can be used without creating an account, but the user will not be able to access the full functionality of the application.
+    Without creating an account, the user can view limited data, such as the top-3 selling products, and the top-3 selling suppliers.
+    They can also browse through the product calalogue.
+
+    \subsubsection*{Creating an account}
+    To create an account, the user can follow one of two steps:
+    \begin{enumerate}
+        \item
+        Click on the \texttt{Log In} button located at the top right of the navigation bar.
+        From there, the user can click on the \texttt{Create an account} button to create an account.
+        \item
+        While browsing the product catalogue, if the user clicks on the \texttt{Add to Cart} button, they will be prompted to log in first.
+        From there, they can create an account.
+    \end{enumerate}
+
+    \subsubsection*{Logging in}
+    After logging in, the user can add products to their cart.
+    They can use the \texttt{Cart} button on the navigation bar to proceed to the checkout page.
+    They can review their order before placing it, and if confirmed, they are redirected to the payment gateway and the order will be placed.
+    \vspace*{10pt} \\
+    On the profile page, the customer can view their personal information\footnote{
+        The feature to update personal information is not yet implemented.
+    }, their order history, and the current active (undelivered) orders.
+
+    \subsection*{Usage as Admins}
+    \subsubsection*{Logging In}
+    The admin\footnote{
+        Currently, there are only two admin accounts, both having the same functionality.
+    } can log in to the admin panel by clicking on the \texttt{Log In as Admin} button shown in the footer.
+    This button is displayed on almost all pages in the footer, even on the user-login page.
+
+    \subsubsection*{How to use}
+    Once logged in, the admin can use the admin panel to perform various tasks\footnote{
+        The feature to add records through the admin panel is not yet implemented.
+    }, such as viewing the stocks through the catalogue, viewing orders, order statistics,
+    and viewing the sales statistics\footnote{
+        Sales statistics are currently displayed in tables. However, we plan to display them through charts
+        it the future.
+    }.
+
+    \subsection*{Usage as Suppliers and Delivery Agents}
+    Both suppliers and delivery agents have similar interfaces to users for logging in.
+    They can log in by clicking on the \texttt{Log In} button located at the top right of the navigation bar.
+    From there, they can perform the tasks specific to their role.
+
+    \vfill \pagebreak
+
+    \section*{References and Bibliography}
+
+    \begin{itemize}
+        \item \href{https://mdbootstrap.com/docs/b4/jquery/tables/sort/}{\color{blue}\underline{Sortable Tables in HTML}} \\
+        The JavaScript code to implement sorting on tables in HTML is taken from this website.
+        \item \href{https://www.w3schools.com/howto/howto_css_animate_buttons.asp}{\color{blue}\underline{Button animations using CSS}}
+    \end{itemize}
+
+\end{document}
 
     \section*{References and Bibliography}
 
