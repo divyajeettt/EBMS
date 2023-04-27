@@ -4,6 +4,7 @@
     <title>
         {% block title %}{{ product["name"] }}{% endblock %}
     </title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
@@ -68,17 +69,17 @@
                 </div>
             </div>
         {% elif session.get("user_type") == "supplier" and session.get("user_id") == product["supplierID"] %}
-        
+
         <hr class="add-margin" style="text-align: left;">
-    
+
         <form method="POST" style="margin-left: 1em">
             <div class="form-row" >
                 <div class="form-group col-md-4" style="text-align: left; margin-left:1em">
                     <label for="inputQty"><b>Additional Stock: </b></label><br>
                     <input type="number" class="form-control" id="inputQty" value="{{ qty if qty else 0 }}" name="q" min="0">
                 </div>
-                
-        
+
+
                 <div class="form-group col-md-4" style="text-align: left; margin-right: 2em">
                     <label for="inputPrice"><b>Price: </b></label><br>
                     <input type="number" class="form-control" id="inputPrice" value="{{ price if price else product['price'] }}" name="p" min="1">
@@ -120,8 +121,39 @@
             {% endfor %}
         {% endif %}
 
+        {% if prev != None and not reviewed %}
+            {% if reviews == [] %}
+                <h2 style="text-align: left; margin-top: 15px;"><b>Drop a review</b></h2>
+                <hr>
+            {% endif %}
+            <p style="text-align: left;">You ordered this product on {{ prev["order_date"] }}. Rate the product out of 5!</p>
+
+            </div>
+                <form id="form" action="/product/{{ product['productID'] }}" method="POST">
+                    <div class="rate" style="text-align: center;">
+                        <input type="radio" id="star5" name="rating" value="5"/>
+                        <label for="star5" title="text">5 stars</label>
+                        <input type="radio" id="star4" name="rating" value="4"/>
+                        <label for="star4" title="text">4 stars</label>
+                        <input type="radio" id="star3" name="rating" value="3"/>
+                        <label for="star3" title="text">3 stars</label>
+                        <input type="radio" id="star2" name="rating" value="2"/>
+                        <label for="star2" title="text">2 stars</label>
+                        <input type="radio" id="star1" name="rating" value="1"/>
+                        <label for="star1" title="text">1 star</label>
+                    </div>
+                    <div class="input-group" width="100%;">
+                        <input type="text" id="query" name="review" class="form-control" placeholder="Review...">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Add review</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+
         {% if more != [] %}
-            <h2 style="text-align: left; margin-top: 15px;"><b>More from {{ supplier["name"] }}</b></h2> <!-- add code to sort reviews by date and rating (asc/desc both) -->
+            <h2 style="text-align: left; margin-top: 15px;"><b>More from {{ supplier["name"] }}</b></h2>
             <hr>
 
             <div class="card-group" style="width: 100%;">

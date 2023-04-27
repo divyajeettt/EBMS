@@ -767,7 +767,7 @@ def checkout():
     if request.method == "POST":
         if request.form.get("action") == "cancel":
             return redirect("/account/cart")
-        
+
         elif request.form.get("action") == "confirm":
             return redirect("/account/payment")
 
@@ -812,7 +812,7 @@ def payment():
     if request.method == "POST":
         if request.form.get("action") == "cancel":
             return redirect("/account/cart")
-        
+
         elif request.form.get("action") == "pay":
             with cnx.cursor() as cursor:
                 cursor.execute("""
@@ -921,8 +921,8 @@ def payment():
                            upiID=upiID,
                            subtotal=subtotal,
                            tax=tax,
-                           delivery_charge=delivery_charge, 
-                           balance=balance, 
+                           delivery_charge=delivery_charge,
+                           balance=balance,
                            products=products)
 
 
@@ -935,36 +935,42 @@ def product(product_id):
 
     if request.method == "POST":
         if session.get("user_type") == "customer":
-            
             with cnx.cursor(dictionary=True) as cursor:
-                cursor.execute(f"""
-                    SELECT * FROM cart
-                    WHERE customerID = {session.get("user_id")} AND productID = {product_id}
-                """)
-                cart_item = cursor.fetchone()
-
-                if cart_item is None:
-                    cursor.execute(f"INSERT INTO cart VALUES ({session.get('user_id')}, {product_id}, {qty})")
-                    dest = f"/product/{product_id}?message=Item+added+to+cart"
-
-                elif edit:
+                if qty is None:
                     cursor.execute(f"""
-                        UPDATE cart SET quantity = {qty}
-                        WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+                        INSERT INTO product_review VALUES
+                        ({session.get("user_id")}, {product_id}, {request.form.get("rating")}, "{request.form.get("review")}", CURDATE())
                     """)
-                    dest = "/account/cart"
-
+                    dest = f"/product/{product_id}?message=Review+added"
                 else:
                     cursor.execute(f"""
-                        UPDATE cart SET quantity = quantity + {qty}
+                        SELECT * FROM cart
                         WHERE customerID = {session.get("user_id")} AND productID = {product_id}
                     """)
-                    dest = f"/product/{product_id}?message=More+items+added+to+cart"
+                    cart_item = cursor.fetchone()
+
+                    if cart_item is None:
+                        cursor.execute(f"INSERT INTO cart VALUES ({session.get('user_id')}, {product_id}, {qty})")
+                        dest = f"/product/{product_id}?message=Item+added+to+cart"
+
+                    elif edit:
+                        cursor.execute(f"""
+                            UPDATE cart SET quantity = {qty}
+                            WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+                        """)
+                        dest = "/account/cart"
+
+                    else:
+                        cursor.execute(f"""
+                            UPDATE cart SET quantity = quantity + {qty}
+                            WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+                        """)
+                        dest = f"/product/{product_id}?message=More+items+added+to+cart"
 
                 cnx.commit()
 
             return redirect(dest)
-        
+
         elif session.get("user_type") == "supplier":
             with cnx.cursor(dictionary=True) as cursor:
                 # update quantity
@@ -982,13 +988,31 @@ def product(product_id):
                         WHERE productID = {product_id}
                     """)
                     cnx.commit()
-            
+
             return redirect(f"/product/{product_id}?message=Product+updated")
 
     context = {}
+    context["prev"] = None
+    if session.get("user_type") == "customer":
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute(f"""
+                SELECT DATE_FORMAT(order_date, '%M %d, %Y') AS order_date
+                FROM orders
+                JOIN order_product ON orders.orderID = order_product.orderID
+                WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+            """)
+            context["prev"] = cursor.fetchone()
+
     with cnx.cursor(dictionary=True) as cursor:
         cursor.execute(f"SELECT * FROM product WHERE productID = {product_id}")
         product = context["product"] = cursor.fetchone()
+
+        if session.get("user_type") == "customer":
+            cursor.execute(f"""
+                SELECT * from product_review
+                WHERE customerID = {session.get("user_id")} AND productID = {product_id}
+            """)
+            context["reviewed"] = cursor.fetchone() is not None
 
         cursor.execute(f"""
             SELECT CONCAT(first_name, ' ', last_name) as name, rating, content, DATE_FORMAT(review_date, '%M %d, %Y') AS review_date
