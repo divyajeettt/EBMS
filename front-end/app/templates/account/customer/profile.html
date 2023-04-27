@@ -9,9 +9,9 @@
     <img style="border-radius: 10px;" align="left"
     src="https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM="  width="300">
 
-    <div class="add-margin" style="display: flex; margin-bottom: 0px;">
-        <h1 style="text-align: left; white-space: nowrap; margin-bottom: 0px;"><b>{{ user["name"] }}</b></h1>
-        <div style="margin-top: 8px; text-align: right; margin-bottom: 0px; border-radius: 100%;">
+    <div class="add-margin" style="display: flex; justify-content: space-between; margin-bottom: 0px;">
+        <h1 style="display: inline-flex; text-align: left; white-space: nowrap; margin-bottom: 0px;"><b>{{ user["name"] }}</b></h1>
+        <div style="display: inline-flex; margin-top: 8px; text-align: right; margin-bottom: 0px; border-radius: 100%;">
             <a href="/account/edit"><img class="hover-button" src="https://cdn-icons-png.flaticon.com/512/181/181540.png" style="width: 10%;"></a>
         </div>
     </div>
@@ -21,9 +21,11 @@
     <div class="add-margin" style="display: flex; margin-bottom: 0px;">
         <div style="text-align: left;">
           <img src="https://cdn-icons-png.flaticon.com/512/3178/3178158.png" style="width: 4%;">
-          <p style="display: inline-block; margin-left: 10px; margin-bottom: 0px;">{{ user["email"] }}</p>
+          <p style="display: inline-flex; margin-left: 10px; margin-bottom: 0px;">{{ user["email"] }}</p>
         </div>
-        <p style="display: inline-block; margin-left: auto; margin-bottom: 0px;"><b>Age:</b> {{ user["age"] }}</p>
+        <div style="text-align: right;">
+            <p style="display: inline-flex; margin-bottom: 0px;"><b>Age:&nbsp;</b> {{ user["age"] }}</p>
+        </div>
     </div>
 
     <hr class="add-margin">
