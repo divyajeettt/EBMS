@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Wallet
+{% endblock %}
+
+{% block main %}
+    <style>
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 14px;
+            margin-top: 20px;
+            /* shorter length */
+            width: 33%;
+        }
+    </style>
+
+    <h1><b>Your <span class="blue">e</span><span class="red">b</span><span class="yellow">m</span><span class="green">s</span> Wallet</b></h1>
+    <hr>
+
+    <!-- current balance -->
+    <h4>Current Balance: <b>{{ wallet }}</b></h4>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <form action="/account/wallet" method="post">
+        <h2><b>Add Money</b></h2>
+        <br>
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="amount" placeholder="Amount" type="number" min="1">
+        </div>
+        <br>
+        <div>
+            <button type="submit" class="button"><span>Continue</span></button>
+        </div>
+    </form>
+{% endblock %}
