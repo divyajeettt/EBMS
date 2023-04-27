@@ -37,12 +37,27 @@
 
     <hr class="add-margin">
 
-    <p class="add-margin" style="text-align: left;">
-        <b>Shipping Address:</b> <br>
-        {{ user["hno"] }}<br>
-        {{ user["location"] }}<br>
-        {{ user["state"]}}, {{ user["country"] }}<br>
-    </p>
+    <div class="add-margin" style="display: flex; justify-content: space-between; margin-bottom: 0px;">
+        <p style="text-align: left;">
+            <b>Shipping Address:</b> <br>
+            {{ user["hno"] }}<br>
+            {{ user["location"] }}<br>
+            {{ user["state"]}}, {{ user["country"] }}<br>
+        </p>
+
+        <div style="text-align: right;">
+            <p style="display: inline-flex; margin-bottom: 0px;"><b>Balance:&nbsp;</b> {{ user["balance"] }}</p>
+            <!-- button to add money to wallet -->
+            <br>
+            <br>
+            <form action="account/wallet" method="GET">
+                <button class="btn btn-primary" style="height: 45px; width:12em" onclick="submitForm()">
+                    <span>Add Money to Wallet</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
 
     <br>
     <h2 style="text-align: left;"><b>Your Active Orders</b></h1>

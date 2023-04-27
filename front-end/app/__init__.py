@@ -626,6 +626,12 @@ def account():
             user["phone"] = cursor.fetchall()
 
             cursor.execute(f"""
+                SELECT balance FROM wallet
+                where customerID = {session.get("user_id")}
+            """)
+            user["balance"] = cursor.fetchone()["balance"]
+
+            cursor.execute(f"""
                 SELECT
                     orderID, DATE_FORMAT(order_date, '%M %d, %Y') AS order_date,
                     DATE_FORMAT(ADDDATE(order_date, INTERVAL 15 DAY), '%d %M') AS ETA,
@@ -1074,6 +1080,33 @@ def view_orders():
         orders = cursor.fetchall()
 
     return render_template("/account/customer/orders.html", orders=orders, active=active)
+
+@app.route("/account/wallet", methods=["GET", "POST"])
+@login_required
+def wallet():
+    if session.get("user_type") != "customer":
+        return redirect("/login")
+
+    if request.method == "POST":
+        amount = request.form.get("amount")
+        with cnx.cursor(dictionary=True) as cursor:
+            cursor.execute(f"""
+                UPDATE wallet SET balance = balance + {amount}
+                WHERE customerID = {session.get("user_id")}
+            """)
+            cnx.commit()
+
+        return redirect("/account/wallet")
+
+    with cnx.cursor(dictionary=True) as cursor:
+        cursor.execute(f"""
+            SELECT balance
+            FROM wallet
+            WHERE customerID = {session.get("user_id")}
+        """)
+        wallet = cursor.fetchone()["balance"]
+
+    return render_template("/account/customer/wallet.html", wallet=wallet)
 
 @app.route("/product/add", methods=["GET", "POST"])
 @login_required
