@@ -5,6 +5,16 @@
 {% endblock %}
 
 {% block main %}
+    <style>
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 14px;
+            margin-top: 20px;
+            /* shorter length */
+            width: 33%;
+        }
+    </style>
+
     <h1><b>User Login</b></h1>
     <br>
     {% if error %}
@@ -18,7 +28,9 @@
         <div class="form-group">
             <input class="form-control" name="password" placeholder="Password" type="password">
         </div>
+        <hr>
         <div class="form-check" style="font-weight: bold;">
+            &nbsp; &nbsp; &nbsp;
             <input class="form-check-input" type="radio" name="LoginRadio" id="flexRadioDefault1" value="customer" checked>
             <label class="form-check-label" for="flexRadioDefault1">
                 Customer &nbsp; &nbsp; &nbsp;
