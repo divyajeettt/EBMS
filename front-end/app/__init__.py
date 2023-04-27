@@ -984,6 +984,9 @@ def product(product_id):
                     cnx.commit()
             
             return redirect(f"/product/{product_id}?message=Product+updated")
+        
+        elif not session.get("user_type"):
+            return redirect("/login")
 
     context = {}
     with cnx.cursor(dictionary=True) as cursor:
