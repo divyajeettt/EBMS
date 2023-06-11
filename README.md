@@ -37,3 +37,4 @@ python3 ./front-end/run.py
 - Addition of graphs and charts to display trends along with tabular data.
 - Addition of storage of images for products and user profiles in the database.
 - An ML model may be used to generate the "Hot-Picks for You" category on a user's home page.
+- Add robustness against SQL injection attacks.
