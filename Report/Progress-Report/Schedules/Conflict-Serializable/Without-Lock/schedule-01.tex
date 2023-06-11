@@ -1,0 +1,30 @@
+\begin{center}
+    \begin{adjustbox}{width=\textwidth}
+        \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+        & \\ \hline
+        & \textsc{Read($Q$)} \\
+        & \textsc{$Q := Q - q_{2}$} \\
+        & \textsc{Write($Q$)} \\
+        & \textsc{Read($B_{2}$)} \\
+        & \textsc{Write($B_{2}'$)} \\
+        \textsc{Read($Q$)} & \\
+        \textsc{$Q := Q - q_{1}$} & \\
+        \textsc{Write($Q$)} & \\
+        & \textsc{Write(Order $O_{2}$)} \\
+        \textsc{Read($B_{1}$)} & \\
+        \textsc{Check($B_{1}$)} & \\
+        \textsc{Write($B_{1}'$)} & \\
+        \textsc{Write(Order $O_{1}$)} & \\
+        \hline
+        \end{tabularx}
+    \end{adjustbox}
+\end{center}
+\vspace*{10pt}
+First, the quantity bought by $B_{2}$ is deducted from the stock quantity $Q$. $B_{2}$'s balance is also updated.
+Then we switch to $T_{1}$ and deduct the quantity bought by $B_{1}$ from $Q$. Now, we switch back to $T_{2}$ and write the order details.
+Finally, we switch back to $T_{1}$ and execute the remaining commands and commit the transactions.
+\vspace*{10pt} \\
+This schedule is conflict serializable since we can repeatedly switch the last command in $T_{2}$ up, such that both the transactions
+get executed serially ($T_{1}$ after $T_{2}$).

@@ -1,0 +1,63 @@
+\deadline{5}{Embedded SQL Queries, OLAP Queries, and Triggers}{March 26, 2023}
+
+\section*{\Huge Frontend Development}
+\vspace*{10pt}
+
+Since this deadline now requires embedding SQL queries in a host programming language, the frontend development has also been started.
+As decided previously, the host langauge is Python-3, and the frontend is being developed using the Flask Web-Development Micro Framework. \\
+The raw frontend is in the first stages of development and is hosted on a local server.
+This document contains references and bibliographies for all open-source code available on the internet for tasks like placing sortable tables on a page,
+CSS animations, and JavaScript functions for form validation.
+
+\section*{\Huge Embedded SQL Queries}
+\vspace*{10pt}
+
+As of now, the only SQL queries which have been embedded in the Python code are those for which the frontend interaces have been developed.
+In the future, these will be refactored into small \texttt{.sql} files and imported into the Python code for security\footnote{
+    The embedded SQL Queries are currently not protected against SQL Injection Attacks.
+} and readability purposes.
+\vspace*{10pt} \\
+The following is a (non-exhaustive) list of already embedded SQL queries:
+
+\begin{enumerate}
+    \item \input{./SQL/Embedded/query-01.tex}
+    \item \input{./SQL/Embedded/query-02.tex}
+    \item \input{./SQL/Embedded/query-03.tex}
+    \item \input{./SQL/Embedded/query-04.tex}
+    \item \input{./SQL/Embedded/query-05.tex}
+    \item \input{./SQL/Embedded/query-06.tex}
+    \item \input{./SQL/Embedded/query-07.tex}
+    \item \input{./SQL/Embedded/query-08.tex}
+    \item \input{./SQL/Embedded/query-09.tex}
+    \item \input{./SQL/Embedded/query-10.tex}
+    \item \input{./SQL/Embedded/query-11.tex}
+    \item \input{./SQL/Embedded/query-12.tex}
+\end{enumerate}
+
+\section*{\Huge OLAP SQL Queries}
+\vspace*{10pt}
+
+OLAP queries are (mainly) utilised by the Admin in our use case to perform data analytics.
+The OLAP data is separated from the rolled-up form before rendering the HTML page. These queries are also embedded in Python.
+\vspace*{10pt} \\
+The following is a (non-exhaustive) list of already implemented OLAP SQL queries:
+
+\begin{enumerate}
+    \item \input{./SQL/OLAP/query-01.tex}
+    \item \input{./SQL/OLAP/query-02.tex}
+    \item \input{./SQL/OLAP/query-03.tex}
+    \item \input{./SQL/OLAP/query-04.tex}
+    \item \input{./SQL/OLAP/query-05.tex}
+\end{enumerate}
+
+\section*{\Huge Triggers}
+
+The following triggers are identified according to the use cases and implemented in the database:
+
+\begin{enumerate}
+    \item \input{./SQL/Triggers/trigger-01.tex}
+    \item \input{./SQL/Triggers/trigger-02.tex}
+    \item \input{./SQL/Triggers/trigger-03.tex}
+\end{enumerate}
+
+\vfill \pagebreak

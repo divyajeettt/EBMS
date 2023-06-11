@@ -1,0 +1,169 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{adjustbox}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{color}
+
+\geometry{bottom=30mm, top=30mm, left=30mm, right=30mm}
+
+\newcommand{\deadline}[3]{
+    \hspace{0pt}
+    \vfill
+    \begin{center}
+        \Huge \textbf{Deadline #1} \\
+        \vspace*{5pt}
+        \Large \textit{#2} \\
+        \vspace*{25pt}
+        \large \textbf{#3}
+    \end{center}
+    \vfill
+    \pagebreak
+}
+
+\definecolor{dkgreen}{rgb}{0, 0.6, 0.0}
+\definecolor{gray}{rgb}{0.5, 0.5, 0.5}
+\definecolor{mauve}{rgb}{0.58, 0.0, 0.82}
+
+\lstset{frame=tb,
+    language=SQL,
+    aboveskip=3mm,
+    belowskip=3mm,
+    showstringspaces=false,
+    columns=flexible,
+    basicstyle={\footnotesize\ttfamily},
+    numbers=none,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{dkgreen},
+    stringstyle=\color{mauve},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4
+}
+
+\title{
+    \textbf{\Huge ElectroBase Management System} \\
+    \vspace*{10pt}
+    \large{\textit{EBMS - an Online Electronics Retail Store}} \\
+    \vspace*{20pt}
+    Built as a course project for \\
+    CSE202: Fundamentals of Database Management Systems \\
+    \vspace*{25pt}
+    \textbf{\Large Project Progress Report and Documentation}
+    \vfill
+}
+
+\author{
+    \href{mailto:divyajeet21529@iiitd.ac.in}{]Divyajeet Singh (2021529)} \\
+    \vspace*{20pt}
+    \href{mailto:mehar21541@iiitd.ac.in}{Mehar Khurana (2021541)}
+}
+
+\date{
+    \vfill
+    \textbf{\today}
+    \vspace*{15pt}
+    \begin{center}
+        \includegraphics[scale=0.9]{Logo}
+    \end{center}
+}
+
+\graphicspath{{./../Assets/}}
+
+\begin{document}
+    \maketitle
+
+    \input{Deadlines/deadline-01.tex}
+    \input{Deadlines/deadline-02.tex}
+    \input{Deadlines/deadline-03.tex}
+    \input{Deadlines/deadline-04.tex}
+    \input{Deadlines/deadline-05.tex}
+    \input{Deadlines/deadline-06.tex}
+
+    \hspace{0pt}
+    \vfill
+    \begin{center}
+        \Huge \textbf{User Guide} \\
+        \vspace*{5pt}
+        \Large \textit{How to use ElectroBase Management System}
+    \end{center}
+    \vfill
+    \pagebreak
+
+    \section*{\Huge Frontend Development}
+    \vspace*{10pt}
+
+    The frontend development of the application has been completed within the timeframe of Deadline-6, the final deadline for the project.
+    The website is currently only hosted on a developmental server, while the database is hosted on a local machine.
+
+    \section*{\Huge Navigation through the application}
+    \vspace*{10pt}
+
+    The frontend of the application is designed to be as intuitive as possible.
+    Although there remain some minor bugs and unimplemented features, the application is fully functional and can be used by all stakeholders.
+    The UI is very simple and easy to understand, and any user can navigate through the application with ease.
+
+    \subsection*{Usage as Customers}
+    \subsubsection*{Without creating an account}
+    The application can be used without creating an account, but the user will not be able to access the full functionality of the application.
+    Without creating an account, the user can view limited data, such as the top-3 selling products, and the top-3 selling suppliers.
+    They can also browse through the product calalogue.
+
+    \subsubsection*{Creating an account}
+    To create an account, the user can follow one of two steps:
+    \begin{enumerate}
+        \item
+        Click on the \texttt{Log In} button located at the top right of the navigation bar.
+        From there, the user can click on the \texttt{Create an account} button to create an account.
+        \item
+        While browsing the product catalogue, if the user clicks on the \texttt{Add to Cart} button, they will be prompted to log in first.
+        From there, they can create an account.
+    \end{enumerate}
+
+    \subsubsection*{Logging in}
+    After logging in, the user can add products to their cart.
+    They can use the \texttt{Cart} button on the navigation bar to proceed to the checkout page.
+    They can review their order before placing it, and if confirmed, they are redirected to the payment gateway and the order will be placed.
+    \vspace*{10pt} \\
+    On the profile page, the customer can view their personal information\footnote{
+        The feature to update personal information is not yet implemented.
+    }, their order history, and the current active (undelivered) orders.
+
+    \subsection*{Usage as Admins}
+    \subsubsection*{Logging In}
+    The admin\footnote{
+        Currently, there are only two admin accounts, both having the same functionality.
+    } can log in to the admin panel by clicking on the \texttt{Log In as Admin} button shown in the footer.
+    This button is displayed on almost all pages in the footer, even on the user-login page.
+
+    \subsubsection*{How to use}
+    Once logged in, the admin can use the admin panel to perform various tasks\footnote{
+        The feature to add records through the admin panel is not yet implemented.
+    }, such as viewing the stocks through the catalogue, viewing orders, order statistics,
+    and viewing the sales statistics.
+
+    \subsection*{Usage as Suppliers and Delivery Agents}
+    Both suppliers and delivery agents have similar interfaces to users for logging in.
+    They can log in by clicking on the \texttt{Log In} button located at the top right of the navigation bar.
+    From there, they can perform the tasks specific to their role.
+
+    \vfill \pagebreak
+
+    \section*{References and Bibliography}
+
+    \begin{itemize}
+        \item \href{https://mdbootstrap.com/docs/b4/jquery/tables/sort/}{\color{blue}\underline{Sortable tables in HTML}} \\
+        The JavaScript code to implement sorting on tables in HTML is taken from this website.
+        \item \href{https://www.w3schools.com/howto/howto_css_animate_buttons.asp}{\color{blue}\underline{Button animations using CSS}}
+        \item \href{https://codepen.io/hesguru/pen/BaybqXv}{\color{blue}\underline{Star-Rating implementation using CSS}}
+        \item \href{https://www.geeksforgeeks.org/types-of-schedules-in-dbms/}{\color{blue}\underline{Types of schedules in DBMS}}
+    \end{itemize}
+\end{document}

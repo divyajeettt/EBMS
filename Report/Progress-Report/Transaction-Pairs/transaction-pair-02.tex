@@ -1,0 +1,23 @@
+Consider the case where a supplier adds products to stock (i.e., increases the quantity), and
+simultaneously, a customer buys the same product (i.e. decreases the quantity). \\
+Here, $Q$ represents the quantity (in stock) of Product 1. $B_{2}$ represents the balance of the customer in
+$T_{2}$, while $O_{2}$ represents their order.
+
+\begin{center}
+    \begin{adjustbox}{width=\textwidth}
+        \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+        & \\ \hline
+        \textsc{Read($Q$)} & \textsc{Read($Q$)} \\
+        \textsc{$Q := Q + q_{1}$} & \textsc{$Q := Q - q_{2}$} \\
+        \textsc{Write($Q$)} & \textsc{Write($Q$)} \\
+        \textsc{Commit} & \textsc{Read($B_{2}$)} \\
+        & \textsc{Write($B_{2}'$)} \\
+        & \textsc{Write(Order $O_{2}$)} \\
+        & \textsc{Commit} \\
+        \hline
+        \end{tabularx}
+    \end{adjustbox}
+\end{center}
+\vspace*{5pt}

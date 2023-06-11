@@ -1,8 +1,8 @@
-*/main.aux
-*/main.fdb_latexmk
-*/main.fls
-*/main.log
-*/main.out
-*/main.synctex.gz
+**/*.aux
+**/*.fdb_latexmk
+**/*.fls
+**/*.log
+**/*.out
+**/*.synctex.gz
 .DS_Store
 front-end/run.py

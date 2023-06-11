@@ -1,0 +1,27 @@
+\begin{center}
+    \begin{adjustbox}{width=\textwidth}
+        \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+        & \\ \hline
+        \textsc{Read($Q$)} & \\
+        & \textsc{Read($Q$)} \\
+        \textsc{$Q := Q - q_{2}$} & \\
+        \textsc{Write($Q$)} & \\
+        & \textsc{$Q := Q - q_{2}$} \\
+        & \textsc{Write($Q$)} \\
+        & \textsc{Read($B_{2}$)} \\
+        & \textsc{Write($B_{2}'$)} \\
+        & \textsc{Write(Order $O_{2}$)} \\
+        \textsc{Read($B_{1}$)} & \\
+        \textsc{Check($B_{1}$)} & \\
+        \textsc{Write($B_{1}'$)} & \\
+        \textsc{Write(Order $O_{1}$)} & \\
+        \hline
+        \end{tabularx}
+    \end{adjustbox}
+\end{center}
+\vspace*{10pt}
+The above schedule is non-conflict-serializable as there does not exist any sequence of non-conflicting switches
+to make the schedule serial. This is because $T_{1}$ writes to $Q$ before and after a read and write,
+respectively, which are executed by $T_{2}$.

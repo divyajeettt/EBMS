@@ -1,0 +1,23 @@
+Consider the case of two customers buying the same product simultaneously.
+The following table of transactions sums up the reads and writes to the database needed to complete the required actions. \\
+Here, $Q$ represents the quantity (in stock) of Product 1. Similarly, $B_{1}$ and $B_{2}$ represent the balance of
+customers 1 and 2, whereas their orders are represented by $O_{1}$ and $O_{2}$, respectively.
+
+\begin{center}
+    \begin{adjustbox}{width=\textwidth}
+        \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+        & \\ \hline
+        \textsc{Read(product 1 quantity)} & \textsc{Read(product 1 quantity)} \\
+        $Q := Q - q_{1}$ & $Q := Q - q_{2}$ \\
+        \textsc{Write(product 1 quantity)} & \textsc{Write(product 1 quantity)} \\
+        \textsc{Read(balance user 1)} & \textsc{Read(balance user 2)} \\
+        \textsc{Write(new balance user 1)} & \textsc{Write(new balance user 2)} \\
+        \textsc{Commit} & \textsc{Commit} \\
+        \hline
+        \end{tabularx}
+    \end{adjustbox}
+\end{center}
+
+\vspace*{2.5pt}

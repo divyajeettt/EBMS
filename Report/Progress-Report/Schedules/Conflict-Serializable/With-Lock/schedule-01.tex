@@ -1,0 +1,39 @@
+\begin{center}
+    \begin{adjustbox}{width=\textwidth}
+        \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+        & \\ \hline
+        & \textsc{Lock-X($Q$)} \\
+        & \textsc{Read($Q$)} \\
+        & \textsc{$Q := Q - q_{2}$} \\
+        & \textsc{Write($Q$)} \\
+        & \textsc{Unlock($Q$)} \\
+        & \textsc{Lock-X($B_{2}$)} \\
+        & \textsc{Read($B_{2}$)} \\
+        & \textsc{Write($B_{2}'$)} \\
+        & \textsc{Unlock($B_{2}$)} \\
+        \textsc{Lock-X($Q$)} & \\
+        \textsc{Read($Q$)} & \\
+        \textsc{$Q := Q - q_{1}$} & \\
+        \textsc{Write($Q$)} & \\
+        \textsc{Unlock($Q$)} & \\
+        & \textsc{Lock-X(Order $O_{2}$)} \\
+        & \textsc{Write(Order $O_{2}$)} \\
+        & \textsc{Unlock(Order $O_{2}$)} \\
+        \textsc{Lock-X($B_{1}$)} & \\
+        \textsc{Read($B_{1}$)} & \\
+        \textsc{Check($B_{1}$)} & \\
+        \textsc{Write($B_{1}'$)} & \\
+        \textsc{Unlock($B_{1}$)} & \\
+        \textsc{Lock-X(Order $O_{1}$)} & \\
+        \textsc{Write(Order $O_{1}$)} & \\
+        \textsc{unlock(Order $O_{1}$)} & \\
+        \hline
+        \end{tabularx}
+    \end{adjustbox}
+\end{center}
+\vspace*{10pt}
+We add locks before each read, and unlock after each write.
+This ensures that no two transactions are accessing/altering the same data point at the same time,
+which could lead to conflicts.

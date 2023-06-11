@@ -1,0 +1,127 @@
+\deadline{3}{Implementing the Database Schema and Integrity Constraints, and Populating simulated data satisfying them}{February 10, 2023}
+
+\section*{\Huge Iterations on the Database Schema}
+\subsection*{Tables added or renamed:}
+\begin{enumerate}
+    \item
+    Since \textbf{address} is a composite attribute, we store it in a separate table since we would rarely need to search for the address.
+    The search/join/union query efficiency would get affected if we store all the address data in the same stakeholder table.
+    \item
+    The \textbf{consists\_of} relationship table has been renamed to \textbf{order\_product} to make it more intuitive.
+    \item
+    Entity table \textbf{description} has been renamed to \textbf{product\_description}, since \newline \texttt{description} is a reserved keyword in MySQL.
+    Its field \textbf{description} has also been renamed to \textbf{content} for the same reason.
+    \item
+    Entity table \textbf{order} has also been renamed to \textbf{orders} for the same reason.
+\end{enumerate}
+
+\subsection*{Columns/Fields added, removed, or renamed:}
+\begin{enumerate}
+    \item
+    All fields called \textbf{hashed\_password} have been renamed to \textbf{pwd} for simplicity.
+    \item
+    Added field \textbf{email} to \textbf{customer}, \textbf{supplier}, and \textbf{delivery\_agent} tables.
+    \item
+    Added field \textbf{quantity} to table \textbf{product}.
+    \item
+    Removed fields \textbf{reviewID} from the \textbf{product\_review} and \textbf{da\_review} tables,
+    so as to decompose the ternary relationships \textbf{delivered} and \textbf{purchased}.
+    \item
+    Added \textbf{order\_date} and \textbf{delivery\_date} to the \textbf{order} table.
+\end{enumerate}
+
+\section*{\Huge Handling Different Attributes}
+\subsection*{Composite Attributes:}
+\begin{enumerate}
+    \item
+    Addresses of all stakeholders are stored in a single table with a unique \textbf{addressID} assigned to each address.
+    This \textbf{addressID} is then stored along with other stakeholder data in their tables.
+    \item
+    Added sub-attribute \textbf{country} to the \textbf{address} composite attribute.
+    \item
+    The \textbf{name} composite attribute is stored in the same table, since we might need to search for the names of the stakeholders.
+    Each sub-attribute is kept as a column (\textbf{first\_name}, \textbf{middle\_initial}, \textbf{last\_name}) in the table.
+\end{enumerate}
+
+\subsection*{Multi-Valued Attributes:}
+\begin{enumerate}
+    \item
+    Since \textbf{phone\_number} is a multivalued attribute, we store it in a separate table, with the \textbf{phoneID} attribute
+    from this table being stored in the \textbf{delivery\_agent} and \textbf{customer} tables.
+    This table does not have a primary key since each \textbf{phoneID} associates to one or more \textbf{num}'s (phone numbers).
+\end{enumerate}
+
+\subsection*{Derived Attributes:}
+\begin{enumerate}
+    \item
+    Changed \textbf{ETA} and \textbf{delivered} (earlier \textbf{status}) to derived attributes.
+    \textbf{ETA} will be calculated as \textbf{order\_date} + 15 days when required.
+    \item
+    The attribute \textbf{delivered} will be \texttt|True| if \textbf{delivery\_date} is not null, else \texttt|False|.
+\end{enumerate}
+Since these constraints/relations will be implemented outside the database, and hence these fields are not present in the tables.
+
+\section*{Assumptions:}
+\begin{enumerate}
+    \item
+    The field \textbf{delivery\_date} of \textbf{orders} is allowed to be \texttt{NULL}.
+    This is because we do not know the \textbf{delivery\_date} when the order is placed, and it is only updated when the order is delivered.
+    We derive the attribute \textbf{delivered} from \textbf{delivery\_date} to check if the order has been delivered or not.
+    \item
+    Since \textbf{phone numbers} are implemented as multi-valued attributes, we assume that phone numbers are not unique to a customer.
+    This means that multiple users may have the same phone number.
+    \item
+    All primary keys are defined with the \texttt{AUTO\_INCREMENT} constraints so that we do not need to insert ID values ourselves,
+    and duplicity errors on primary keys are avoided.
+    \item
+    \textbf{Product descriptions} and \textbf{review contents} are being stored using \texttt{TEXT} datatype in MySQL, which is not stored
+    in the server memory and does not hamper query times.
+    \item
+    All attributes that can not have null values have been specified as \texttt{NOT NULL}. Attributes like \textbf{last\_name}, \textbf{middle\_initial},
+    \textbf{content} in the \textbf{review} tables, and \textbf{delivery\_date} in the \textbf{orders} table can have null values.
+    \item
+    \textbf{Availability} of a delivery agent has been given a \texttt{DEFAULT} value of true, ie, when a delivery agent is added to the database,
+    they are available to deliver an order by default.
+    \item
+    \textbf{Balance} in a customer wallet, on account creation, has been given a \texttt{DEFAULT} value of 0.
+    \item
+    \textbf{pwd}'s in all tables are stored as SHA1 hashes.
+    \item
+    Some other integrity constrains have also been added, for example, \textbf{rating} must be between 0 and 5, and \textbf{quantity}
+    and \textbf{price} must be positive.
+    \item
+    Based on a rough idea of the types of queries we plan to use, some indices have also been added on the fields of the tables.
+    These may be updated in the future.
+\end{enumerate}
+
+\section*{\Huge Data Generation \& Population}
+\subsection*{Data Generation}
+Most of the simulated data for the stakeholder and main entity tables was generated using \href{https://www.mockaroo.com}{\color{blue}\underline{https://www.mockaroo.com}}. \\
+\newline
+We utilised the (Ruby) code functionality to implement viable constraints on the data while data generation.
+The data for each table was downloaded as a CSV-file.
+We then used python scripts to generate the MySQL insertion queries and to populate relations.
+Data for some tables (like \textbf{cart} and \textbf{orders}) was mainly done through python scripts so as to make sure the existential constraints were not violated.
+
+\subsection*{Data Population}
+All the tables of the database were pre-populated with data with integrity-constrains maintained to start querying.
+The database was populated with the following number of rows of data:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item \texttt{address}: 400 rows
+        \item \texttt{phone\_number}: 400 rows
+        \item \texttt{admin}: 2 rows
+        \item \texttt{supplier}: 200 rows
+        \item \texttt{customer}: 200 rows
+        \item \texttt{delivery\_agent}: 200 rows
+        \item \texttt{product}: 200 rows
+        \item \texttt{orders}: 1000 rows
+        \item \texttt{wallet}: 200 rows
+        \item \texttt{product\_review}: 200 rows
+        \item \texttt{da\_review}: 200 rows
+        \item \texttt{cart}: 1073 rows
+        \item \texttt{order\_product}: 5552 rows
+    \end{itemize}
+\end{multicols}
+
+\pagebreak

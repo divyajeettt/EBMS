@@ -1,0 +1,23 @@
+\begin{center}
+    \begin{adjustbox}{width=\textwidth}
+        \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \multirow{2}{*}{\textbf{Transaction-1 ($T_{1}$)}} & \multirow{2}{*}{\textbf{Transaction-2 ($T_{2}$)}} \\
+        & \\ \hline
+        & \textsc{Read($Q_{1}$)} \\
+        & \textsc{$Q := Q - q_{2}$} \\
+        & \textsc{Write($Q$)} \\
+        \textsc{Read($Q$)} & \\
+        \textsc{$Q := Q + q_{1}$} & \\
+        \textsc{Write($Q$)} & \\
+        & \textsc{Read($B_{2}$)} \\
+        & \textsc{Check($B_{2}$)} \\
+        & \textsc{Write($B_{2}'$)} \\
+        & \textsc{Write(Order $O_{2}$)} \\
+        \hline
+        \end{tabularx}
+    \end{adjustbox}
+\end{center}
+\vspace*{10pt}
+This schedule is conflict serializable as we can repeatedly move the three statements from $T_{1}$ upwards, such that
+both the transactions get executed serially ($T_{2}$ after $T_{1}$).

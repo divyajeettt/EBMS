@@ -1,0 +1,46 @@
+\deadline{6}{Conflicting and Non-Conflicting Database Transactions}{April 24, 2023}
+
+\section*{\Huge Concurrent Database Transactions}
+\vspace*{10pt}
+Assuming the application is hosted on a public server, multiple users can access and use it simultaneously.
+Hence, there may arise cases where multiple users access the database (through transactions) in a way that creates conflicts and inconsistency.
+
+\subsection*{Transaction Pair 1}
+\input{./Transaction-Pairs/transaction-pair-01.tex}
+
+\subsection*{Conflict-Serializable Schedule}
+\input{./Schedules/Conflict-Serializable/Without-Lock/schedule-01.tex}
+
+\subsection*{Conflict-Serializable Schedule with Locks}
+\input{./Schedules/Conflict-Serializable/With-Lock/schedule-01.tex}
+
+\pagebreak
+
+\subsection*{Non-Conflict-Serializable Schedule}
+\input{./Schedules/Non-Conflict-Serializable/Without-Lock/schedule-01.tex}
+
+\pagebreak
+
+\subsection*{Non-Conflict-Serializable Schedule with Locks}
+\input{./Schedules/Non-Conflict-Serializable/With-Lock/schedule-01.tex}
+
+\pagebreak
+
+\subsection*{Transaction Pair 2}
+\input{./Transaction-Pairs/transaction-pair-02.tex}
+
+\subsection*{Conflict-Serializable Schedule}
+\input{./Schedules/Conflict-Serializable/Without-Lock/schedule-02.tex}
+
+\pagebreak
+
+\subsection*{Conflict-Serializable Schedule with Locks}
+\input{./Schedules/Conflict-Serializable/With-Lock/schedule-02.tex}
+
+\subsection*{Non-Conflict-Serializable Schedule}
+\input{./Schedules/Non-Conflict-Serializable/Without-Lock/schedule-02.tex}
+
+\subsection*{Non-Conflict-Serializable Schedule with Locks}
+\input{./Schedules/Non-Conflict-Serializable/With-Lock/schedule-02.tex}
+
+\vfill \pagebreak
