@@ -8,7 +8,7 @@ EBMS aims to solve the problem of managing an online electronics store by bringi
 
 ## Run
 
-Clone the repository on your device and navigate to the folder. Run the following command to install the dependencies:
+Clone the repository on your device and navigate to the folder. The project requires a Python Environment and MySQL Server installed on your device. Run the following command to install the dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -35,3 +35,5 @@ python3 ./front-end/run.py
 - Improvement of UI/UX of the website.
 - Addition of a dark mode.
 - Addition of graphs and charts to display trends along with tabular data.
+- Addition of storage of images for products and user profiles in the database.
+- An ML model may be used to generate the "Hot-Picks for You" category on a user's home page.
