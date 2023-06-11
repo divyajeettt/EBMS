@@ -7,70 +7,74 @@
 <body>
     {% block main %}
         <h1><b>Welcome to <span style="color: #537fbe;">e</span><span style="color: #ea433b;">b</span><span style="color: #f5b82e;">m</span><span style="color: #2e944b;">s</span>, {{session['username']}}!</b></h1>
-        
-        <!-- table showing active orders -->
-        
 
+        <!-- table showing active orders -->
         <br>
         <br>
         <h2 style="text-align: left;"><b>Active Orders</b></h2>
+        <hr>
         <h5>
             You currently have {{active_orders|length}} active orders.
         </h5>
-        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Order ID</th>
-                    <th scope="col">Customer ID</th>
-                    <th scope="col">Order Date</th>
-                    <th scope="col">ETA</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in active_orders %}
+        {% if active_orders|length > 0 %}
+            <table class="table table-striped table-hover table-bordered" style="text-align: left;">
+                <thead class="thead-dark">
                     <tr>
-                        <th scope="row">{{order['orderID']}}</th>
-                        <td>{{order['customerID']}}</td>
-                        <td>{{order['order_date']}}</td>
-                        <td>{{order['ETA']}}</td>
-                        <td>
-                            <form action="/account" method="post">
-                                <input type="hidden" name="order_id" value="{{order['orderID']}}">
-                                <button class="btn btn-primary" name="delivered_button" onclick="sendData(this.parentNode)">Delivered...</button>
-                            </form>
-                        </td>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Customer ID</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">ETA</th>
+                        <th scope="col">Action</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for order in active_orders %}
+                        <tr>
+                            <th scope="row">{{order['orderID']}}</th>
+                            <td>{{order['customerID']}}</td>
+                            <td>{{order['order_date']}}</td>
+                            <td>{{order['ETA']}}</td>
+                            <td>
+                                <form action="/account" method="post">
+                                    <input type="hidden" name="order_id" value="{{order['orderID']}}">
+                                    <button class="btn btn-primary" name="delivered_button" onclick="sendData(this.parentNode)">Delivered...</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
 
         <!-- table showing completed orders -->
         <br>
         <br>
         <h2 style="text-align: left;"><b>Delivered Orders</b></h2>
+        <hr>
         <h5>
             You have delivered {{completed_orders|length}} orders.
         </h5>
-        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Order ID</th>
-                    <th scope="col">Customer ID</th>
-                    <th scope="col">Order Date</th>
-                    <th scope="col">Delivered Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in completed_orders %}
+        {% if completed_orders|length > 0 %}
+            <table class="table table-striped table-hover table-bordered" style="text-align: left;">
+                <thead class="thead-dark">
                     <tr>
-                        <th scope="row">{{order['orderID']}}</th>
-                        <td>{{order['customerID']}}</td>
-                        <td>{{order['order_date']}}</td>
-                        <td>{{order['delivery_date']}}</td>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Customer ID</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Delivered Date</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for order in completed_orders %}
+                        <tr>
+                            <th scope="row">{{order['orderID']}}</th>
+                            <td>{{order['customerID']}}</td>
+                            <td>{{order['order_date']}}</td>
+                            <td>{{order['delivery_date']}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     {% endblock %}
 </body>

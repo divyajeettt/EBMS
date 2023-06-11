@@ -67,55 +67,62 @@
     <br>
     <br>
     <br>
-        
+
     <h3 style="text-align: left;"><b>Your Products</b></h3>
-    <br>
-    
-    <!-- code to list a supplier's products as a table -->
-    <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Item</th>
-                <th scope="col">Price</th>
-                <th scope="col">Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in products %}
-            <tr>
-                <td>{{item['productID']}}</td>
-                <td>{{item['name']}}</td>
-                <td>{{item['price']}}</td>
-                <td>{{item['quantity']}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <hr>
+
+    {% if products == [] %}
+        <p style="text-align: left;">You haven't supplied any products yet.</p>
+    {% else %}
+        <!-- code to list a supplier's products as a table -->
+        <table class="table table-striped table-hover table-bordered" style="text-align: left;" id="searchTable">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in products %}
+                <tr>
+                    <td>{{item['productID']}}</td>
+                    <td>{{item['name']}}</td>
+                    <td>{{item['price']}}</td>
+                    <td>{{item['quantity']}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
     <br>
 
     <h3 style="text-align: left;"><b>Sales Statistics</b></h3>
-    <br>
-    <!-- code to list a supplier's sales statistics as a table -->
-    <table class="table table-striped table-hover table-bordered" style="text-align: left;">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Item</th>
-                <th scope="col">Quantity Sold</th>
-                <th scope="col">Revenue</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in sales %}
-            <tr>
-                <td>{{item['product_name']}}</td>
-                <td>{{item['total_quantity_sold']}}</td>
-                <td>{{item['total_revenue']}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+    <hr>
+    {% if sales == [] %}
+        <p style="text-align: left;">You haven't sold any products yet.</p>
+    {% else %}
+        <!-- code to list a supplier's sales statistics as a table -->
+        <table class="table table-striped table-hover table-bordered" style="text-align: left;">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity Sold</th>
+                    <th scope="col">Revenue</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in sales %}
+                <tr>
+                    <td>{{item['product_name']}}</td>
+                    <td>{{item['total_quantity_sold']}}</td>
+                    <td>{{item['total_revenue']}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
     <script>
         const pid = 0;
         const table = document.getElementById("searchTable");
