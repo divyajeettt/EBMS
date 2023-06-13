@@ -1,0 +1,65 @@
+\section{SQL Queries}
+
+As previously stated, the back-end of the project is handled in MySQL Server; naturally, the queries are written in SQL.
+The project produced use cases that required complicated and challenging involving the use of subqueries, joins, and aggregate functions.
+A few examples of such queries are given below.
+
+\begin{sqlquery}[Embedded OLAP Query]
+The following query is used to find out the trends in the number of orders on a monthly, quarterly, and yearly basis.
+\vspace*{5pt} \\
+\verb|SELECT                                                           | \\
+\verb|    YEAR(order.order_date) AS date_year,                         | \\
+\verb|    QUARTER(order.order_date) AS date_quarter,                   | \\
+\verb|    MONTH(order.order_date) AS date_month,                       | \\
+\verb|    COUNT(order.orderID) AS order_count,                         | \\
+\verb|    SUM(order_product.price * order_product.quantity) AS revenue | \\
+\verb|FROM order                                                       | \\
+\verb|JOIN order_product ON order.order_id = order_product.order_id    | \\
+\verb|JOIN product ON order_product.product_id = product.product_id    | \\
+\verb|GROUP BY date_year, date_quarter, date_month WITH ROLLUP         | \\
+\verb|ORDER BY date_year DESC, date_month DESC;                        |
+\end{sqlquery}
+
+\begin{sqlquery}[Embedded Simple SQL Query]
+The following query gets a small list of inactive suppliers, i.e. the suppliers who have not supplied any products.
+\vspace*{5pt} \\
+\verb|SELECT supplier.supplier_id, supplier.email                                | \\
+\verb|FROM supplier                                                              | \\
+\verb|WHERE NOT EXISTS (                                                         | \\
+\verb|    SELECT * FROM product WHERE product.supplier_id = supplier.supplier_id | \\
+\verb|)                                                                          | \\
+\verb|LIMIT 10;                                                                  |
+\end{sqlquery}
+
+\begin{sqlquery}[Embedded Simple SQL Query]
+The following query fetches a list of top-rated products.
+\vspace*{5pt} \\
+\verb|SELECT product.product_id, product.name, AVG(product_review.rating) as avg_rating | \\
+\verb|FROM product_review, product                                                      | \\
+\verb|WHERE product.product_id = product_review.product_id                              | \\
+\verb|GROUP BY product.product_id                                                       | \\
+\verb|HAVING avg_rating >= 4.5                                                          | \\
+\verb|ORDER BY avg_rating DESC;                                                         |
+\end{sqlquery}
+
+\begin{sqlquery}[Database Trigger]
+The following trigger is used to create a wallet for a new customer as soon as they register.
+\vspace*{5pt} \\
+\verb|DROP TRIGGER IF EXISTS create_wallet;                                             | \\
+\verb|DELIMITER $$                                                                      | \\
+\verb|CREATE TRIGGER create_wallet AFTER INSERT ON customer                             | \\
+\verb|FOR EACH ROW                                                                      | \\
+\verb|BEGIN                                                                             | \\
+\verb|    IF NOT EXISTS (SELECT * FROM wallet WHERE customer_id = NEW.customer_id) THEN | \\
+\verb|        INSERT INTO wallet (customer_id, balance) VALUES (NEW.customer_id, 0);    | \\
+\verb|    END IF;                                                                       | \\
+\verb|END;                                                                              | \\
+\verb|$$                                                                                | \\
+\verb|DELIMITER ;                                                                       |
+\end{sqlquery}
+
+\vspace*{-15pt}
+
+A comprehensive collection of almost all SQL Queries used in the project can be found in the \texttt{SQL/} directory in the project repository.
+
+\vspace*{-45pt}

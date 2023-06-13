@@ -1,0 +1,62 @@
+\section{Source Code}
+
+The progress report for the project can be found at \texttt{Report/Progress-Report/main.pdf} in the repository.
+The source code for the project, inclusive of reports and database, can be found at \url{https://github.com/divyajeettt/EBMS}.
+
+\subsection*{Dependencies}
+
+ElectroBase Management System is written completely in \texttt{Python 3.11.0} by the authors.
+The front-end is written in \texttt{HTML-4}, \texttt{CSS-3}, and \texttt{JavaScript}.
+The handler for the front-end is written in \texttt{Flask}, a popular web micro-framework for Python.
+The back-end is handled using \texttt{MySQL Server}, a popular relational database management system.
+
+\begin{setupbox}[Dependencies]
+    To use EBMS on a local machine, at least the following dependencies must be installed:
+    \begin{itemize}
+        \item A \texttt{Python 3.9.0} interpreter
+        \begin{itemize}
+            \item \texttt{Flask 2.3.0}
+            \item \texttt{Flask-Session 0.4.0}
+            \item \texttt{mysql-connector-python 8.0.33}
+        \end{itemize}
+        \item A \texttt{MySQL Server 8.0.26} distribution
+    \end{itemize}
+\end{setupbox}
+
+\begin{setupbox}[Installation \& Setup]
+    Assuming you have Python and MySQL Server ready on a machine, you may follow the steps below to setup EBMS:
+    \begin{itemize}
+        \item Clone the repository and navigate to the directory.
+        \item Create \texttt{front-end/app/.env} with your database credentials. A sample file is provided at \texttt{front-end/app/.sample\_env}.
+        \item To setup the database, through a MySQL Command Line Client, run:
+        \begin{itemize}
+            \item \texttt{SOURCE Database-Generation/database-schema.sql} to create the database.
+            \item (Optional) \texttt{SOURCE Database-Generation/data-population.sql} to populate the database with sample data.
+        \end{itemize}
+        \item To install the other Python dependencies, run \texttt{pip install -r requirements.txt}.
+    \end{itemize}
+\end{setupbox}
+
+\begin{setupbox}[Run the Application]
+    To run the application, run the command \texttt{python -m front-end/run.py} from the root directory of the repository.
+\end{setupbox}
+
+\pagebreak
+
+\subsection*{Disclaimer}
+
+The authors claim to have written the entire codebase from scratch themselves, with proper attribution to the resources used.
+The authors do not claim any responsibility for the use of this project in any other context, even if it results in damage or data loss.
+
+The project is currently not as secure as it should be, and is not intended for production use.
+It is also not intended for commercial use, and will be guarded by the MIT License.
+For example, the website is not protected against SQL injection attacks.
+
+\vfill
+
+\begin{center}
+    \begin{tcolorbox}[colback=red!5!white,colframe=red!75!black]
+        \centering
+        \textbf{EBMS is a course project for CSE202: Fundamentals of Database Management Systems (Winter 2023) at IIIT-Delhi.}
+    \end{tcolorbox}
+\end{center}

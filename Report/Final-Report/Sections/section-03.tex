@@ -1,0 +1,60 @@
+\section{Entity Relationships}
+
+Entities are the objects that are represented in the database.
+They are (usually) the real-world objects that are being modelled.
+How entities interact with each other is governed by the relationships among them.
+Relational diagrams for the database design can be found in the Progress Report for the project.
+
+\begin{entity}[\texttt{admin}]
+    \hspace*{-15pt}\texttt{admin( id, username, password )}
+\end{entity}
+
+\begin{entity}[\texttt{customer}]
+    \hspace*{-15pt}\texttt{customer( \\
+        \hspace*{15pt}\underline{id}, email, password, name(first\_name, middle\_initial, last\_name), \\
+        \hspace*{15pt}address(street(street\_name, apt\_number), city, zip, state, country), \\
+        \hspace*{15pt}age, \{ phone\_number \} \\
+    )}
+\end{entity}
+
+\begin{entity}[\texttt{supplier}]
+    \hspace*{-15pt}\texttt{supplier( \\
+        \hspace*{15pt}\underline{id}, email, password, name(first\_name, middle\_initial, last\_name), \\
+        \hspace*{15pt}address(street(street\_name, apt\_number), city, zip, state, country) \\
+    )}
+\end{entity}
+
+\begin{entity}[\texttt{delivery\_agent}]
+    \hspace*{-15pt}\texttt{delivery\_agent( \\
+        \hspace*{15pt}\underline{id}, email, password, name(first\_name, middle\_initial, last\_name), \\
+        \hspace*{15pt}availability, \{ phone\_number \} \\
+    )}
+\end{entity}
+
+\begin{entity}[\texttt{product}]
+    \hspace*{-15pt}\texttt{product( \underline{id}, name, supplier\_id, price, quantity, product\_description )}
+\end{entity}
+
+\begin{entity}[\texttt{order}]
+    \hspace*{-15pt}\texttt{order( \underline{id}, customer\_id, da\_id, order\_date, delivery\_date )}
+\end{entity}
+
+\begin{entity}[(Weak) \texttt{wallet}]
+    \hspace*{-15pt}\texttt{wallet( \underline{id(customer)}, balance, upi\_id )}
+\end{entity}
+
+\begin{relationship}[\texttt{product\_review( customer, product )}]
+    \hspace*{-15pt}\texttt{product\_review( \dashuline{id(customer)}, \dashuline{id(product)}, rating, content, review\_date )}
+\end{relationship}
+
+\begin{relationship}[\texttt{da\_review( customer, delivery\_agent )}]
+    \hspace*{-15pt}\texttt{da\_review( \dashuline{id(customer)}, \dashuline{id(delivery\_agent)}, rating, content, review\_date )}
+\end{relationship}
+
+\begin{relationship}[\texttt{cart( customer, product )}]
+    \hspace*{-15pt}\texttt{cart( \dashuline{id(customer)}, \dashuline{id(product)}, quantity )}
+\end{relationship}
+
+\begin{relationship}[\texttt{order\_product( order, product )}]
+    \hspace*{-15pt}\texttt{order\_product( \dashuline{id(order)}, \dashuline{id(product)}, quantity )}
+\end{relationship}
