@@ -31,10 +31,15 @@ python3 ./front-end/run.py
 
 ## Future Plans
 
+- Enable functionality of the "Edit" button on user profiles.
+- Enable functionality of the search bars on Admin Dashboard.
+- Update the product catalogue to show cards (like the ones in cart) instead of a table.
+- Enable the supplier to view the number of orders for each of their product, and move the features to a supplier dashboard.
+- Enable the supplier to download the sales statistics.
 - The project currently displays all prices, order costs, etc. in INR. A forex API may be used to convert the prices to USD, EUR, etc. based on the user's prefernce. This preference may be decided at the time of registration and stored in the database.
-- Improvement of UI/UX of the website.
-- Addition of a dark mode.
 - Addition of graphs and charts to display trends along with tabular data.
 - Addition of storage of images for products and user profiles in the database.
-- An ML model may be used to generate the "Hot-Picks for You" category on a user's home page.
 - Add robustness against SQL injection attacks.
+- Addition of a dark mode.
+- An ML model may be used to generate the "Hot-Picks for You" category on a user's home page.
+- Improvement of UI/UX of the website.

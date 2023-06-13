@@ -1,8 +1,5 @@
-**/*.aux
-**/*.fdb_latexmk
-**/*.fls
-**/*.log
-**/*.out
-**/*.synctex.gz
+Report/*-Report/*.*
+!Report/*-Report/main.tex
+!Report/*-Report/main.pdf
 .DS_Store
 front-end/run.py
