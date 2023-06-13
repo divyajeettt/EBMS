@@ -12,10 +12,9 @@ SELECT
     MONTH(order_date) AS date_month,
     COUNT(orders.orderID) AS order_count,
     SUM(price * order_product.quantity) AS revenue
-FROM
-    orders
-    JOIN order_product ON orders.orderID = order_product.orderID
-    JOIN product ON order_product.productID = product.productID
+FROM orders
+JOIN order_product ON orders.orderID = order_product.orderID
+JOIN product ON order_product.productID = product.productID
 GROUP BY date_year, date_quarter, date_month WITH ROLLUP
 ORDER BY date_year DESC, date_month DESC;
 \end{lstlisting}
